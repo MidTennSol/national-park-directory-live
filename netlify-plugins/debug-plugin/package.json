@@ -1,0 +1,9 @@
+{
+  "name": "netlify-debug-plugin",
+  "version": "0.1.0",
+  "description": "Debug plugin for Netlify builds",
+  "main": "index.js",
+  "keywords": ["netlify", "netlify-plugin", "debug"],
+  "author": "Site Developer",
+  "license": "MIT"
+} 

@@ -28,6 +28,6 @@
 [context.deploy-preview.environment]
   NETLIFY_CONTEXT = "deploy-preview"
 
-# Use the custom debug plugin
+# Use the properly structured plugin
 [[plugins]]
-  package = "./netlify-debug-plugin.js" 
+  package = "./netlify-plugins/debug-plugin" 
