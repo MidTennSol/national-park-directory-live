@@ -17,13 +17,13 @@ interface Park {
   slug: string;
 }
 
-// Create slugs for designations (same function as in index.astro)
-const createSlug = (name: string) => {
-  return name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
-};
-
 // Required for Astro dynamic routes
 export async function getStaticPaths() {
+  // Create slugs for designations
+  const createSlug = (name: string) => {
+    return name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
+  };
+
   // Fetch all parks
   const allParks = await fetchNationalParks({
     sort: 'Name',
