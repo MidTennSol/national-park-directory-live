@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
+    "debug-build": "NODE_OPTIONS=--trace-warnings NODE_ENV=production astro build --verbose",
     "preview": "astro preview",
     "astro": "astro"
   },
