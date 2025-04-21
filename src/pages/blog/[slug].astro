@@ -1,0 +1,289 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+import { formatDate } from '../../utils/dateUtils';
+import type { CollectionEntry } from 'astro:content';
+
+// Generate static paths for all blog posts
+export async function getStaticPaths() {
+  const blogEntries = await getCollection('blog', ({ data }) => !data.draft);
+  
+  return blogEntries.map(entry => ({
+    params: { slug: entry.slug },
+    props: { entry },
+  }));
+}
+
+// Get the blog post for this page
+const { entry } = Astro.props;
+const { Content } = await entry.render();
+
+// Get related posts (posts with matching tags, excluding current post)
+const allPosts = await getCollection('blog', ({ data }) => !data.draft);
+const relatedPosts = allPosts
+  .filter((post: CollectionEntry<'blog'>) => 
+    post.slug !== entry.slug && // Exclude current post
+    post.data.tags.some(tag => entry.data.tags.includes(tag)) // Must share at least one tag
+  )
+  .sort(() => Math.random() - 0.5) // Randomize order
+  .slice(0, 3); // Get up to 3 related posts
+---
+
+<BaseLayout title={`${entry.data.title} - National Park Directory Blog`}>
+  <article class="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <!-- Breadcrumbs -->
+    <div class="mb-8">
+      <nav class="flex" aria-label="Breadcrumb">
+        <ol class="inline-flex items-center space-x-1 md:space-x-3">
+          <li class="inline-flex items-center">
+            <a href="/" class="inline-flex items-center text-sm font-medium text-gray-700 hover:text-green-700">
+              Home
+            </a>
+          </li>
+          <li>
+            <div class="flex items-center">
+              <span class="mx-2 text-gray-400">/</span>
+              <a href="/blog" class="text-sm font-medium text-gray-700 hover:text-green-700">Blog</a>
+            </div>
+          </li>
+          <li aria-current="page">
+            <div class="flex items-center">
+              <span class="mx-2 text-gray-400">/</span>
+              <span class="text-sm font-medium text-gray-500 truncate max-w-xs">{entry.data.title}</span>
+            </div>
+          </li>
+        </ol>
+      </nav>
+    </div>
+
+    <!-- Article Header -->
+    <header class="mb-8 max-w-4xl mx-auto">
+      <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-4">
+        {entry.data.title}
+      </h1>
+      
+      <div class="flex items-center text-gray-600 mb-6">
+        <span class="mr-4">{formatDate(entry.data.publishDate)}</span>
+        <span class="mr-4">•</span>
+        <span>By {entry.data.author}</span>
+      </div>
+
+      <div class="flex flex-wrap gap-2 mb-6">
+        {entry.data.tags.map((tag: string) => (
+          <span class="text-xs bg-green-100 text-green-800 rounded-full px-3 py-1">
+            {tag}
+          </span>
+        ))}
+      </div>
+      
+      {entry.data.image && (
+        <div class="rounded-lg overflow-hidden shadow-lg mb-8">
+          <img 
+            src={entry.data.image} 
+            alt={entry.data.title}
+            class="w-full h-auto max-h-[500px] object-cover"
+            onload="this.classList.add('image-loaded')"
+            onerror="if (!this.src.includes('blog-placeholder.jpg')) { this.src='/images/blog-placeholder.jpg'; this.classList.add('fallback-applied'); }"
+          />
+        </div>
+      )}
+      
+      <p class="text-xl text-gray-600 leading-relaxed mb-6">
+        {entry.data.description}
+      </p>
+    </header>
+
+    <!-- Article Content -->
+    <div class="blog-content max-w-3xl mx-auto prose prose-lg prose-green mx-auto">
+      <Content />
+    </div>
+
+    <!-- Article Footer -->
+    <footer class="max-w-3xl mx-auto mt-12 pt-8 border-t border-gray-200">
+      <div class="flex flex-wrap items-center justify-between">
+        <div>
+          <h3 class="text-lg font-bold text-gray-900">Share this article</h3>
+          <div class="flex space-x-4 mt-2">
+            <!-- Share buttons -->
+            <a href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(entry.data.title)}&url=${encodeURIComponent(`https://nationalparkdirectory.com/blog/${entry.slug}`)}`} target="_blank" rel="noopener noreferrer" class="text-gray-500 hover:text-blue-400 transition-colors">
+              <span class="sr-only">Share on Twitter</span>
+              <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M8.29 20.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0022 5.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.804-2.27 8.224 8.224 0 01-2.605.996 4.107 4.107 0 00-6.993 3.743 11.65 11.65 0 01-8.457-4.287 4.106 4.106 0 001.27 5.477A4.072 4.072 0 012.8 9.713v.052a4.105 4.105 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.108 4.108 0 003.834 2.85A8.233 8.233 0 012 18.407a11.616 11.616 0 006.29 1.84"></path>
+              </svg>
+            </a>
+            <a href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(`https://nationalparkdirectory.com/blog/${entry.slug}`)}`} target="_blank" rel="noopener noreferrer" class="text-gray-500 hover:text-blue-600 transition-colors">
+              <span class="sr-only">Share on Facebook</span>
+              <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                <path fill-rule="evenodd" d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z" clip-rule="evenodd"></path>
+              </svg>
+            </a>
+            <a href={`https://www.linkedin.com/shareArticle?mini=true&url=${encodeURIComponent(`https://nationalparkdirectory.com/blog/${entry.slug}`)}&title=${encodeURIComponent(entry.data.title)}`} target="_blank" rel="noopener noreferrer" class="text-gray-500 hover:text-blue-700 transition-colors">
+              <span class="sr-only">Share on LinkedIn</span>
+              <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h-.003z"></path>
+              </svg>
+            </a>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <!-- Related Posts Section -->
+    {relatedPosts.length > 0 && (
+      <div class="max-w-4xl mx-auto mt-16">
+        <h2 class="text-2xl font-bold text-gray-800 mb-6">Related Articles</h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {relatedPosts.map((post: CollectionEntry<'blog'>) => (
+            <a href={`/blog/${post.slug}`} class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
+              {post.data.image && (
+                <div class="relative h-40 bg-gray-100">
+                  <img 
+                    src={post.data.image} 
+                    alt={post.data.title}
+                    class="w-full h-full object-cover"
+                    onload="this.classList.add('image-loaded')"
+                    onerror="if (!this.src.includes('blog-placeholder.jpg')) { this.src='/images/blog-placeholder.jpg'; }"
+                  />
+                </div>
+              )}
+              <div class="p-4">
+                <h3 class="font-bold text-gray-800 mb-2">{post.data.title}</h3>
+                <p class="text-sm text-gray-600 line-clamp-2">{post.data.description}</p>
+              </div>
+            </a>
+          ))}
+        </div>
+      </div>
+    )}
+  </article>
+</BaseLayout>
+
+<style is:global>
+  .blog-content h1 {
+    font-size: 2.25rem;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+    font-weight: 700;
+    line-height: 1.2;
+    color: #1f2937;
+  }
+  
+  .blog-content h2 {
+    font-size: 1.875rem;
+    margin-top: 1.75rem;
+    margin-bottom: 1rem;
+    font-weight: 700;
+    line-height: 1.3;
+    color: #1f2937;
+  }
+  
+  .blog-content h3 {
+    font-size: 1.5rem;
+    margin-top: 1.5rem;
+    margin-bottom: 0.75rem;
+    font-weight: 600;
+    line-height: 1.4;
+    color: #1f2937;
+  }
+  
+  .blog-content p {
+    margin-bottom: 1.25rem;
+    line-height: 1.7;
+  }
+  
+  .blog-content ul, .blog-content ol {
+    margin-bottom: 1.25rem;
+    padding-left: 1.25rem;
+  }
+  
+  .blog-content ul {
+    list-style-type: disc;
+  }
+  
+  .blog-content ol {
+    list-style-type: decimal;
+  }
+  
+  .blog-content li {
+    margin-bottom: 0.5rem;
+    line-height: 1.7;
+  }
+  
+  .blog-content a {
+    color: #047857;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+  
+  .blog-content a:hover {
+    color: #065f46;
+  }
+  
+  .blog-content blockquote {
+    border-left: 4px solid #10b981;
+    padding-left: 1rem;
+    font-style: italic;
+    margin: 1.5rem 0;
+    color: #4b5563;
+  }
+  
+  .blog-content img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 0.5rem;
+    margin: 1.5rem 0;
+  }
+  
+  .blog-content code {
+    background-color: #f3f4f6;
+    padding: 0.125rem 0.25rem;
+    border-radius: 0.25rem;
+    font-family: monospace;
+    font-size: 0.875em;
+  }
+  
+  .blog-content pre {
+    background-color: #1f2937;
+    color: #f9fafb;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    overflow-x: auto;
+    margin: 1.5rem 0;
+  }
+  
+  .blog-content pre code {
+    background-color: transparent;
+    padding: 0;
+    color: inherit;
+  }
+  
+  .blog-content table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1.5rem 0;
+  }
+  
+  .blog-content th, .blog-content td {
+    border: 1px solid #e5e7eb;
+    padding: 0.5rem;
+    text-align: left;
+  }
+  
+  .blog-content th {
+    background-color: #f9fafb;
+    font-weight: 600;
+  }
+  
+  img {
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+  }
+  img.image-loaded {
+    opacity: 1;
+  }
+  .fallback-applied {
+    object-fit: contain !important;
+    padding: 2rem;
+    background-color: #f9fafb;
+  }
+</style> 

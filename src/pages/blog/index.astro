@@ -1,0 +1,147 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+import { formatDate } from '../../utils/dateUtils';
+import type { CollectionEntry } from 'astro:content';
+
+// Get all blog posts that aren't marked as draft
+const allBlogPosts = await getCollection('blog', ({ data }) => {
+  return !data.draft;
+});
+
+// Sort by publish date (newest first)
+const sortedPosts = allBlogPosts.sort((a: CollectionEntry<'blog'>, b: CollectionEntry<'blog'>) => 
+  b.data.publishDate.valueOf() - a.data.publishDate.valueOf()
+);
+
+// Get featured posts
+const featuredPosts = sortedPosts.filter((post: CollectionEntry<'blog'>) => post.data.featured);
+---
+
+<BaseLayout title="Blog - National Park Directory">
+  <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <div class="text-center mb-16">
+      <h1 class="text-4xl md:text-5xl font-bold text-green-800">National Park Blog</h1>
+      <div class="h-1 w-24 bg-green-600 mx-auto mt-4"></div>
+      <p class="mt-6 text-lg text-gray-600 max-w-2xl mx-auto">
+        Discover stories, tips, and insights about America's national parks. From wildlife encounters to hiking guides, our blog helps you plan your next outdoor adventure.
+      </p>
+    </div>
+
+    {featuredPosts.length > 0 && (
+      <div class="mb-16">
+        <h2 class="text-2xl font-bold text-gray-800 mb-6">Featured Posts</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+          {featuredPosts.slice(0, 2).map((post: CollectionEntry<'blog'>) => (
+            <div class="bg-white rounded-lg shadow-md overflow-hidden">
+              {post.data.image && (
+                <div class="relative h-48 bg-gray-100">
+                  <img 
+                    src={post.data.image} 
+                    alt={post.data.title}
+                    class="w-full h-full object-cover"
+                    onload="this.classList.add('image-loaded')"
+                    onerror="if (!this.src.includes('blog-placeholder.jpg')) { this.src='/images/blog-placeholder.jpg'; }"
+                  />
+                </div>
+              )}
+              <div class="p-6">
+                <div class="flex items-center text-sm text-gray-500 mb-2">
+                  <span>{formatDate(post.data.publishDate)}</span>
+                  <span class="mx-2">•</span>
+                  <span>{post.data.author}</span>
+                </div>
+                <h3 class="text-xl font-bold text-gray-800 mb-2">
+                  <a href={`/blog/${post.slug}`} class="hover:text-green-700 transition-colors">
+                    {post.data.title}
+                  </a>
+                </h3>
+                <p class="text-gray-600 mb-4">{post.data.description}</p>
+                <div class="flex flex-wrap gap-2 mb-4">
+                  {post.data.tags.map((tag: string) => (
+                    <span class="text-xs bg-green-100 text-green-800 rounded-full px-3 py-1">
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+                <a href={`/blog/${post.slug}`} class="inline-flex items-center text-green-700 hover:text-green-900 font-medium">
+                  Read more
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                  </svg>
+                </a>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    )}
+
+    <div>
+      <h2 class="text-2xl font-bold text-gray-800 mb-6">All Posts</h2>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        {sortedPosts.map((post: CollectionEntry<'blog'>) => (
+          <div class="bg-white rounded-lg shadow-md overflow-hidden h-full flex flex-col">
+            {post.data.image && (
+              <div class="relative h-40 bg-gray-100">
+                <img 
+                  src={post.data.image} 
+                  alt={post.data.title}
+                  class="w-full h-full object-cover"
+                  onload="this.classList.add('image-loaded')"
+                  onerror="if (!this.src.includes('blog-placeholder.jpg')) { this.src='/images/blog-placeholder.jpg'; }"
+                />
+              </div>
+            )}
+            <div class="p-6 flex-grow flex flex-col">
+              <div class="flex items-center text-sm text-gray-500 mb-2">
+                <span>{formatDate(post.data.publishDate)}</span>
+                <span class="mx-2">•</span>
+                <span>{post.data.author}</span>
+              </div>
+              <h3 class="text-lg font-bold text-gray-800 mb-2">
+                <a href={`/blog/${post.slug}`} class="hover:text-green-700 transition-colors">
+                  {post.data.title}
+                </a>
+              </h3>
+              <p class="text-gray-600 mb-4 flex-grow">{post.data.description}</p>
+              <div class="flex flex-wrap gap-2 mb-4">
+                {post.data.tags.slice(0, 3).map((tag: string) => (
+                  <span class="text-xs bg-green-100 text-green-800 rounded-full px-2 py-0.5">
+                    {tag}
+                  </span>
+                ))}
+                {post.data.tags.length > 3 && (
+                  <span class="text-xs bg-gray-100 text-gray-700 rounded-full px-2 py-0.5">
+                    +{post.data.tags.length - 3} more
+                  </span>
+                )}
+              </div>
+              <a href={`/blog/${post.slug}`} class="inline-flex items-center text-green-700 hover:text-green-900 font-medium mt-auto">
+                Read more
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                </svg>
+              </a>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  img {
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+  }
+  img.image-loaded {
+    opacity: 1;
+  }
+  .fallback-applied {
+    object-fit: contain !important;
+    padding: 2rem;
+    background-color: #f9fafb;
+  }
+</style> 
