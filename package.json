@@ -2,6 +2,13 @@
   "name": "national-park-directory-live",
   "type": "module",
   "version": "0.0.1",
+  "engines": {
+    "node": ">=20.3.0",
+    "npm": ">=10.0.0"
+  },
+  "config": {
+    "python": "python3"
+  },
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",

@@ -7,13 +7,14 @@
   NODE_ENV = "production"
   CI = "true"
   NODE_OPTIONS = "--max-old-space-size=4096"
+  # Set specific Python version rather than disabling
+  PYTHON_VERSION = "3.9"
   # Disable any automatic language installers
   NETLIFY_USE_MISE = "false"
   NETLIFY_USE_YARN = "false"
   NETLIFY_USE_PNPM = "false"
   # Disable other common potential sources of issues
   RUBY_VERSION = "false"
-  PYTHON_VERSION = "false"
   # Increase verbosity for debugging
   DEBUG = "netlify:*"
 
