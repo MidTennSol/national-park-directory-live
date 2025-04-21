@@ -1,5 +1,6 @@
+# Main Netlify configuration
 [build]
-  command = "bash ./build.sh"
+  command = "bash ./build-with-rollup-fix.sh"
   publish = "dist"
 
 [build.environment]
@@ -7,17 +8,15 @@
   NODE_ENV = "production"
   CI = "true"
   NODE_OPTIONS = "--max-old-space-size=4096"
-  # Set specific versions rather than disabling
   PYTHON_VERSION = "3.9"
   RUBY_VERSION = "3.2.0"
-  # Disable any automatic language installers
   NETLIFY_USE_MISE = "false"
   NETLIFY_USE_YARN = "false"
   NETLIFY_USE_PNPM = "false"
-  # Increase verbosity for debugging
   DEBUG = "netlify:*"
-  # Flag for the postinstall script to detect Netlify
   NETLIFY = "true"
+  # Add npm config directly to environment
+  NPM_CONFIG_NODE_LINKER = "hoisted"
 
 # Disable post-processing to eliminate another source of potential issues
 [build.processing]
@@ -28,12 +27,4 @@
   NETLIFY_CONTEXT = "production"
 
 [context.deploy-preview.environment]
-  NETLIFY_CONTEXT = "deploy-preview"
-
-# Use the properly structured plugin
-[[plugins]]
-  package = "./netlify-plugins/debug-plugin"
-
-# Setup node-linker to help with native modules
-[build.environment.NPM_CONFIG_FLAGS]
-  node-linker = "hoisted" 
+  NETLIFY_CONTEXT = "deploy-preview" 

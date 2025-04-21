@@ -1,0 +1,8 @@
+# Basic Netlify configuration with minimal settings
+[build]
+  command = "npm install @rollup/rollup-linux-x64-gnu && npm run build"
+  publish = "dist"
+
+[build.environment]
+  NODE_VERSION = "20.3.0"
+  NODE_ENV = "production" 
