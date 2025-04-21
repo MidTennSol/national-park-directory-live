@@ -16,6 +16,8 @@
   NETLIFY_USE_PNPM = "false"
   # Increase verbosity for debugging
   DEBUG = "netlify:*"
+  # Flag for the postinstall script to detect Netlify
+  NETLIFY = "true"
 
 # Disable post-processing to eliminate another source of potential issues
 [build.processing]
@@ -30,4 +32,8 @@
 
 # Use the properly structured plugin
 [[plugins]]
-  package = "./netlify-plugins/debug-plugin" 
+  package = "./netlify-plugins/debug-plugin"
+
+# Setup node-linker to help with native modules
+[build.environment.NPM_CONFIG_FLAGS]
+  node-linker = "hoisted" 

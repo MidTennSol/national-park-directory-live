@@ -14,9 +14,11 @@
     "build": "astro build",
     "debug-build": "NODE_OPTIONS=--trace-warnings NODE_ENV=production astro build --verbose",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "postinstall": "node ./postinstall.js"
   },
   "dependencies": {
+    "@rollup/rollup-linux-x64-gnu": "4.9.6",
     "@tailwindcss/vite": "^4.1.4",
     "astro": "^5.7.4"
   },
@@ -24,5 +26,10 @@
     "autoprefixer": "^10.4.21",
     "postcss": "^8.5.3",
     "tailwindcss": "^4.1.4"
+  },
+  "optionalDependencies": {
+    "@rollup/rollup-win32-x64-msvc": "4.9.6",
+    "@rollup/rollup-darwin-x64": "4.9.6",
+    "@rollup/rollup-linux-x64-musl": "4.9.6"
   }
 }

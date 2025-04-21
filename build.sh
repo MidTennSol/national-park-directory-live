@@ -57,6 +57,28 @@ if [ ! -f Gemfile.lock ]; then
     touch Gemfile.lock
 fi
 
+# Ensure we have the right Rollup module for Linux
+echo "======================================================"
+echo "ENSURING CORRECT ROLLUP MODULES:"
+if [[ $(uname -s) == "Linux" ]]; then
+    echo "Linux detected, verifying Rollup modules..."
+    
+    # Check if Rollup GNU module exists
+    if [ ! -d "node_modules/@rollup/rollup-linux-x64-gnu" ]; then
+        echo "Installing @rollup/rollup-linux-x64-gnu explicitly"
+        npm install @rollup/rollup-linux-x64-gnu
+    else
+        echo "@rollup/rollup-linux-x64-gnu already installed"
+    fi
+    
+    # Verify the module
+    if [ -f "node_modules/@rollup/rollup-linux-x64-gnu/rollup.linux-x64-gnu.node" ]; then
+        echo "Verified: rollup.linux-x64-gnu.node exists"
+    else
+        echo "Warning: rollup.linux-x64-gnu.node file not found"
+    fi
+fi
+
 # Install dependencies with detailed output
 echo "======================================================"
 echo "INSTALLING DEPENDENCIES:"
