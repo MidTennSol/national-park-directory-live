@@ -1,0 +1,225 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ParkCard from '../components/ParkCard.astro';
+import { fetchNationalParks } from '../utils/airtable.js';
+
+console.log('Fetching parks for homepage...');
+
+// Define error state
+let error = null;
+
+// Fetch parks and randomly select 6 for the homepage
+let featuredParks = [];
+try {
+  console.log('Making Airtable API request...');
+  // Fetch all parks first
+  const allParks = await fetchNationalParks({
+    sort: 'Name',
+    view: 'Grid view',
+    filterByFormula: ''
+  });
+  console.log(`Fetched ${allParks.length} parks successfully`);
+  
+  // Randomly select 6 parks
+  const shuffled = [...allParks].sort(() => 0.5 - Math.random());
+  featuredParks = shuffled.slice(0, 6);
+  console.log(`Selected 6 random parks for the homepage`);
+} catch (err) {
+  console.error('Error fetching parks:', err);
+  error = err instanceof Error ? err.message : String(err);
+}
+
+// For debugging
+const debug = false;
+---
+
+<BaseLayout title="National Park Directory - Discover America's National Parks">
+  <!-- Hero Section -->
+  <div class="bg-gradient-to-r from-green-800 to-green-700 text-white">
+    <div class="container mx-auto px-4 py-20 md:py-24 lg:py-32">
+      <div class="max-w-3xl">
+        <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold mb-4">
+          Discover America's National Parks
+        </h1>
+        <p class="text-xl md:text-2xl mb-8 text-green-100">
+          Explore natural wonders, historical sites, and recreational areas across the United States.
+        </p>
+        <div class="flex flex-wrap gap-4">
+          <a 
+            href="/parks" 
+            class="bg-white text-green-800 px-6 py-3 rounded-md font-medium hover:bg-green-100 transition-colors shadow-md"
+          >
+            View All Parks
+          </a>
+          <a 
+            href="/states" 
+            class="bg-green-600 text-white px-6 py-3 rounded-md font-medium hover:bg-green-500 transition-colors shadow-md"
+          >
+            Browse by State
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Featured Parks Section -->
+  <div class="container mx-auto px-4 py-16">
+    <h2 class="text-3xl font-bold text-gray-900 mb-8 text-center">Featured National Parks</h2>
+    
+    {error ? (
+      <div class="bg-red-50 border border-red-200 rounded-lg p-6 text-center">
+        <p class="text-red-800">
+          Sorry, we encountered an error loading the parks. Please try again later.
+        </p>
+        {debug && <p class="text-red-600 mt-2">Error: {error}</p>}
+      </div>
+    ) : featuredParks.length > 0 ? (
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        {featuredParks.map((park) => (
+          <ParkCard park={park} />
+        ))}
+      </div>
+    ) : (
+      <div class="bg-yellow-50 border border-yellow-100 rounded-lg p-6 text-center">
+        <p class="text-yellow-800">
+          No parks found. Please check back later.
+        </p>
+      </div>
+    )}
+    
+    <div class="mt-12 text-center">
+      <a 
+        href="/parks" 
+        class="inline-flex items-center px-6 py-3 border border-green-800 text-green-800 rounded-md font-medium hover:bg-green-50 transition-colors"
+      >
+        View All Parks
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+        </svg>
+      </a>
+    </div>
+  </div>
+  
+  <!-- Navigation Cards -->
+  <div class="bg-gray-50 py-16">
+    <div class="container mx-auto px-4">
+      <h2 class="text-3xl font-bold text-gray-900 mb-8 text-center">Explore Our Directory</h2>
+      
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <!-- All Parks Card -->
+        <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
+          <div class="h-48 bg-green-800 flex items-center justify-center">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-24 w-24 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
+            </svg>
+          </div>
+          <div class="p-6">
+            <h3 class="text-xl font-bold text-gray-900 mb-2">All National Parks</h3>
+            <p class="text-gray-700 mb-4">
+              Browse the complete directory of national parks, monuments, historic sites, and more.
+            </p>
+            <a 
+              href="/parks" 
+              class="text-green-800 font-medium hover:text-green-700 flex items-center"
+            >
+              View All Parks
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-1" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd" />
+              </svg>
+            </a>
+          </div>
+        </div>
+        
+        <!-- Parks by State Card -->
+        <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
+          <div class="h-48 bg-blue-700 flex items-center justify-center">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-24 w-24 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
+            </svg>
+          </div>
+          <div class="p-6">
+            <h3 class="text-xl font-bold text-gray-900 mb-2">Parks by State</h3>
+            <p class="text-gray-700 mb-4">
+              Find national parks in your state or plan a trip to discover parks in a new region.
+            </p>
+            <a 
+              href="/states" 
+              class="text-blue-700 font-medium hover:text-blue-600 flex items-center"
+            >
+              Browse by State
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-1" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd" />
+              </svg>
+            </a>
+          </div>
+        </div>
+        
+        <!-- Parks by Type Card -->
+        <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
+          <div class="h-48 bg-purple-700 flex items-center justify-center">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-24 w-24 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+            </svg>
+          </div>
+          <div class="p-6">
+            <h3 class="text-xl font-bold text-gray-900 mb-2">Parks by Type</h3>
+            <p class="text-gray-700 mb-4">
+              Explore different types of park designations, from National Parks to Historic Sites and Monuments.
+            </p>
+            <a 
+              href="/types" 
+              class="text-purple-700 font-medium hover:text-purple-600 flex items-center"
+            >
+              Browse by Type
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-1" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd" />
+              </svg>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- About Section -->
+  <div id="about" class="container mx-auto px-4 py-16">
+    <div class="max-w-4xl mx-auto">
+      <h2 class="text-3xl font-bold text-gray-900 mb-6">About The National Park Directory</h2>
+      <div class="prose prose-lg max-w-none">
+        <p>
+          The National Park Directory is dedicated to showcasing the incredible diversity of America's national parks system. 
+          From iconic landscapes like Yellowstone and the Grand Canyon to lesser-known historical sites and monuments, 
+          this directory aims to help visitors discover and plan their adventures in these protected natural and cultural treasures.
+        </p>
+        <p>
+          Our directory includes comprehensive information about:
+        </p>
+        <ul>
+          <li>National Parks</li>
+          <li>National Monuments</li>
+          <li>National Historic Sites</li>
+          <li>National Recreation Areas</li>
+          <li>And other sites managed by the National Park Service</li>
+        </ul>
+        <p>
+          Whether you're planning a family vacation, a solo adventure, or simply interested in learning more about America's 
+          protected lands, we hope this directory serves as a valuable resource for your exploration.
+        </p>
+        
+        {debug && (
+          <div class="mt-8 p-4 bg-gray-100 rounded-lg">
+            <h3 class="text-lg font-bold mb-2">Debug Info</h3>
+            <p>Featured Parks Count: {featuredParks.length}</p>
+            {featuredParks.length > 0 && (
+              <div>
+                <p>First Park: {featuredParks[0].name}</p>
+                <p>Has Image URL: {Boolean(featuredParks[0].imageUrl).toString()}</p>
+                <p>Has Wikimedia Images: {Boolean(featuredParks[0].wikimediaImages).toString()}</p>
+              </div>
+            )}
+          </div>
+        )}
+      </div>
+    </div>
+  </div>
+</BaseLayout>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 256" width="512" height="256">
+  <rect width="512" height="256" fill="#f0f9f0"/>
+  <g transform="translate(0, 20)">
+    <!-- Mountains -->
+    <path d="M0,256 L100,150 L150,200 L250,100 L350,180 L450,80 L512,120 L512,256 Z" fill="#2F6D4A"/>
+    <path d="M0,256 L50,190 L100,220 L150,180 L200,256 Z" fill="#1D4D33"/>
+    
+    <!-- Sun -->
+    <circle cx="432" cy="50" r="30" fill="#F8BB67"/>
+    
+    <!-- Trees -->
+    <g transform="translate(120, 170)">
+      <path d="M0,0 L-20,-40 L-10,-40 L-25,-70 L-10,-70 L-20,-100 L20,-100 L10,-70 L25,-70 L10,-40 L20,-40 Z" fill="#1D4D33"/>
+      <rect x="-5" y="0" width="10" height="20" fill="#3D2817"/>
+    </g>
+    <g transform="translate(160, 190)">
+      <path d="M0,0 L-15,-30 L-7,-30 L-18,-55 L-5,-55 L-15,-80 L15,-80 L5,-55 L18,-55 L7,-30 L15,-30 Z" fill="#1D4D33"/>
+      <rect x="-4" y="0" width="8" height="15" fill="#3D2817"/>
+    </g>
+    
+    <!-- Text -->
+    <text x="256" y="40" font-family="Arial, sans-serif" font-size="24" font-weight="bold" text-anchor="middle" fill="#1D4D33">National Park</text>
+  </g>
+</svg> 

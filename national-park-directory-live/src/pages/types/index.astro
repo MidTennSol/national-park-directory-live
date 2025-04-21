@@ -1,0 +1,265 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { fetchNationalParks } from '../../utils/airtable.js';
+
+// Define a type for designation data
+interface DesignationType {
+  name: string;
+  count: number;
+  slug: string;
+}
+
+// Fetch all parks
+const allParks = await fetchNationalParks({
+  sort: 'Name',
+  view: 'Grid view',
+  filterByFormula: ''
+});
+
+// Get unique designations and count parks in each
+const designationsWithCounts = new Map<string, number>();
+
+allParks.forEach(park => {
+  if (park.designation) {
+    const designation = park.designation.trim();
+    designationsWithCounts.set(designation, (designationsWithCounts.get(designation) || 0) + 1);
+  } else {
+    // Handle parks with no designation
+    designationsWithCounts.set('Other', (designationsWithCounts.get('Other') || 0) + 1);
+  }
+});
+
+// Create slugs for designations (convert to lowercase, replace spaces with hyphens)
+const createSlug = (name: string) => {
+  return name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
+};
+
+// Convert to array for rendering
+const typeData = Array.from(designationsWithCounts.entries())
+  .map(([name, count]) => ({
+    name,
+    count,
+    slug: createSlug(name)
+  }))
+  .sort((a, b) => b.count - a.count); // Sort by count (descending)
+
+// Group by designation category
+const typeCategories = {
+  'National Park': typeData.filter(type => type.name === 'National Park'),
+  'Monument': typeData.filter(type => 
+    type.name.includes('Monument') || 
+    type.name.includes('Memorial')
+  ),
+  'Historic': typeData.filter(type => 
+    type.name.includes('Historic') || 
+    type.name.includes('Historical') || 
+    type.name.includes('Heritage')
+  ),
+  'Recreation': typeData.filter(type => 
+    type.name.includes('Recreation') || 
+    type.name.includes('Recreational')
+  ),
+  'Preserve': typeData.filter(type => 
+    type.name.includes('Preserve') || 
+    type.name.includes('Conservation') || 
+    type.name.includes('Reserve')
+  ),
+  'Other': typeData.filter(type => {
+    // Exclude types that are already categorized
+    return !['National Park'].includes(type.name) &&
+      !type.name.includes('Monument') &&
+      !type.name.includes('Memorial') &&
+      !type.name.includes('Historic') &&
+      !type.name.includes('Historical') &&
+      !type.name.includes('Heritage') &&
+      !type.name.includes('Recreation') &&
+      !type.name.includes('Recreational') &&
+      !type.name.includes('Preserve') &&
+      !type.name.includes('Conservation') &&
+      !type.name.includes('Reserve');
+  })
+};
+
+// Define colors for different categories
+const categoryColors = {
+  'National Park': 'green',
+  'Monument': 'blue',
+  'Historic': 'amber',
+  'Recreation': 'indigo',
+  'Preserve': 'emerald',
+  'Other': 'gray'
+};
+
+// Get total number of park types
+const totalTypes = typeData.length;
+---
+
+<BaseLayout title="Explore National Parks by Type - National Park Directory">
+  <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div class="mb-8">
+      <a href="/" class="text-green-800 hover:underline">Home</a> &raquo; 
+      <span class="text-gray-600">Park Types</span>
+    </div>
+    
+    <!-- Types Header -->
+    <div class="bg-white rounded-lg shadow-md overflow-hidden mb-8">
+      <div class="relative h-64 md:h-80">
+        <!-- Placeholder background -->
+        <div class="absolute inset-0 flex items-center justify-center bg-green-50">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-32 w-32 text-green-200 fill-current" viewBox="0 0 20 20" fill="currentColor">
+            <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z" />
+          </svg>
+        </div>
+        
+        <img 
+          src="/images/park-types-banner.jpg"
+          alt="Various National Park Types" 
+          class="type-banner-image w-full h-full object-cover relative z-10"
+          onload="this.classList.add('image-loaded'); this.parentElement.querySelector('div').classList.add('hidden');"
+          onerror="this.src='/images/park-placeholder.jpg'; this.classList.add('fallback-applied');"
+        />
+        <div class="absolute inset-0 bg-black bg-opacity-40 flex items-end z-20">
+          <div class="p-6 text-white">
+            <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold">National Park Site Types</h1>
+            <p class="text-xl mt-2">
+              Explore {totalTypes} different types of National Park Service sites
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Introduction -->
+    <div class="bg-white rounded-lg shadow-md p-6 mb-8">
+      <h2 class="text-2xl font-bold text-gray-900 mb-4">About National Park Site Types</h2>
+      <p class="text-gray-700 mb-4">
+        The National Park Service manages many different types of sites, each with its own designation and purpose. 
+        From iconic National Parks like Yellowstone and Grand Canyon to historic sites, monuments, preserves, and more, 
+        each category has unique characteristics and preservation goals.
+      </p>
+      <p class="text-gray-700 mb-4">
+        Select a site type below to explore all the National Park Service sites in that category.
+      </p>
+    </div>
+    
+    <!-- Type Categories Listings -->
+    {Object.entries(typeCategories).map(([category, types]) => {
+      if (types.length === 0) return null;
+      
+      const colorKey = categoryColors[category as keyof typeof categoryColors] || 'gray';
+      const bgColor = `bg-${colorKey}-600`;
+      const textColor = `text-white`;
+      const borderColor = `border-${colorKey}-700`;
+      const hoverBorderColor = `hover:border-${colorKey}-500`;
+      const badgeBgColor = `bg-${colorKey}-100`;
+      const badgeTextColor = `text-${colorKey}-800`;
+      
+      return (
+        <div class="mb-10">
+          <div class={`flex items-center ${bgColor} ${textColor} rounded-t-lg px-4 py-3 border ${borderColor}`}>
+            <h2 class="text-2xl font-bold">{category} Sites</h2>
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4 bg-white border border-t-0 border-gray-200 rounded-b-lg">
+            {types.map((type: DesignationType) => (
+              <a 
+                href={`/types/${type.slug}`} 
+                class={`block bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow p-4 border border-gray-100 ${hoverBorderColor}`}
+              >
+                <div class="flex items-center">
+                  <div class={`w-12 h-12 ${badgeBgColor} rounded-lg flex items-center justify-center mr-3 border ${borderColor}`}>
+                    <span class={`text-lg font-bold ${badgeTextColor}`}>{type.count}</span>
+                  </div>
+                  <div>
+                    <h3 class="font-medium text-gray-900">{type.name}</h3>
+                    <p class="text-sm text-gray-600">{type.count} site{type.count !== 1 ? 's' : ''}</p>
+                  </div>
+                </div>
+              </a>
+            ))}
+          </div>
+        </div>
+      );
+    })}
+    
+    <!-- Alphabetical Type Listing -->
+    <div class="mb-10">
+      <h2 class="text-2xl font-bold text-gray-900 mb-6">All Park Types Alphabetically</h2>
+      
+      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+        {typeData
+          .sort((a, b) => a.name.localeCompare(b.name)) // Sort alphabetically
+          .map((type: DesignationType) => {
+            // Determine category for color
+            const getTypeCategory = (typeName: string) => {
+              if (typeName === 'National Park') return 'National Park';
+              if (typeName.includes('Monument') || typeName.includes('Memorial')) return 'Monument';
+              if (typeName.includes('Historic') || typeName.includes('Historical') || typeName.includes('Heritage')) return 'Historic';
+              if (typeName.includes('Recreation') || typeName.includes('Recreational')) return 'Recreation';
+              if (typeName.includes('Preserve') || typeName.includes('Conservation') || typeName.includes('Reserve')) return 'Preserve';
+              return 'Other';
+            };
+            
+            const typeCategory = getTypeCategory(type.name);
+            const colorKey = categoryColors[typeCategory as keyof typeof categoryColors] || 'gray';
+            const bgColor = `bg-${colorKey}-100`;
+            const textColor = `text-${colorKey}-800`;
+            const hoverBgColor = `hover:bg-${colorKey}-50`;
+            const hoverBorderColor = `hover:border-${colorKey}-300`;
+            
+            return (
+              <a 
+                href={`/types/${type.slug}`}
+                class={`flex items-center p-3 rounded-lg border border-gray-100 ${hoverBorderColor} ${hoverBgColor} transition-colors`}
+              >
+                <div class={`${bgColor} ${textColor} font-bold w-12 h-12 rounded-full flex items-center justify-center mr-3 text-sm`}>
+                  {type.count}
+                </div>
+                <div class="flex-1">
+                  <div class="font-medium text-gray-900">{type.name}</div>
+                  <div class={`text-sm ${textColor}`}>{type.count} {type.count === 1 ? 'site' : 'sites'}</div>
+                </div>
+                <svg xmlns="http://www.w3.org/2000/svg" class={`h-5 w-5 ${textColor}`} viewBox="0 0 20 20" fill="currentColor">
+                  <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+                </svg>
+              </a>
+            );
+          })
+        }
+      </div>
+    </div>
+    
+    <!-- Call to Action -->
+    <div class="bg-green-50 rounded-lg shadow-md p-8 mt-8 text-center">
+      <h2 class="text-2xl font-bold text-green-800 mb-4">Ready to Explore?</h2>
+      <p class="text-gray-700 max-w-2xl mx-auto mb-6">
+        Discover the diversity of America's national park system by exploring different site types. 
+        From historic battlefields to spectacular natural areas, find the perfect destination for your next adventure.
+      </p>
+      <div class="flex flex-wrap justify-center gap-4">
+        <a 
+          href="/parks"
+          class="inline-flex items-center px-6 py-3 bg-green-800 text-white font-medium rounded-md shadow-sm hover:bg-green-700 transition-colors"
+        >
+          View All Parks
+        </a>
+        <a 
+          href="/states"
+          class="inline-flex items-center px-6 py-3 bg-blue-700 text-white font-medium rounded-md shadow-sm hover:bg-blue-600 transition-colors"
+        >
+          Browse by State
+        </a>
+      </div>
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .image-loaded {
+    opacity: 1;
+  }
+  .type-banner-image.fallback-applied {
+    object-fit: contain !important;
+    padding: 2rem;
+    background-color: #f0f9f0;
+  }
+</style> 

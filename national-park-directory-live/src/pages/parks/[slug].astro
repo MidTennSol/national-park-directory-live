@@ -1,0 +1,544 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { fetchNationalParks, fetchNationalParkBySlug } from '../../utils/airtable.js';
+
+// Define Park type
+interface Park {
+  id: string;
+  name: string;
+  description: string;
+  descriptionExpounded?: string;
+  designation?: string;
+  websiteUrl?: string;
+  activities?: string[];
+  topics?: string[];
+  weatherInfo?: string;
+  latitude?: string;
+  longitude?: string;
+  states: string;
+  city?: string;
+  directionsInfo?: string;
+  directionsInfoExpounded?: string;
+  directionsUrl?: string;
+  parkCode?: string;
+  wikimediaImages?: string | string[];
+  statesMulti?: string[];
+  siteType?: string;
+  imageUrl?: string;
+  slug: string;
+}
+
+// Required for Astro dynamic routes
+export async function getStaticPaths() {
+  // Fetch all parks to generate paths for each one
+  const allParks = await fetchNationalParks({
+    sort: 'Name',
+    view: 'Grid view',
+    filterByFormula: ''
+  });
+
+  // Create a path for each park using its slug
+  return allParks.map(park => ({
+    params: { slug: park.slug || 'unknown-park' },
+    props: { park }
+  }));
+}
+
+// Get the slug and park data from getStaticPaths
+const { slug } = Astro.params;
+const { park } = Astro.props;
+
+console.log(`Processing park page for slug: "${slug}"`);
+console.log(`Using provided park data for: ${park.name} with slug: ${park.slug}`);
+
+// Format the activities as a list if available
+let activities: string[] = [];
+if (park.activities) {
+  if (Array.isArray(park.activities)) {
+    activities = park.activities;
+  } else if (typeof park.activities === 'string') {
+    // If it's a JSON string, try to parse it
+    try {
+      if (park.activities.startsWith('[')) {
+        activities = JSON.parse(park.activities);
+      } else {
+        // Single activity as string
+        activities = [park.activities];
+      }
+    } catch (e) {
+      console.error('Error parsing activities:', e);
+      activities = [park.activities];
+    }
+  }
+}
+console.log(`Processed activities: ${activities.length}`);
+
+// Format the topics as a list if available
+let topics: string[] = [];
+if (park.topics) {
+  if (Array.isArray(park.topics)) {
+    topics = park.topics;
+  } else if (typeof park.topics === 'string') {
+    // If it's a JSON string, try to parse it
+    try {
+      if (park.topics.startsWith('[')) {
+        topics = JSON.parse(park.topics);
+      } else {
+        // Single topic as string
+        topics = [park.topics];
+      }
+    } catch (e) {
+      console.error('Error parsing topics:', e);
+      topics = [park.topics];
+    }
+  }
+}
+console.log(`Processed topics: ${topics.length}`);
+
+// Get the states as an array
+const states = Array.isArray(park.statesMulti) ? park.statesMulti : [];
+
+// Use the extended description if available, otherwise use the regular description
+const fullDescription = park.descriptionExpounded || park.description;
+
+// Use the extended directions if available, otherwise use the regular directions
+const fullDirections = park.directionsInfoExpounded || park.directionsInfo;
+
+// Define a mapping of state abbreviations to full names
+const stateNames: Record<string, string> = {
+  'AL': 'Alabama',
+  'AK': 'Alaska',
+  'AZ': 'Arizona',
+  'AR': 'Arkansas',
+  'CA': 'California',
+  'CO': 'Colorado',
+  'CT': 'Connecticut',
+  'DE': 'Delaware',
+  'FL': 'Florida',
+  'GA': 'Georgia',
+  'HI': 'Hawaii',
+  'ID': 'Idaho',
+  'IL': 'Illinois',
+  'IN': 'Indiana',
+  'IA': 'Iowa',
+  'KS': 'Kansas',
+  'KY': 'Kentucky',
+  'LA': 'Louisiana',
+  'ME': 'Maine',
+  'MD': 'Maryland',
+  'MA': 'Massachusetts',
+  'MI': 'Michigan',
+  'MN': 'Minnesota',
+  'MS': 'Mississippi',
+  'MO': 'Missouri',
+  'MT': 'Montana',
+  'NE': 'Nebraska',
+  'NV': 'Nevada',
+  'NH': 'New Hampshire',
+  'NJ': 'New Jersey',
+  'NM': 'New Mexico',
+  'NY': 'New York',
+  'NC': 'North Carolina',
+  'ND': 'North Dakota',
+  'OH': 'Ohio',
+  'OK': 'Oklahoma',
+  'OR': 'Oregon',
+  'PA': 'Pennsylvania',
+  'RI': 'Rhode Island',
+  'SC': 'South Carolina',
+  'SD': 'South Dakota',
+  'TN': 'Tennessee',
+  'TX': 'Texas',
+  'UT': 'Utah',
+  'VT': 'Vermont',
+  'VA': 'Virginia',
+  'WA': 'Washington',
+  'WV': 'West Virginia',
+  'WI': 'Wisconsin',
+  'WY': 'Wyoming',
+  'DC': 'District of Columbia',
+  'AS': 'American Samoa',
+  'GU': 'Guam',
+  'MP': 'Northern Mariana Islands',
+  'PR': 'Puerto Rico',
+  'VI': 'U.S. Virgin Islands'
+};
+
+// Process Wikimedia images
+let parkImages: string[] = [];
+console.log('Processing Wikimedia images for park detail page');
+console.log('- wikimediaImages type:', typeof park.wikimediaImages);
+
+if (park.wikimediaImages) {
+  try {
+    if (typeof park.wikimediaImages === 'string') {
+      // Check if it's a JSON array string
+      if (park.wikimediaImages.startsWith('[')) {
+        try {
+          parkImages = JSON.parse(park.wikimediaImages);
+          console.log(`Parsed JSON string into array with ${parkImages.length} images`);
+        } catch (e) {
+          console.error('Error parsing JSON string:', e);
+          parkImages = [park.wikimediaImages];
+        }
+      } else {
+        // Single image URL as string
+        parkImages = [park.wikimediaImages];
+        console.log('Using single string URL as image');
+      }
+    } else if (Array.isArray(park.wikimediaImages)) {
+      parkImages = park.wikimediaImages;
+      console.log(`Using existing array with ${parkImages.length} images`);
+    }
+  } catch (e) {
+    console.error(`Error processing Wikimedia images for ${park.name}:`, e);
+  }
+}
+
+// Ensure all image URLs are properly formatted
+parkImages = parkImages.map(url => {
+  if (url && !url.startsWith('http') && !url.startsWith('/')) {
+    return 'https://' + url;
+  }
+  return url;
+});
+
+console.log(`Final parkImages array has ${parkImages.length} images`);
+if (parkImages.length > 0) {
+  console.log('First image:', parkImages[0]);
+}
+
+// Use first wikimedia image, fallback to imageUrl, or use placeholder
+const mainImage = parkImages.length > 0 
+  ? parkImages[0] 
+  : (park.imageUrl || '/images/park-placeholder.svg');
+
+// Ensure main image URL is properly formatted
+let formattedMainImage = mainImage;
+if (formattedMainImage && !formattedMainImage.startsWith('http') && !formattedMainImage.startsWith('/')) {
+  formattedMainImage = 'https://' + formattedMainImage;
+}
+
+// Fallback image if no image URL is provided
+const fallbackImage = "/images/park-placeholder.svg";
+
+// Format the designation with a default value
+const designation = park.designation || 'National Park';
+
+// Check if we have valid coordinates for a map
+const hasValidCoordinates = park.latitude && park.longitude && 
+  !isNaN(parseFloat(park.latitude as string)) && !isNaN(parseFloat(park.longitude as string));
+
+// Create map URL if coordinates are valid
+let mapUrl = '';
+if (hasValidCoordinates) {
+  const latitude = parseFloat(park.latitude as string);
+  const longitude = parseFloat(park.longitude as string);
+  mapUrl = `https://www.google.com/maps/embed/v1/place?key=AIzaSyBJF0B95x6qv1eaNBwCbCLJF9-UI_KUHJo&q=${latitude},${longitude}&zoom=10`;
+}
+---
+
+<BaseLayout title={`${park.name} - National Park Directory`}>
+  <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div class="mb-8">
+      <a href="/" class="text-green-800 hover:underline">Home</a> &raquo; 
+      <a href="/parks" class="text-green-800 hover:underline">Parks</a> &raquo; 
+      <span class="text-gray-600">{park.name}</span>
+    </div>
+    
+    <!-- Park Header -->
+    <div class="bg-white rounded-lg shadow-md overflow-hidden mb-8">
+      <div class="relative h-64 md:h-96">
+        <!-- Placeholder mountain SVG as background -->
+        <div class="absolute inset-0 flex items-center justify-center bg-green-50">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="h-32 w-32 text-green-200 fill-current">
+            <path d="M512 32.01c-23.4 8.78-45.1 14.1-68.5 21.06-75.4 20.07-151.2 45.5-167.3 129.7 0 0-45.4-33.7-99.8 3.8-54.4 37.6-84.5 75.1-98.6 93.1-14.2 18-28.4 28.1-42.5 47.1-14.2 19-2.8 47.1-2.8 47.1l135.8 132.7c11.6-12.5 27.2-21.6 36-30.9 19.8-20.9 38.6-45.5 63-67.4 27.3-24.5 76-35.8 76-35.8l-52.7-36.4c113.2-10.7 152.6-67.3 220.6-125.1 0 0-65.2 25.6-143.7 13.3 0 0 29.4-20.1 82.4-31.8 39.1-8.7 134.4-14.5 119.9-59.7-1.3-4.1-4.3-7-7.1-8.8-10.7-7-32.9 6.3-50.6 10.8v-1.8z"  />
+          </svg>
+        </div>
+        
+        <img 
+          src={formattedMainImage}
+          alt={`View of ${park.name}`} 
+          class="park-detail-image w-full h-full object-cover relative z-10"
+          onload="this.classList.add('image-loaded'); this.parentElement.querySelector('div').classList.add('hidden');"
+          onerror="if (!this.src.includes('park-placeholder.svg')) { this.src='/images/park-placeholder.svg'; this.classList.add('fallback-applied'); }"
+        />
+        <div class="absolute inset-0 bg-black bg-opacity-40 flex items-end z-20">
+          <div class="p-6 text-white">
+            <div class="mb-2">
+              <span class="bg-green-800 text-white px-3 py-1 rounded-full text-sm font-medium">
+                {designation}
+              </span>
+              <span class="ml-2 bg-green-700 text-white px-3 py-1 rounded-full text-sm font-medium">
+                {park.states.split(',').map((stateCode: string, index: number, array: string[]) => (
+                  <>
+                    <a 
+                      href={`/states/${stateCode.trim()}`} 
+                      class="hover:underline"
+                    >
+                      {stateCode.trim()}
+                    </a>
+                    {index < array.length - 1 ? ', ' : ''}
+                  </>
+                ))}
+              </span>
+            </div>
+            <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold">{park.name}</h1>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Park Content -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <!-- Main Content -->
+      <div class="lg:col-span-2">
+        <section class="bg-white rounded-lg shadow-md p-6 mb-8">
+          <h2 class="text-2xl font-bold text-gray-900 mb-4">About</h2>
+          <div class="prose prose-lg max-w-none">
+            <p>{fullDescription}</p>
+          </div>
+        </section>
+        
+        {fullDirections && (
+          <section class="bg-white rounded-lg shadow-md p-6 mb-8">
+            <h2 class="text-2xl font-bold text-gray-900 mb-4">Directions</h2>
+            <div class="prose prose-lg max-w-none">
+              {fullDirections.includes('<!DOCTYPE html>') ? (
+                <div set:html={fullDirections.replace(/&lt;/g, '<').replace(/&gt;/g, '>')}></div>
+              ) : (
+                <p>{fullDirections}</p>
+              )}
+              {park.directionsUrl && (
+                <p>
+                  <a 
+                    href={park.directionsUrl} 
+                    class="text-green-800 hover:underline" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                  >
+                    Get detailed directions &raquo;
+                  </a>
+                </p>
+              )}
+            </div>
+          </section>
+        )}
+        
+        {hasValidCoordinates && (
+          <section class="bg-white rounded-lg shadow-md p-6 mb-8">
+            <h2 class="text-2xl font-bold text-gray-900 mb-4">Location</h2>
+            <div class="aspect-video w-full rounded overflow-hidden">
+              <iframe
+                width="100%"
+                height="100%"
+                style="border:0"
+                loading="lazy"
+                allowfullscreen
+                src={mapUrl}
+              ></iframe>
+            </div>
+            <div class="mt-4 text-sm text-gray-500">
+              {park.city && <p class="mb-1">Located in {park.city}</p>}
+              {states.length > 0 && <p>State(s): {states.join(', ')}</p>}
+            </div>
+          </section>
+        )}
+        
+        {park.weatherInfo && (
+          <section class="bg-white rounded-lg shadow-md p-6 mb-8">
+            <h2 class="text-2xl font-bold text-gray-900 mb-4">Weather Information</h2>
+            <div class="prose prose-lg max-w-none">
+              <p>{park.weatherInfo}</p>
+            </div>
+          </section>
+        )}
+        
+        {/* Photo Gallery - Moved down here */}
+        {parkImages.length > 1 && (
+          <section class="bg-white rounded-lg shadow-md p-6 mb-8">
+            <h2 class="text-2xl font-bold text-gray-900 mb-4">Gallery</h2>
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+              {parkImages.slice(0, 8).map((img: string, index: number) => (
+                <div class="aspect-square overflow-hidden rounded-lg relative bg-green-50">
+                  <!-- Placeholder icon -->
+                  <div class="absolute inset-0 flex items-center justify-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="h-10 w-10 text-green-200 fill-current">
+                      <path d="M19 19H5V5h14v14zM5 3c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2H5zm4 5h6v6H9V8z"/>
+                    </svg>
+                  </div>
+                  
+                  <img 
+                    src={img} 
+                    alt={`${park.name} - Image ${index + 1}`} 
+                    class="gallery-image w-full h-full object-cover hover:scale-105 transition-transform duration-300 relative z-10"
+                    loading="lazy"
+                    onload="this.classList.add('image-loaded'); this.parentElement.querySelector('div').classList.add('hidden');"
+                    onerror="if (!this.src.includes('park-placeholder.svg')) { this.src='/images/park-placeholder.svg'; this.classList.add('fallback-applied'); }"
+                  />
+                </div>
+              ))}
+            </div>
+          </section>
+        )}
+      </div>
+      
+      <!-- Sidebar -->
+      <div class="space-y-8">
+        <!-- Quick Facts -->
+        <section class="bg-white rounded-lg shadow-md p-6">
+          <h2 class="text-xl font-bold text-gray-900 mb-4">Quick Facts</h2>
+          <ul class="space-y-4">
+            {park.designation && (
+              <li class="flex items-start">
+                <span class="font-medium text-gray-700 min-w-32">Designation:</span>
+                <span>{park.designation}</span>
+              </li>
+            )}
+            {park.siteType && (
+              <li class="flex items-start">
+                <span class="font-medium text-gray-700 min-w-32">Site Type:</span>
+                <span>{park.siteType}</span>
+              </li>
+            )}
+            {states.length > 0 && (
+              <li class="flex items-start">
+                <span class="font-medium text-gray-700 min-w-32">States:</span>
+                <span>
+                  {states.map((stateCode: string, index: number) => (
+                    <>
+                      <a 
+                        href={`/states/${stateCode}`} 
+                        class="text-green-800 hover:underline"
+                      >
+                        {stateCode}
+                      </a>
+                      {index < states.length - 1 ? ', ' : ''}
+                    </>
+                  ))}
+                </span>
+              </li>
+            )}
+            {park.city && (
+              <li class="flex items-start">
+                <span class="font-medium text-gray-700 min-w-32">City:</span>
+                <span>{park.city}</span>
+              </li>
+            )}
+            {park.parkCode && (
+              <li class="flex items-start">
+                <span class="font-medium text-gray-700 min-w-32">Park Code:</span>
+                <span>{park.parkCode}</span>
+              </li>
+            )}
+            {park.websiteUrl && (
+              <li class="flex items-start">
+                <span class="font-medium text-gray-700 min-w-32">Website:</span>
+                <a 
+                  href={park.websiteUrl} 
+                  class="text-green-800 hover:underline" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                >
+                  Official Website
+                </a>
+              </li>
+            )}
+          </ul>
+        </section>
+        
+        <!-- States Sidebar Card -->
+        {states.length > 0 && (
+          <section class="bg-white rounded-lg shadow-md p-6 mt-6">
+            <h2 class="text-xl font-bold text-gray-900 mb-4">Explore More Parks</h2>
+            <p class="text-gray-700 mb-4">See all national parks in:</p>
+            <div class="flex flex-wrap gap-2">
+              {states.map((stateCode: string) => {
+                const stateName = stateNames[stateCode] || stateCode;
+                return (
+                  <a
+                    href={`/states/${stateCode}`}
+                    class="inline-flex items-center px-3 py-2 bg-blue-50 text-blue-700 rounded-md hover:bg-blue-100 transition-colors"
+                  >
+                    <span class="font-medium mr-1">{stateCode}</span>
+                    <span class="text-sm">({stateName})</span>
+                  </a>
+                );
+              })}
+            </div>
+          </section>
+        )}
+        
+        <!-- Activities -->
+        {activities.length > 0 && (
+          <section class="bg-white rounded-lg shadow-md p-6 mt-6">
+            <h2 class="text-xl font-bold text-gray-900 mb-4">Activities</h2>
+            <div class="flex flex-wrap gap-2">
+              {activities.map((activity: string) => {
+                // Split activities that might be comma-separated
+                const individualActivities = activity.split(',').map(act => act.trim()).filter(act => act);
+                return individualActivities.map((act, i) => (
+                  <span class="px-3 py-1 mb-2 bg-green-100 text-green-800 rounded-full text-sm shadow-sm">
+                    {act}
+                  </span>
+                ));
+              })}
+            </div>
+          </section>
+        )}
+        
+        <!-- Topics -->
+        {topics.length > 0 && (
+          <section class="bg-white rounded-lg shadow-md p-6">
+            <h2 class="text-xl font-bold text-gray-900 mb-4">Topics</h2>
+            <div class="flex flex-wrap gap-2">
+              {topics.map((topic: string) => {
+                // Split topics that might be comma-separated
+                const individualTopics = topic.split(',').map(t => t.trim()).filter(t => t);
+                return individualTopics.map((t, i) => (
+                  <span class="px-3 py-1 mb-2 bg-blue-50 text-blue-700 rounded-full text-sm shadow-sm">
+                    {t}
+                  </span>
+                ));
+              })}
+            </div>
+          </section>
+        )}
+      </div>
+    </div>
+    
+    <!-- Call to Action -->
+    <div class="bg-green-50 rounded-lg shadow-md p-8 mt-8 text-center">
+      <h2 class="text-2xl font-bold text-green-800 mb-4">Plan Your Visit</h2>
+      <p class="text-gray-700 max-w-2xl mx-auto mb-6">
+        Ready to explore {park.name}? Learn more about the park, plan your trip, and discover the natural wonders that await you.
+      </p>
+      {park.websiteUrl && (
+        <a 
+          href={park.websiteUrl} 
+          class="inline-flex items-center px-6 py-3 bg-green-800 text-white font-medium rounded-md shadow-sm hover:bg-green-700 transition-colors"
+          target="_blank" 
+          rel="noopener noreferrer"
+        >
+          Visit Official Website
+        </a>
+      )}
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .image-loaded {
+    opacity: 1;
+  }
+  .park-detail-image.fallback-applied {
+    object-fit: contain !important;
+    padding: 2rem;
+    background-color: #f0f9f0;
+  }
+  .gallery-image.fallback-applied {
+    object-fit: contain !important;
+    padding: 0.5rem;
+    background-color: #f0f9f0;
+  }
+</style> 

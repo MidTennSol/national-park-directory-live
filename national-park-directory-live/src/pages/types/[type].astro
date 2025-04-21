@@ -1,0 +1,341 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ParkCard from '../../components/ParkCard.astro';
+import { fetchNationalParks } from '../../utils/airtable.js';
+
+// Define Park type
+interface Park {
+  id: string;
+  name: string;
+  description: string;
+  summary?: string;
+  states: string;
+  statesMulti?: string[];
+  designation: string;
+  imageUrl: string;
+  wikimediaImages?: string | string[];
+  slug: string;
+}
+
+// Create slugs for designations (same function as in index.astro)
+const createSlug = (name: string) => {
+  return name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
+};
+
+// Required for Astro dynamic routes
+export async function getStaticPaths() {
+  // Fetch all parks
+  const allParks = await fetchNationalParks({
+    sort: 'Name',
+    view: 'Grid view',
+    filterByFormula: ''
+  });
+  
+  // Get unique designations and count parks in each
+  const designationsWithCounts = new Map<string, number>();
+  
+  allParks.forEach(park => {
+    if (park.designation) {
+      const designation = park.designation.trim();
+      designationsWithCounts.set(designation, (designationsWithCounts.get(designation) || 0) + 1);
+    } else {
+      // Handle parks with no designation
+      designationsWithCounts.set('Other', (designationsWithCounts.get('Other') || 0) + 1);
+    }
+  });
+  
+  // Create paths for each designation type
+  return Array.from(designationsWithCounts.keys()).map(designation => {
+    // Filter parks for this designation
+    const typeParks = allParks.filter(park => {
+      return park.designation === designation || 
+        (!park.designation && designation === 'Other');
+    });
+    
+    // Create slug for this designation
+    const slug = createSlug(designation);
+    
+    return {
+      params: { type: slug },
+      props: { 
+        typeName: designation,
+        typeSlug: slug,
+        parks: typeParks 
+      }
+    };
+  });
+}
+
+// Get the type and parks data from getStaticPaths
+const { type } = Astro.params;
+const { typeName, typeSlug, parks } = Astro.props;
+
+// Group parks by state for this type
+const parksByState = parks.reduce((acc, park) => {
+  if (park.states) {
+    // Handle comma-separated states
+    const stateList = park.states.split(',').map((s: string) => s.trim());
+    
+    stateList.forEach((state: string) => {
+      if (!acc[state]) {
+        acc[state] = [];
+      }
+      
+      // Only add the park if it's not already in the array
+      if (!acc[state].some((p: Park) => p.id === park.id)) {
+        acc[state].push(park);
+      }
+    });
+  }
+  
+  // Also check statesMulti if available
+  if (park.statesMulti && Array.isArray(park.statesMulti)) {
+    park.statesMulti.forEach((state: string) => {
+      if (!acc[state]) {
+        acc[state] = [];
+      }
+      
+      // Only add the park if it's not already in the array
+      if (!acc[state].some((p: Park) => p.id === park.id)) {
+        acc[state].push(park);
+      }
+    });
+  }
+  
+  return acc;
+}, {} as Record<string, Park[]>);
+
+// Define a mapping of state abbreviations to full names
+const stateNames: Record<string, string> = {
+  'AL': 'Alabama',
+  'AK': 'Alaska',
+  'AZ': 'Arizona',
+  'AR': 'Arkansas',
+  'CA': 'California',
+  'CO': 'Colorado',
+  'CT': 'Connecticut',
+  'DE': 'Delaware',
+  'FL': 'Florida',
+  'GA': 'Georgia',
+  'HI': 'Hawaii',
+  'ID': 'Idaho',
+  'IL': 'Illinois',
+  'IN': 'Indiana',
+  'IA': 'Iowa',
+  'KS': 'Kansas',
+  'KY': 'Kentucky',
+  'LA': 'Louisiana',
+  'ME': 'Maine',
+  'MD': 'Maryland',
+  'MA': 'Massachusetts',
+  'MI': 'Michigan',
+  'MN': 'Minnesota',
+  'MS': 'Mississippi',
+  'MO': 'Missouri',
+  'MT': 'Montana',
+  'NE': 'Nebraska',
+  'NV': 'Nevada',
+  'NH': 'New Hampshire',
+  'NJ': 'New Jersey',
+  'NM': 'New Mexico',
+  'NY': 'New York',
+  'NC': 'North Carolina',
+  'ND': 'North Dakota',
+  'OH': 'Ohio',
+  'OK': 'Oklahoma',
+  'OR': 'Oregon',
+  'PA': 'Pennsylvania',
+  'RI': 'Rhode Island',
+  'SC': 'South Carolina',
+  'SD': 'South Dakota',
+  'TN': 'Tennessee',
+  'TX': 'Texas',
+  'UT': 'Utah',
+  'VT': 'Vermont',
+  'VA': 'Virginia',
+  'WA': 'Washington',
+  'WV': 'West Virginia',
+  'WI': 'Wisconsin',
+  'WY': 'Wyoming',
+  'DC': 'District of Columbia',
+  'AS': 'American Samoa',
+  'GU': 'Guam',
+  'MP': 'Northern Mariana Islands',
+  'PR': 'Puerto Rico',
+  'VI': 'U.S. Virgin Islands'
+};
+
+// Sort states alphabetically by full name
+const sortedStates = Object.keys(parksByState).sort((a, b) => {
+  const stateA = stateNames[a] || a;
+  const stateB = stateNames[b] || b;
+  return stateA.localeCompare(stateB);
+});
+
+// Determine category for this type for color scheme
+const getTypeCategory = (typeName: string) => {
+  if (typeName === 'National Park') return 'National Park';
+  if (typeName.includes('Monument') || typeName.includes('Memorial')) return 'Monument';
+  if (typeName.includes('Historic') || typeName.includes('Historical') || typeName.includes('Heritage')) return 'Historic';
+  if (typeName.includes('Recreation') || typeName.includes('Recreational')) return 'Recreation';
+  if (typeName.includes('Preserve') || typeName.includes('Conservation') || typeName.includes('Reserve')) return 'Preserve';
+  return 'Other';
+};
+
+// Get category and color
+const typeCategory = getTypeCategory(typeName);
+const categoryColors = {
+  'National Park': 'green',
+  'Monument': 'blue',
+  'Historic': 'amber',
+  'Recreation': 'indigo',
+  'Preserve': 'emerald',
+  'Other': 'gray'
+};
+
+const colorKey = categoryColors[typeCategory as keyof typeof categoryColors] || 'gray';
+const bgColor = `bg-${colorKey}-600`;
+const textColor = `text-white`;
+const borderColor = `border-${colorKey}-700`;
+const sectionBgColor = `bg-${colorKey}-50`;
+const sectionTextColor = `text-${colorKey}-800`;
+const sectionBorderColor = `border-${colorKey}-200`;
+---
+
+<BaseLayout title={`${typeName} - National Park Types`}>
+  <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div class="mb-8">
+      <a href="/" class="text-green-800 hover:underline">Home</a> &raquo; 
+      <a href="/types" class="text-green-800 hover:underline">Park Types</a> &raquo; 
+      <span class="text-gray-600">{typeName}</span>
+    </div>
+    
+    <!-- Type Header -->
+    <div class="bg-white rounded-lg shadow-md overflow-hidden mb-8">
+      <div class="relative h-64 md:h-80">
+        <!-- Placeholder background -->
+        <div class={`absolute inset-0 flex items-center justify-center ${bgColor}`}>
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-32 w-32 text-white opacity-25 fill-current" viewBox="0 0 20 20" fill="currentColor">
+            <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z" />
+          </svg>
+        </div>
+        
+        <img 
+          src={`/images/types/${typeSlug}.jpg`}
+          alt={`${typeName} sites`} 
+          class="type-banner-image w-full h-full object-cover relative z-10"
+          onload="this.classList.add('image-loaded'); this.parentElement.querySelector('div').classList.add('hidden');"
+          onerror="this.src='/images/park-placeholder.jpg'; this.classList.add('fallback-applied');"
+        />
+        <div class="absolute inset-0 bg-black bg-opacity-40 flex items-end z-20">
+          <div class="p-6 text-white">
+            <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold">{typeName}</h1>
+            <p class="text-xl mt-2">
+              Explore {parks.length} {typeName} site{parks.length !== 1 ? 's' : ''} across America
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Type Info -->
+    <div class={`bg-white rounded-lg shadow-md p-6 mb-8 border-t-4 ${borderColor}`}>
+      <h2 class="text-2xl font-bold text-gray-900 mb-4">About {typeName} Sites</h2>
+      <p class="text-gray-700 mb-4">
+        {typeName === 'National Park' ? (
+          `National Parks are America's crown jewels - vast protected areas set aside for their natural beauty, unique geological features, diverse ecosystems, and recreational opportunities. These parks preserve the nation's most spectacular landscapes for future generations.`
+        ) : typeName.includes('Monument') ? (
+          `National Monuments protect objects of historic, prehistoric, or scientific interest on public lands. Unlike National Parks, which are designated by Congress, National Monuments can be established by Presidential proclamation.`
+        ) : typeName.includes('Historic') ? (
+          `Historic sites preserve places significant to America's history, protecting buildings, landscapes, and other resources that tell the story of important people and events in our nation's past.`
+        ) : typeName.includes('Recreation') ? (
+          `National Recreation Areas are lands and waters set aside for outdoor recreation use. Many are centered around large reservoirs and emphasize water-based activities, while offering opportunities for hiking, camping, and wildlife viewing.`
+        ) : typeName.includes('Preserve') ? (
+          `Preserves protect significant natural resources. While similar to National Parks, they often allow activities such as hunting, trapping, or oil and gas extraction that would be prohibited in a National Park.`
+        ) : (
+          `The National Park Service manages many types of sites, each with their own unique characteristics and purposes. ${typeName} sites are part of America's diverse system of protected lands.`
+        )}
+      </p>
+      <p class="text-gray-700">
+        With {parks.length} sites across {Object.keys(parksByState).length} states, {typeName} sites offer visitors opportunities to experience America's natural and cultural heritage.
+      </p>
+    </div>
+    
+    <!-- Quick Links -->
+    {sortedStates.length > 8 && (
+      <div class="mb-8">
+        <h3 class="text-lg font-semibold text-gray-700 mb-3">Jump to a State:</h3>
+        <div class="flex flex-wrap gap-2">
+          {sortedStates.map(stateCode => (
+            <a 
+              href={`#state-${stateCode}`} 
+              class="px-3 py-1 bg-gray-100 hover:bg-gray-200 text-gray-800 rounded-full text-sm"
+            >
+              {stateNames[stateCode] || stateCode}
+            </a>
+          ))}
+        </div>
+      </div>
+    )}
+    
+    <!-- Parks Listing By State -->
+    <h2 class="text-2xl font-bold text-gray-900 mb-6">{typeName} Sites by State</h2>
+    
+    {sortedStates.length > 0 ? (
+      sortedStates.map(stateCode => (
+        <div class="mb-8" id={`state-${stateCode}`}>
+          <h3 class={`text-xl font-semibold ${sectionTextColor} mb-3 pb-2 border-b ${sectionBorderColor}`}>
+            {stateNames[stateCode] || stateCode} 
+            <span class="text-gray-500 text-base font-normal ml-2">
+              ({parksByState[stateCode].length} site{parksByState[stateCode].length !== 1 ? 's' : ''})
+            </span>
+          </h3>
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {parksByState[stateCode].map((park: Park) => (
+              <ParkCard park={park} />
+            ))}
+          </div>
+        </div>
+      ))
+    ) : (
+      <div class="bg-yellow-50 border border-yellow-100 rounded-lg p-6 text-center">
+        <p class="text-yellow-800">
+          No parks found for this type. This could be due to data limitations.
+        </p>
+      </div>
+    )}
+    
+    <!-- Call to Action -->
+    <div class={`${sectionBgColor} rounded-lg shadow-md p-8 mt-8 text-center`}>
+      <h2 class={`text-2xl font-bold ${sectionTextColor} mb-4`}>Plan Your Visit</h2>
+      <p class="text-gray-700 max-w-2xl mx-auto mb-6">
+        Ready to explore {typeName} sites? Start planning your trip to one of these fascinating destinations and discover the diverse natural and cultural heritage they protect.
+      </p>
+      <div class="flex flex-wrap justify-center gap-4">
+        <a 
+          href="/parks"
+          class="inline-flex items-center px-6 py-3 bg-green-800 text-white font-medium rounded-md shadow-sm hover:bg-green-700 transition-colors"
+        >
+          View All Parks
+        </a>
+        <a 
+          href="/types"
+          class="inline-flex items-center px-6 py-3 bg-blue-700 text-white font-medium rounded-md shadow-sm hover:bg-blue-600 transition-colors"
+        >
+          Browse Other Park Types
+        </a>
+      </div>
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .image-loaded {
+    opacity: 1;
+  }
+  .type-banner-image.fallback-applied {
+    object-fit: contain !important;
+    padding: 2rem;
+    background-color: #f0f9f0;
+  }
+</style> 

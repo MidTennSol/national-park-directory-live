@@ -1,0 +1,115 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { fetchNationalParks } from '../utils/airtable.js';
+
+// Fetch a few parks
+const parks = await fetchNationalParks({ 
+  maxRecords: 5,
+  sort: 'Name',
+  view: 'Grid view',
+  filterByFormula: ''
+});
+
+// Debug
+console.log('First park data sample:', parks[0]);
+
+// Function to inspect value type
+function getValueType(value: any): string {
+  if (value === null) return 'null';
+  if (value === undefined) return 'undefined';
+  if (Array.isArray(value)) return `array[${value.length}]`;
+  if (typeof value === 'object') return 'object';
+  return typeof value;
+}
+---
+
+<BaseLayout title="Image Debug">
+  <div class="container mx-auto px-4 py-8">
+    <h1 class="text-3xl font-bold mb-6">Image Data Debugging</h1>
+    
+    {parks.map((park) => (
+      <div class="bg-white p-6 rounded-lg shadow-md mb-8">
+        <h2 class="text-2xl font-bold mb-3">{park.name}</h2>
+        
+        <div class="mb-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+          <!-- Data Display -->
+          <div>
+            <h3 class="text-xl font-semibold mb-3">Park Data</h3>
+            <ul class="space-y-2">
+              <li><strong>Image URL:</strong> {park.imageUrl ? park.imageUrl : 'Not available'}</li>
+              <li><strong>Image URL Type:</strong> {getValueType(park.imageUrl)}</li>
+              <li>
+                <strong>Wikimedia Images:</strong> 
+                {getValueType(park.wikimediaImages)} 
+                {park.wikimediaImages && (
+                  <span class="block mt-1 ml-4 text-sm text-gray-600">
+                    {typeof park.wikimediaImages === 'string' 
+                      ? park.wikimediaImages 
+                      : JSON.stringify(park.wikimediaImages)}
+                  </span>
+                )}
+              </li>
+              <li><strong>Slug:</strong> {park.slug}</li>
+              <li><strong>States:</strong> {park.states}</li>
+            </ul>
+          </div>
+          
+          <!-- Image Test -->
+          <div>
+            <h3 class="text-xl font-semibold mb-3">Image Tests</h3>
+            
+            <div class="space-y-4">
+              <!-- SVG Placeholder -->
+              <div>
+                <p class="font-medium mb-1">SVG Placeholder:</p>
+                <img 
+                  src="/images/park-placeholder.svg" 
+                  alt="Placeholder" 
+                  class="h-32 object-cover rounded-md"
+                />
+              </div>
+              
+              <!-- Direct imageUrl -->
+              {park.imageUrl && (
+                <div>
+                  <p class="font-medium mb-1">Direct imageUrl:</p>
+                  <img 
+                    src={park.imageUrl} 
+                    alt={`Image URL for ${park.name}`} 
+                    class="h-32 object-cover rounded-md"
+                    onload="this.style.border='2px solid green'"
+                    onerror="this.style.border='2px solid red'; this.src='/images/park-placeholder.svg'"
+                  />
+                </div>
+              )}
+              
+              <!-- Direct Wikimedia -->
+              {park.wikimediaImages && (
+                <div>
+                  <p class="font-medium mb-1">Direct Wikimedia (first if array):</p>
+                  <img 
+                    src={typeof park.wikimediaImages === 'string' 
+                      ? park.wikimediaImages 
+                      : (Array.isArray(park.wikimediaImages) && park.wikimediaImages.length > 0 
+                        ? park.wikimediaImages[0] 
+                        : '/images/park-placeholder.svg')} 
+                    alt={`Wikimedia image for ${park.name}`} 
+                    class="h-32 object-cover rounded-md"
+                    onload="this.style.border='2px solid green'"
+                    onerror="this.style.border='2px solid red'; this.src='/images/park-placeholder.svg'"
+                  />
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+        
+        <!-- Raw Data -->
+        <div class="mt-6">
+          <h3 class="text-lg font-semibold mb-2">Raw Data:</h3>
+          <pre class="bg-gray-100 p-4 rounded-md text-sm overflow-auto max-h-40">{JSON.stringify(park, null, 2)}</pre>
+        </div>
+      </div>
+    ))}
+  </div>
+</BaseLayout> 

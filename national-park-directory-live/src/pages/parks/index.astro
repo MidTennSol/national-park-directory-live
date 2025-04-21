@@ -1,0 +1,166 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ParkCard from '../../components/ParkCard.astro';
+import { fetchNationalParks } from '../../utils/airtable.js';
+
+// Define the Park interface
+interface Park {
+  id: string;
+  name: string;
+  description: string;
+  summary?: string; // Make summary optional
+  imageUrl: string;
+  wikimediaImages?: string | string[];
+  slug: string;
+  states: string;
+  designation: string;
+  [key: string]: any; // Allow for other properties
+}
+
+// Get the current page from the URL query parameter
+const page = parseInt(Astro.url.searchParams.get('page') || '1');
+const parksPerPage = 12; // Number of parks to show per page
+
+// Fetch all parks from Airtable - pagination is handled automatically
+console.log('Parks index: Fetching all parks...');
+const allParks = await fetchNationalParks({
+  sort: 'Name',
+  view: 'Grid view',
+  filterByFormula: ''
+}) as Park[];
+console.log(`Parks index: Fetched ${allParks.length} parks total`);
+
+// Calculate total number of pages
+const totalPages = Math.ceil(allParks.length / parksPerPage);
+
+// Ensure current page is within valid range
+const currentPage = Math.max(1, Math.min(page, totalPages));
+
+// Group parks by first letter for alphabetical listing
+const parksByLetter = allParks.reduce<Record<string, Park[]>>((acc, park) => {
+  if (!park.name) return acc;
+  
+  const firstLetter = park.name.charAt(0).toUpperCase();
+  if (!acc[firstLetter]) {
+    acc[firstLetter] = [];
+  }
+  acc[firstLetter].push(park);
+  return acc;
+}, {});
+
+// Get sorted letters
+const letters = Object.keys(parksByLetter).sort();
+console.log(`Parks index: Grouped parks under ${letters.length} letters`);
+
+// Get the slice of parks for the current page
+// First, flatten the parks by letter into a single array
+const flattenedParks = letters.flatMap(letter => parksByLetter[letter]);
+// Then slice based on the current page
+const startIndex = (currentPage - 1) * parksPerPage;
+const parksForPage = flattenedParks.slice(startIndex, startIndex + parksPerPage);
+
+// Group the paged parks by first letter again
+const pagedParksByLetter = parksForPage.reduce<Record<string, Park[]>>((acc, park) => {
+  if (!park.name) return acc;
+  
+  const firstLetter = park.name.charAt(0).toUpperCase();
+  if (!acc[firstLetter]) {
+    acc[firstLetter] = [];
+  }
+  acc[firstLetter].push(park);
+  return acc;
+}, {});
+
+// Get sorted letters for the current page
+const pagedLetters = Object.keys(pagedParksByLetter).sort();
+---
+
+<BaseLayout title="All National Parks - National Park Directory">
+  <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <h1 class="text-4xl md:text-5xl font-bold text-center my-16">National Parks Directory</h1>
+    
+    <div class="max-w-3xl mx-auto text-center mb-12">
+      <p class="text-lg text-gray-700">Explore all national parks, monuments, historic sites, and more across the United States.</p>
+      <p class="text-sm text-gray-500 mt-2">Showing {parksForPage.length} of {allParks.length} parks and sites</p>
+    </div>
+    
+    <!-- Alphabet Navigation -->
+    <div class="mb-12 bg-white rounded-lg shadow-md p-4">
+      <div class="flex flex-wrap justify-center gap-2">
+        {letters.map(letter => (
+          <a 
+            href={`#section-${letter}`}
+            class="w-8 h-8 flex items-center justify-center rounded-full bg-green-100 text-green-800 hover:bg-green-200 transition-colors"
+          >
+            {letter}
+          </a>
+        ))}
+      </div>
+    </div>
+    
+    <!-- Parks Listing -->
+    <div class="space-y-16">
+      {pagedLetters.map(letter => (
+        <section id={`section-${letter}`} class="scroll-mt-24">
+          <h2 class="text-3xl font-bold text-gray-900 mb-8 border-b border-gray-200 pb-2">{letter} <span class="text-sm font-normal text-gray-500">({pagedParksByLetter[letter].length} parks)</span></h2>
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {pagedParksByLetter[letter].map((park: Park) => (
+              <ParkCard park={park} />
+            ))}
+          </div>
+        </section>
+      ))}
+    </div>
+    
+    <!-- Pagination -->
+    {totalPages > 1 && (
+      <div class="mt-16 flex justify-center">
+        <div class="flex items-center gap-2">
+          <!-- Previous Page Button -->
+          {currentPage > 1 ? (
+            <a 
+              href={`/parks?page=${currentPage - 1}`} 
+              class="px-4 py-2 bg-green-100 text-green-800 rounded-md hover:bg-green-200 transition-colors"
+            >
+              &larr; Previous
+            </a>
+          ) : (
+            <span class="px-4 py-2 bg-gray-100 text-gray-400 rounded-md cursor-not-allowed">
+              &larr; Previous
+            </span>
+          )}
+          
+          <!-- Page Numbers -->
+          <div class="flex gap-2">
+            {Array.from({ length: totalPages }, (_, i) => i + 1).map(pageNum => (
+              <a 
+                href={`/parks?page=${pageNum}`}
+                class={`w-8 h-8 flex items-center justify-center rounded-md transition-colors ${
+                  pageNum === currentPage 
+                    ? 'bg-green-800 text-white' 
+                    : 'bg-green-100 text-green-800 hover:bg-green-200'
+                }`}
+              >
+                {pageNum}
+              </a>
+            ))}
+          </div>
+          
+          <!-- Next Page Button -->
+          {currentPage < totalPages ? (
+            <a 
+              href={`/parks?page=${currentPage + 1}`} 
+              class="px-4 py-2 bg-green-100 text-green-800 rounded-md hover:bg-green-200 transition-colors"
+            >
+              Next &rarr;
+            </a>
+          ) : (
+            <span class="px-4 py-2 bg-gray-100 text-gray-400 rounded-md cursor-not-allowed">
+              Next &rarr;
+            </span>
+          )}
+        </div>
+      </div>
+    )}
+  </div>
+</BaseLayout> 

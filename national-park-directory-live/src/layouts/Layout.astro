@@ -1,0 +1,142 @@
+---
+import '../styles/global.css';
+
+interface Props {
+	title?: string;
+}
+
+const { title = "National Park Directory" } = Astro.props;
+
+// Define navigation items
+const mainNavItems = [
+	{ text: 'Home', url: '/' },
+	{ text: 'About', url: '/about' },
+	{ text: 'Parks', url: '/parks' },
+	{ text: 'Contact', url: '/contact' },
+	{ text: 'Blog', url: '/blog' },
+	{ text: 'FAQs', url: '/faqs' }
+];
+
+const footerNavItems = [
+	...mainNavItems,
+	{ text: 'Privacy Policy', url: '/privacy-policy' },
+	{ text: 'Terms', url: '/terms' },
+	{ text: 'Sitemap', url: '/sitemap' }
+];
+---
+
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<meta name="generator" content={Astro.generator} />
+		<title>{title}</title>
+		
+		<!-- Image fallback script -->
+		<script>
+			document.addEventListener('DOMContentLoaded', () => {
+				// Set a class on the body when DOM is loaded
+				document.body.classList.add('dom-loaded');
+				
+				// Handle broken images
+				document.querySelectorAll('img').forEach(img => {
+					img.addEventListener('error', function() {
+						console.log('Image failed to load:', this.src);
+						if (!this.src.includes('park-placeholder.svg')) {
+							this.src = '/images/park-placeholder.svg';
+							this.classList.add('fallback-applied');
+						}
+					});
+					
+					// Check images that might already be in error state
+					if (img.complete && (img.naturalWidth === 0 || img.naturalHeight === 0)) {
+						console.log('Image already in error state:', img.src);
+						if (!img.src.includes('park-placeholder.svg')) {
+							img.src = '/images/park-placeholder.svg';
+							img.classList.add('fallback-applied');
+						}
+					}
+				});
+			});
+		</script>
+	</head>
+	<body class="bg-white min-h-screen flex flex-col">
+		<header class="bg-green-800 text-white py-4 shadow-md">
+			<div class="container mx-auto px-4 sm:px-6 lg:px-8">
+				<div class="flex justify-between items-center">
+					<a href="/" class="text-2xl font-bold">National Park Directory</a>
+					
+					<!-- Desktop Navigation -->
+					<nav class="hidden md:block">
+						<ul class="flex space-x-6">
+							{mainNavItems.map(item => (
+								<li>
+									<a href={item.url} class="hover:text-green-200 transition-colors">{item.text}</a>
+								</li>
+							))}
+						</ul>
+					</nav>
+					
+					<!-- Mobile Menu Button -->
+					<button id="mobile-menu-button" class="md:hidden text-white">
+						<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+						</svg>
+					</button>
+				</div>
+				
+				<!-- Mobile Navigation -->
+				<div id="mobile-menu" class="hidden md:hidden mt-4 pb-2">
+					<ul class="space-y-2">
+						{mainNavItems.map(item => (
+							<li>
+								<a href={item.url} class="block py-2 hover:text-green-200 transition-colors">{item.text}</a>
+							</li>
+						))}
+					</ul>
+				</div>
+			</div>
+		</header>
+		
+		<main class="flex-grow">
+			<slot />
+		</main>
+		
+		<footer class="bg-gray-100 py-8 mt-12">
+			<div class="container mx-auto px-4 sm:px-6 lg:px-8">
+				<div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+					<div>
+						<h3 class="font-bold text-lg mb-4">National Park Directory</h3>
+						<p class="text-gray-600">Discover the beauty of national parks across the country.</p>
+					</div>
+					<div>
+						<h3 class="font-bold text-lg mb-4">Quick Links</h3>
+						<ul class="space-y-2">
+							{footerNavItems.map(item => (
+								<li>
+									<a href={item.url} class="text-gray-600 hover:text-green-800">{item.text}</a>
+								</li>
+							))}
+						</ul>
+					</div>
+					<div>
+						<h3 class="font-bold text-lg mb-4">Connect</h3>
+						<p class="text-gray-600">Stay updated with our latest park additions and features.</p>
+					</div>
+				</div>
+				<div class="border-t border-gray-200 mt-8 pt-6 text-center text-gray-500">
+					<p>&copy; {new Date().getFullYear()} National Park Directory. All rights reserved.</p>
+				</div>
+			</div>
+		</footer>
+		
+		<script>
+			document.getElementById('mobile-menu-button')?.addEventListener('click', () => {
+				const mobileMenu = document.getElementById('mobile-menu');
+				mobileMenu?.classList.toggle('hidden');
+			});
+		</script>
+	</body>
+</html> 

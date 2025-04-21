@@ -1,0 +1,77 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ParkCard from '../components/ParkCard.astro';
+
+// Create a test park with the Abraham Lincoln Birthplace data
+const testPark = {
+  id: "test-park",
+  name: "Abraham Lincoln Birthplace National Historical Park",
+  description: "For over a century people from around the world have come to rural Central Kentucky to honor the humble beginnings of our 16th president.",
+  summary: "For over a century people from around the world have come to rural Central Kentucky to honor the humble beginnings of our...",
+  imageUrl: "",
+  wikimediaImages: `Image URL used: https://FileAbraham Lincoln Birthplace NHS.jpg
+https://upload.wikimedia.org/wikipedia/commons/0/04/Abraham_Lincoln_Birthplace_NHS.jpg
+FileLincoln Birthplace Memorial.JPG
+https://upload.wikimedia.org/wikipedia/commons/4/44/Lincoln_Birthplace_Memorial.JPG
+FileSinking Springs.JPG
+https://upload.wikimedia.org/wikipedia/commons/7/7f/Sinking_Springs.JPG
+FileAbraham Lincoln Birthplace Memorial.jpg
+https://upload.wikimedia.org/wikipedia/commons/3/33/Abraham_Lincoln_Birthplace_Memorial.jpg
+FileLincoln Birthplace Temple.JPG
+https://upload.wikimedia.org/wikipedia/commons/5/50/Lincoln_Birthplace_Temple.JPG`,
+  slug: "abraham-lincoln-birthplace",
+  states: "Kentucky",
+  designation: "National Historical Park",
+};
+
+// Create a second test park with array image data
+const arrayTestPark = {
+  id: "array-test-park",
+  name: "Abraham Lincoln Birthplace (Array Test)",
+  description: "Testing with array of image URLs",
+  summary: "Testing with array of image URLs",
+  imageUrl: "",
+  wikimediaImages: [
+    "https://upload.wikimedia.org/wikipedia/commons/0/04/Abraham_Lincoln_Birthplace_NHS.jpg",
+    "https://upload.wikimedia.org/wikipedia/commons/4/44/Lincoln_Birthplace_Memorial.JPG",
+    "https://upload.wikimedia.org/wikipedia/commons/7/7f/Sinking_Springs.JPG"
+  ],
+  slug: "abraham-lincoln-birthplace-array",
+  states: "Kentucky",
+  designation: "National Historical Park (Array Test)",
+};
+---
+
+<BaseLayout title="Image Test">
+  <div class="container mx-auto px-4 py-12">
+    <h1 class="text-4xl font-bold text-center mb-12">Image URL Testing</h1>
+    
+    <div class="max-w-3xl mx-auto mb-16">
+      <h2 class="text-2xl font-bold mb-6">String Format Test</h2>
+      <p class="mb-6">This tests how the ParkCard component handles a string with multiple image URLs:</p>
+      
+      <div class="mb-8">
+        <ParkCard park={testPark} />
+      </div>
+      
+      <div class="p-4 bg-yellow-50 rounded-lg">
+        <h3 class="font-semibold mb-2">Raw String Value:</h3>
+        <pre class="text-xs whitespace-pre-wrap">{testPark.wikimediaImages}</pre>
+      </div>
+    </div>
+    
+    <div class="max-w-3xl mx-auto">
+      <h2 class="text-2xl font-bold mb-6">Array Format Test</h2>
+      <p class="mb-6">This tests how the ParkCard component handles an array of image URLs:</p>
+      
+      <div class="mb-8">
+        <ParkCard park={arrayTestPark} />
+      </div>
+      
+      <div class="p-4 bg-yellow-50 rounded-lg">
+        <h3 class="font-semibold mb-2">Raw Array Value:</h3>
+        <pre class="text-xs whitespace-pre-wrap">{JSON.stringify(arrayTestPark.wikimediaImages, null, 2)}</pre>
+      </div>
+    </div>
+  </div>
+</BaseLayout> 

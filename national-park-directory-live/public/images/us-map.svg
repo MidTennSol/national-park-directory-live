@@ -1,0 +1,125 @@
+<svg width="1600" height="900" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1600" height="900" fill="#f0f5ff"/>
+  
+  <!-- US Map -->
+  <g transform="translate(100, 100) scale(1.4)">
+    <!-- Continental US -->
+    <path d="M 250,150
+             C 300,145 350,140 400,138
+             C 450,136 500,135 550,137
+             C 600,140 650,145 700,155
+             C 750,165 800,180 850,205
+             C 900,230 920,270 930,320
+             C 940,370 935,390 920,410
+             C 905,430 880,440 850,445
+             C 820,450 790,445 760,435
+             C 730,425 700,410 670,395
+             C 640,380 610,365 580,350
+             C 550,335 520,320 490,310
+             C 460,300 430,295 400,295
+             C 370,295 340,300 310,315
+             C 280,330 270,350 260,380
+             C 250,410 250,430 255,450
+             C 260,470 270,485 290,495
+             L 250,500
+             L 210,495
+             C 230,485 240,470 245,450
+             C 250,430 250,410 240,380
+             C 230,350 220,330 190,315
+             C 160,300 130,295 100,295
+             C 70,295 40,300 10,310
+             L 10,150
+             Z" 
+        fill="#d0e8ff" stroke="#2563eb" stroke-width="2"/>
+             
+    <!-- Alaska -->
+    <path d="M 50,410
+             C 70,405 90,402 110,400
+             C 130,398 150,397 170,400
+             C 190,403 210,410 220,425
+             C 230,440 230,460 225,480
+             C 220,500 210,510 195,515
+             C 180,520 160,515 140,510
+             C 120,505 100,500 80,500
+             C 60,500 40,505 20,510
+             L 20,460
+             C 30,450 40,440 45,425
+             C 50,410 50,410 50,410
+             Z"
+        fill="#d0e8ff" stroke="#2563eb" stroke-width="2"/>
+        
+    <!-- Hawaii -->
+    <circle cx="200" cy="450" r="20" fill="#d0e8ff" stroke="#2563eb" stroke-width="2"/>
+    <circle cx="220" cy="460" r="15" fill="#d0e8ff" stroke="#2563eb" stroke-width="2"/>
+    <circle cx="240" cy="465" r="10" fill="#d0e8ff" stroke="#2563eb" stroke-width="2"/>
+    <circle cx="255" cy="470" r="7" fill="#d0e8ff" stroke="#2563eb" stroke-width="2"/>
+    <circle cx="265" cy="475" r="5" fill="#d0e8ff" stroke="#2563eb" stroke-width="2"/>
+    
+    <!-- State divisions (simplified) -->
+    <path d="M 100,295 L 150,150" fill="none" stroke="#2563eb" stroke-width="1" opacity="0.5"/>
+    <path d="M 200,295 L 250,150" fill="none" stroke="#2563eb" stroke-width="1" opacity="0.5"/>
+    <path d="M 300,295 L 350,150" fill="none" stroke="#2563eb" stroke-width="1" opacity="0.5"/>
+    <path d="M 400,295 L 450,150" fill="none" stroke="#2563eb" stroke-width="1" opacity="0.5"/>
+    <path d="M 500,350 L 550,150" fill="none" stroke="#2563eb" stroke-width="1" opacity="0.5"/>
+    <path d="M 600,350 L 650,150" fill="none" stroke="#2563eb" stroke-width="1" opacity="0.5"/>
+    <path d="M 700,395 L 750,150" fill="none" stroke="#2563eb" stroke-width="1" opacity="0.5"/>
+    <path d="M 800,445 L 850,205" fill="none" stroke="#2563eb" stroke-width="1" opacity="0.5"/>
+    
+    <path d="M 75,225 L 850,225" fill="none" stroke="#2563eb" stroke-width="1" opacity="0.5"/>
+    <path d="M 50,295 L 800,295" fill="none" stroke="#2563eb" stroke-width="1" opacity="0.5"/>
+    <path d="M 100,350 L 750,350" fill="none" stroke="#2563eb" stroke-width="1" opacity="0.5"/>
+    <path d="M 150,400 L 700,400" fill="none" stroke="#2563eb" stroke-width="1" opacity="0.5"/>
+    <path d="M 200,450 L 650,450" fill="none" stroke="#2563eb" stroke-width="1" opacity="0.5"/>
+  </g>
+  
+  <!-- Title -->
+  <text x="800" y="700" font-family="Arial, sans-serif" font-size="60" fill="#2563eb" text-anchor="middle" font-weight="bold">
+    United States
+  </text>
+  <text x="800" y="770" font-family="Arial, sans-serif" font-size="40" fill="#64748b" text-anchor="middle">
+    National Parks by State
+  </text>
+  
+  <!-- Region Labels -->
+  <g font-family="Arial, sans-serif" font-size="24" font-weight="bold">
+    <text x="250" y="200" fill="#1e40af" text-anchor="middle">Northeast</text>
+    <text x="400" y="350" fill="#166534" text-anchor="middle">Midwest</text>
+    <text x="600" y="450" fill="#b45309" text-anchor="middle">South</text>
+    <text x="900" y="300" fill="#b91c1c" text-anchor="middle">West</text>
+    <text x="200" y="480" fill="#7e22ce" text-anchor="middle">Pacific</text>
+    <text x="1000" y="530" fill="#7e22ce" text-anchor="middle">Territories</text>
+  </g>
+  
+  <!-- Compass Rose -->
+  <g transform="translate(1400, 250)">
+    <circle cx="0" cy="0" r="60" fill="#f0f9ff" stroke="#2563eb" stroke-width="2"/>
+    <path d="M0,-45 L8,-10 L0,-20 L-8,-10 Z" fill="#2563eb"/>
+    <path d="M0,45 L8,10 L0,20 L-8,10 Z" fill="#2563eb"/>
+    <path d="M-45,0 L-10,8 L-20,0 L-10,-8 Z" fill="#2563eb"/>
+    <path d="M45,0 L10,8 L20,0 L10,-8 Z" fill="#2563eb"/>
+    <text x="0" y="-30" font-family="Arial, sans-serif" font-size="18" fill="#2563eb" text-anchor="middle">N</text>
+    <text x="0" y="38" font-family="Arial, sans-serif" font-size="18" fill="#2563eb" text-anchor="middle">S</text>
+    <text x="-33" y="5" font-family="Arial, sans-serif" font-size="18" fill="#2563eb" text-anchor="middle">W</text>
+    <text x="33" y="5" font-family="Arial, sans-serif" font-size="18" fill="#2563eb" text-anchor="middle">E</text>
+  </g>
+  
+  <!-- Decorative Elements -->
+  <g transform="translate(150, 650)">
+    <!-- Mountains -->
+    <path d="M0,100 L50,0 L100,100 Z" fill="#166534" opacity="0.6"/>
+    <path d="M70,100 L120,10 L170,100 Z" fill="#166534" opacity="0.7"/>
+    <path d="M140,100 L190,20 L240,100 Z" fill="#166534" opacity="0.8"/>
+  </g>
+  
+  <g transform="translate(1250, 650)">
+    <!-- Trees -->
+    <circle cx="0" cy="30" r="25" fill="#166534" opacity="0.6"/>
+    <rect x="-5" y="30" width="10" height="30" fill="#7c2d12" opacity="0.7"/>
+    
+    <circle cx="40" cy="20" r="20" fill="#166534" opacity="0.7"/>
+    <rect x="35" y="20" width="10" height="25" fill="#7c2d12" opacity="0.8"/>
+    
+    <circle cx="80" cy="25" r="23" fill="#166534" opacity="0.8"/>
+    <rect x="75" y="25" width="10" height="28" fill="#7c2d12" opacity="0.9"/>
+  </g>
+</svg> 

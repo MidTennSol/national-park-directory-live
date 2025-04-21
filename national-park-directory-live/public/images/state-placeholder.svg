@@ -1,0 +1,45 @@
+<svg width="800" height="600" xmlns="http://www.w3.org/2000/svg">
+  <rect width="800" height="600" fill="#f0f5ff"/>
+  
+  <!-- US Map Outline -->
+  <g fill="#a4c2f4" stroke="#5b8def" stroke-width="2">
+    <!-- Simplified US map shape -->
+    <path d="M200,200 L250,180 L400,190 L450,150 L600,180 L650,250 L600,300 L550,350 L450,380 L350,370 L250,350 L200,300 Z"/>
+    
+    <!-- Interior state borders -->
+    <path d="M300,200 L320,350" fill="none" />
+    <path d="M400,190 L380,380" fill="none" />
+    <path d="M500,170 L470,380" fill="none" />
+    <path d="M250,270 L600,280" fill="none" />
+  </g>
+  
+  <!-- Text -->
+  <text x="400" y="450" font-family="Arial, sans-serif" font-size="24" fill="#336699" text-anchor="middle">
+    State Information
+  </text>
+  
+  <!-- Compass rose -->
+  <g transform="translate(650, 450)">
+    <circle cx="0" cy="0" r="30" fill="#e6eeff" stroke="#5b8def"/>
+    <path d="M0,-25 L5,-5 L0,-10 L-5,-5 Z" fill="#5b8def"/>
+    <path d="M0,25 L5,5 L0,10 L-5,5 Z" fill="#5b8def"/>
+    <path d="M-25,0 L-5,5 L-10,0 L-5,-5 Z" fill="#5b8def"/>
+    <path d="M25,0 L5,5 L10,0 L5,-5 Z" fill="#5b8def"/>
+    <text x="0" y="-15" font-family="Arial, sans-serif" font-size="10" fill="#336699" text-anchor="middle">N</text>
+    <text x="0" y="20" font-family="Arial, sans-serif" font-size="10" fill="#336699" text-anchor="middle">S</text>
+    <text x="-15" y="4" font-family="Arial, sans-serif" font-size="10" fill="#336699" text-anchor="middle">W</text>
+    <text x="15" y="4" font-family="Arial, sans-serif" font-size="10" fill="#336699" text-anchor="middle">E</text>
+  </g>
+  
+  <!-- Geographic icons -->
+  <g fill="#78a642">
+    <!-- Mountains -->
+    <path d="M150,300 L170,260 L190,300 Z"/>
+    <path d="M120,320 L150,260 L180,320 Z"/>
+    <path d="M170,330 L200,280 L230,330 Z"/>
+  </g>
+  
+  <!-- Rivers -->
+  <path d="M100,200 Q150,250 130,300 Q120,350 150,380 Q170,420 150,450" stroke="#5b8def" stroke-width="3" fill="none"/>
+  <path d="M700,200 Q650,250 670,300 Q680,350 650,380 Q630,420 650,450" stroke="#5b8def" stroke-width="3" fill="none"/>
+</svg> 

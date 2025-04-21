@@ -1,0 +1,87 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+// Get environment variables
+const AIRTABLE_TOKEN = import.meta.env.AIRTABLE_TOKEN;
+const AIRTABLE_BASE_ID = import.meta.env.AIRTABLE_BASE_ID;
+const AIRTABLE_TABLE_NAME = import.meta.env.AIRTABLE_TABLE_NAME;
+
+// Test response data
+let responseStatus = "Not run yet";
+let responseText = "No data";
+let errorMessage = "";
+
+// Build the API URL
+const url = `https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/${AIRTABLE_TABLE_NAME}?maxRecords=1`;
+
+try {
+  console.log("Direct API test - making request to:", url);
+  const response = await fetch(url, {
+    headers: {
+      'Authorization': `Bearer ${AIRTABLE_TOKEN}`,
+      'Content-Type': 'application/json'
+    }
+  });
+  
+  responseStatus = `${response.status} ${response.statusText}`;
+  console.log("Direct API test - response status:", responseStatus);
+  
+  if (response.ok) {
+    const data = await response.json();
+    responseText = JSON.stringify(data, null, 2);
+    console.log("Direct API test - data received:", data.records ? data.records.length : 0, "records");
+  } else {
+    // Try to get the error details from the response
+    try {
+      const errorData = await response.text();
+      errorMessage = `API returned error: ${response.status} ${response.statusText}\nDetails: ${errorData}`;
+      console.error("Direct API test - error details:", errorData);
+    } catch (textError) {
+      errorMessage = `API returned error: ${response.status} ${response.statusText}`;
+      console.error("Direct API test - couldn't parse error details:", textError);
+    }
+  }
+} catch (error: unknown) {
+  if (error instanceof Error) {
+    errorMessage = `Exception: ${error.message}`;
+    console.error("Direct API test - exception:", error);
+  } else {
+    errorMessage = "Unknown error occurred";
+    console.error("Direct API test - unknown exception type:", error);
+  }
+}
+---
+
+<BaseLayout title="Airtable API Test">
+  <div class="container mx-auto px-4 py-12">
+    <h1 class="text-3xl font-bold mb-4">Airtable API Test</h1>
+    
+    <div class="bg-white p-6 rounded-lg shadow-md mb-8">
+      <h2 class="text-xl font-semibold mb-4">API Connection Details</h2>
+      
+      <ul class="space-y-2 mb-4">
+        <li><strong>API URL:</strong> {url}</li>
+        <li><strong>Base ID:</strong> {AIRTABLE_BASE_ID}</li>
+        <li><strong>Table Name:</strong> {AIRTABLE_TABLE_NAME}</li>
+        <li><strong>API Token:</strong> {AIRTABLE_TOKEN ? `${AIRTABLE_TOKEN.substring(0, 10)}...` : 'Not available'}</li>
+      </ul>
+      
+      <div class="mt-4">
+        <h3 class="text-lg font-medium mb-2">Response Status: <span class={responseStatus.startsWith("2") ? "text-green-600" : "text-red-600"}>{responseStatus}</span></h3>
+        
+        {errorMessage && (
+          <div class="bg-red-50 border border-red-200 p-4 rounded text-red-700 mb-4">
+            {errorMessage}
+          </div>
+        )}
+      </div>
+    </div>
+    
+    {responseText !== "No data" && (
+      <div class="bg-white p-6 rounded-lg shadow-md">
+        <h2 class="text-xl font-semibold mb-4">API Response</h2>
+        <pre class="bg-gray-100 p-4 rounded overflow-auto max-h-96">{responseText}</pre>
+      </div>
+    )}
+  </div>
+</BaseLayout> 

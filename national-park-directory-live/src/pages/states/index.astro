@@ -1,0 +1,393 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { fetchNationalParks } from '../../utils/airtable.js';
+
+// Define a type for state data
+interface StateData {
+  code: string;
+  name: string;
+  count: number;
+}
+
+// Define a mapping of state abbreviations to full names
+const stateNames: Record<string, string> = {
+  'AL': 'Alabama',
+  'AK': 'Alaska',
+  'AZ': 'Arizona',
+  'AR': 'Arkansas',
+  'CA': 'California',
+  'CO': 'Colorado',
+  'CT': 'Connecticut',
+  'DE': 'Delaware',
+  'FL': 'Florida',
+  'GA': 'Georgia',
+  'HI': 'Hawaii',
+  'ID': 'Idaho',
+  'IL': 'Illinois',
+  'IN': 'Indiana',
+  'IA': 'Iowa',
+  'KS': 'Kansas',
+  'KY': 'Kentucky',
+  'LA': 'Louisiana',
+  'ME': 'Maine',
+  'MD': 'Maryland',
+  'MA': 'Massachusetts',
+  'MI': 'Michigan',
+  'MN': 'Minnesota',
+  'MS': 'Mississippi',
+  'MO': 'Missouri',
+  'MT': 'Montana',
+  'NE': 'Nebraska',
+  'NV': 'Nevada',
+  'NH': 'New Hampshire',
+  'NJ': 'New Jersey',
+  'NM': 'New Mexico',
+  'NY': 'New York',
+  'NC': 'North Carolina',
+  'ND': 'North Dakota',
+  'OH': 'Ohio',
+  'OK': 'Oklahoma',
+  'OR': 'Oregon',
+  'PA': 'Pennsylvania',
+  'RI': 'Rhode Island',
+  'SC': 'South Carolina',
+  'SD': 'South Dakota',
+  'TN': 'Tennessee',
+  'TX': 'Texas',
+  'UT': 'Utah',
+  'VT': 'Vermont',
+  'VA': 'Virginia',
+  'WA': 'Washington',
+  'WV': 'West Virginia',
+  'WI': 'Wisconsin',
+  'WY': 'Wyoming',
+  'DC': 'District of Columbia',
+  'AS': 'American Samoa',
+  'GU': 'Guam',
+  'MP': 'Northern Mariana Islands',
+  'PR': 'Puerto Rico',
+  'VI': 'U.S. Virgin Islands'
+};
+
+// Fetch all parks
+const allParks = await fetchNationalParks({
+  sort: 'Name',
+  view: 'Grid view',
+  filterByFormula: ''
+});
+
+// Get unique states and count parks in each
+const statesWithCounts = new Map<string, number>();
+
+allParks.forEach(park => {
+  if (park.states) {
+    // Handle comma-separated states
+    const stateList = park.states.split(',').map((s: string) => s.trim());
+    stateList.forEach((state: string) => {
+      statesWithCounts.set(state, (statesWithCounts.get(state) || 0) + 1);
+    });
+  }
+  
+  // Also check statesMulti if available
+  if (park.statesMulti && Array.isArray(park.statesMulti)) {
+    park.statesMulti.forEach((state: string) => {
+      statesWithCounts.set(state, (statesWithCounts.get(state) || 0) + 1);
+    });
+  }
+});
+
+// Convert to array for rendering
+const stateData = Array.from(statesWithCounts.entries())
+  .map(([code, count]) => ({
+    code,
+    name: stateNames[code] || code,
+    count
+  }))
+  .sort((a, b) => a.name.localeCompare(b.name));
+
+// Group states by region
+const regions = {
+  'Northeast': ['CT', 'DE', 'ME', 'MD', 'MA', 'NH', 'NJ', 'NY', 'PA', 'RI', 'VT'],
+  'Midwest': ['IL', 'IN', 'IA', 'KS', 'MI', 'MN', 'MO', 'NE', 'ND', 'OH', 'SD', 'WI'],
+  'South': ['AL', 'AR', 'FL', 'GA', 'KY', 'LA', 'MS', 'NC', 'SC', 'TN', 'VA', 'WV', 'DC'],
+  'West': ['AK', 'AZ', 'CA', 'CO', 'HI', 'ID', 'MT', 'NV', 'NM', 'OR', 'UT', 'WA', 'WY'],
+  'Territories': ['AS', 'GU', 'MP', 'PR', 'VI']
+};
+
+// Group states by region for display
+const statesByRegion = Object.entries(regions).map(([region, codes]) => {
+  const states = stateData.filter(state => codes.includes(state.code));
+  return {
+    region,
+    states
+  };
+});
+
+// Calculate total number of states with parks
+const totalStatesWithParks = statesWithCounts.size;
+
+// Define colors for different regions
+const regionColors = {
+  'Northeast': 'blue',
+  'Midwest': 'green',
+  'South': 'amber',
+  'West': 'red',
+  'Territories': 'purple'
+};
+---
+
+<BaseLayout title="Explore National Parks by State - National Park Directory">
+  <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div class="mb-8">
+      <a href="/" class="text-green-800 hover:underline">Home</a> &raquo; 
+      <span class="text-gray-600">States</span>
+    </div>
+    
+    <!-- States Header -->
+    <div class="bg-white rounded-lg shadow-md overflow-hidden mb-8">
+      <div class="relative h-64 md:h-80">
+        <!-- Placeholder background -->
+        <div class="absolute inset-0 flex items-center justify-center bg-blue-50">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-32 w-32 text-blue-200 fill-current" viewBox="0 0 20 20" fill="currentColor">
+            <path d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z" />
+          </svg>
+        </div>
+        
+        <img 
+          src="/images/us-map.svg"
+          alt="Map of United States" 
+          class="state-banner-image w-full h-full object-cover relative z-10"
+          onload="this.classList.add('image-loaded'); this.parentElement.querySelector('div').classList.add('hidden');"
+          onerror="this.src='/images/state-placeholder.svg'; this.classList.add('fallback-applied');"
+        />
+        <div class="absolute inset-0 bg-black bg-opacity-40 flex items-end z-20">
+          <div class="p-6 text-white">
+            <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold">Explore National Parks by State</h1>
+            <p class="text-xl mt-2">Find national parks across {totalStatesWithParks} states and territories</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Introduction -->
+    <div class="bg-white rounded-lg shadow-md p-6 mb-8">
+      <h2 class="text-2xl font-bold text-gray-900 mb-4">Find Parks in Your State</h2>
+      <p class="text-gray-700 mb-4">
+        National parks, monuments, historic sites, and other protected areas can be found throughout the United States.
+        Select a state below to explore national park sites in that area. From iconic landscapes to significant
+        historical locations, each state offers unique experiences for visitors.
+      </p>
+      
+      <!-- Alphabet quick links -->
+      <div class="mt-6">
+        <div class="text-sm text-gray-500 mb-2">Quick jump to states:</div>
+        <div class="flex flex-wrap gap-1">
+          {Array.from('ABCDEFGHIJKLMNOPQRSTUVWXYZ').map(letter => {
+            // Find if there are states starting with this letter
+            const hasStates = stateData.some(state => state.name.startsWith(letter));
+            return (
+              <a 
+                href={`#section-${letter}`} 
+                class={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium ${hasStates ? 'bg-blue-50 text-blue-700 hover:bg-blue-100' : 'bg-gray-100 text-gray-400 cursor-not-allowed'}`}
+                {...(!hasStates && { tabindex: "-1", 'aria-disabled': "true" })}
+              >
+                {letter}
+              </a>
+            );
+          })}
+        </div>
+      </div>
+    </div>
+    
+    <!-- Quick state selector - Small screen alternative -->
+    <div class="mb-8 md:hidden">
+      <label for="state-select" class="block text-gray-700 font-medium mb-2">Quick Select:</label>
+      <select id="state-select" class="w-full border-gray-300 rounded-md shadow-sm focus:border-green-500 focus:ring focus:ring-green-200 focus:ring-opacity-50">
+        <option value="">Select a state...</option>
+        {stateData.map((state: StateData) => (
+          <option value={state.code}>{state.name} ({state.count})</option>
+        ))}
+      </select>
+    </div>
+    
+    <!-- State Listings by Region -->
+    {statesByRegion.map(({ region, states }) => {
+      const colorKey = regionColors[region as keyof typeof regionColors] || 'blue';
+      const bgColor = `bg-${colorKey}-50`;
+      const textColor = `text-${colorKey}-800`;
+      const borderColor = `border-${colorKey}-200`;
+      
+      return (
+        <div class="mb-10">
+          <div class={`flex items-center ${bgColor} ${textColor} rounded-t-lg px-4 py-2 border ${borderColor}`}>
+            <h2 class="text-2xl font-bold">{region}</h2>
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4 bg-white border border-t-0 border-gray-200 rounded-b-lg">
+            {states.length > 0 ? (
+              states.map((state: StateData) => (
+                <a 
+                  href={`/states/${state.code}`} 
+                  class="block bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow p-4 border border-gray-100 hover:border-green-200"
+                  id={`state-${state.code}`}
+                >
+                  <div class="flex items-center">
+                    <div class={`w-12 h-12 ${bgColor} rounded-lg flex items-center justify-center mr-3 border ${borderColor}`}>
+                      <span class={`font-bold ${textColor}`}>{state.code}</span>
+                    </div>
+                    <div>
+                      <h3 class="font-medium text-gray-900">{state.name}</h3>
+                      <p class="text-sm text-gray-600">{state.count} park{state.count !== 1 ? 's' : ''}</p>
+                    </div>
+                  </div>
+                </a>
+              ))
+            ) : (
+              <p class="text-gray-500 italic col-span-full">No parks found in this region</p>
+            )}
+          </div>
+        </div>
+      );
+    })}
+    
+    <!-- Alphabetical State Listings -->
+    <div class="mb-10">
+      <h2 class="text-2xl font-bold text-gray-900 mb-4">States Alphabetically</h2>
+      
+      <!-- Alphabet sticky navigation -->
+      <div class="sticky top-0 z-30 bg-white py-2 border-b border-gray-200 mb-4 shadow-sm">
+        <div class="flex flex-wrap gap-2 justify-center">
+          {Array.from('ABCDEFGHIJKLMNOPQRSTUVWXYZ').map(letter => {
+            const hasStates = stateData.some(state => state.name.startsWith(letter));
+            return (
+              <a 
+                href={`#section-${letter}`} 
+                class={`min-w-[2rem] h-8 rounded flex items-center justify-center text-sm font-medium transition-colors ${
+                  hasStates 
+                    ? 'bg-blue-100 text-blue-800 hover:bg-blue-200' 
+                    : 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                }`}
+                {...(!hasStates && { tabindex: "-1", 'aria-disabled': "true" })}
+              >
+                {letter}
+              </a>
+            );
+          })}
+        </div>
+      </div>
+      
+      {Array.from('ABCDEFGHIJKLMNOPQRSTUVWXYZ').map(letter => {
+        const statesWithLetter = stateData.filter(state => state.name.startsWith(letter));
+        
+        if (statesWithLetter.length === 0) return null;
+        
+        return (
+          <div id={`section-${letter}`} class="mb-8 scroll-mt-16">
+            <div class="bg-blue-700 text-white text-2xl font-bold py-3 px-4 rounded-t-lg">{letter}</div>
+            <div class="bg-white border border-gray-200 border-t-0 rounded-b-lg p-4">
+              <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                {statesWithLetter.map((state: StateData) => (
+                  <a 
+                    href={`/states/${state.code}`}
+                    class="flex items-center p-3 rounded-lg border border-gray-100 hover:border-blue-300 hover:bg-blue-50 transition-colors"
+                  >
+                    <div class="bg-blue-100 text-blue-800 font-bold w-12 h-12 rounded-full flex items-center justify-center mr-3 text-sm">{state.code}</div>
+                    <div>
+                      <div class="font-medium text-gray-900">{state.name}</div>
+                      <div class="text-sm text-blue-700">{state.count} {state.count === 1 ? 'park' : 'parks'}</div>
+                    </div>
+                  </a>
+                ))}
+              </div>
+            </div>
+          </div>
+        );
+      })}
+    </div>
+    
+    <!-- Call to Action -->
+    <div class="bg-green-50 rounded-lg shadow-md p-8 mt-8 text-center">
+      <h2 class="text-2xl font-bold text-green-800 mb-4">Ready to Explore?</h2>
+      <p class="text-gray-700 max-w-2xl mx-auto mb-6">
+        Discover America's natural wonders and cultural heritage through its national park system. 
+        Select your state and start planning your adventure today.
+      </p>
+      <a 
+        href="/parks"
+        class="inline-flex items-center px-6 py-3 bg-green-800 text-white font-medium rounded-md shadow-sm hover:bg-green-700 transition-colors"
+      >
+        View All National Parks
+      </a>
+    </div>
+  </div>
+</BaseLayout>
+
+<script>
+  // Handle state selection for mobile view
+  const stateSelect = document.getElementById('state-select');
+  if (stateSelect) {
+    stateSelect.addEventListener('change', (e) => {
+      const target = e.target as HTMLSelectElement;
+      if (target.value) {
+        window.location.href = `/states/${target.value}`;
+      }
+    });
+  }
+
+  // Add active class to the current letter in the alphabet navigation
+  document.addEventListener('DOMContentLoaded', () => {
+    const alphabetLinks = document.querySelectorAll('a[href^="#section-"]');
+    const sections = document.querySelectorAll('[id^="section-"]');
+    
+    // Update active letter on scroll
+    function highlightCurrentSection() {
+      let currentSectionId = '';
+      const scrollPosition = window.scrollY + 100; // Offset for the sticky header
+      
+      // Find the current section based on scroll position
+      sections.forEach((section) => {
+        const sectionTop = section.getBoundingClientRect().top + window.scrollY;
+        // Use proper type checking for HTML element properties
+        const sectionHeight = (section as HTMLElement).offsetHeight || 0;
+        const sectionBottom = sectionTop + sectionHeight;
+        
+        if (scrollPosition >= sectionTop && scrollPosition < sectionBottom) {
+          currentSectionId = section.id;
+        }
+      });
+      
+      // Update active class on alphabet links
+      alphabetLinks.forEach((link) => {
+        const href = link.getAttribute('href');
+        if (href === `#${currentSectionId}`) {
+          link.classList.add('bg-blue-600', 'text-white');
+          link.classList.remove('bg-blue-100', 'text-blue-800');
+        } else if (link.classList.contains('bg-blue-600')) {
+          link.classList.remove('bg-blue-600', 'text-white');
+          link.classList.add('bg-blue-100', 'text-blue-800');
+        }
+      });
+    }
+    
+    // Listen for scroll events
+    window.addEventListener('scroll', highlightCurrentSection);
+    
+    // Initial highlight
+    highlightCurrentSection();
+  });
+</script>
+
+<style>
+  .image-loaded {
+    opacity: 1;
+  }
+  .state-banner-image.fallback-applied {
+    object-fit: contain !important;
+    padding: 2rem;
+    background-color: #f0f5ff;
+  }
+  
+  /* Smooth scrolling for anchor links */
+  html {
+    scroll-behavior: smooth;
+  }
+</style> 

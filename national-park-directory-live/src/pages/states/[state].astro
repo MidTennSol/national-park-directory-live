@@ -1,0 +1,308 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ParkCard from '../../components/ParkCard.astro';
+import { fetchNationalParks } from '../../utils/airtable.js';
+
+// Define Park type
+interface Park {
+  id: string;
+  name: string;
+  description: string;
+  summary?: string;
+  states: string;
+  statesMulti?: string[];
+  designation: string;
+  imageUrl: string;
+  wikimediaImages?: string | string[];
+  slug: string;
+}
+
+// Define a mapping of state abbreviations to full names - used in multiple places
+export const stateNames: Record<string, string> = {
+  'AL': 'Alabama',
+  'AK': 'Alaska',
+  'AZ': 'Arizona',
+  'AR': 'Arkansas',
+  'CA': 'California',
+  'CO': 'Colorado',
+  'CT': 'Connecticut',
+  'DE': 'Delaware',
+  'FL': 'Florida',
+  'GA': 'Georgia',
+  'HI': 'Hawaii',
+  'ID': 'Idaho',
+  'IL': 'Illinois',
+  'IN': 'Indiana',
+  'IA': 'Iowa',
+  'KS': 'Kansas',
+  'KY': 'Kentucky',
+  'LA': 'Louisiana',
+  'ME': 'Maine',
+  'MD': 'Maryland',
+  'MA': 'Massachusetts',
+  'MI': 'Michigan',
+  'MN': 'Minnesota',
+  'MS': 'Mississippi',
+  'MO': 'Missouri',
+  'MT': 'Montana',
+  'NE': 'Nebraska',
+  'NV': 'Nevada',
+  'NH': 'New Hampshire',
+  'NJ': 'New Jersey',
+  'NM': 'New Mexico',
+  'NY': 'New York',
+  'NC': 'North Carolina',
+  'ND': 'North Dakota',
+  'OH': 'Ohio',
+  'OK': 'Oklahoma',
+  'OR': 'Oregon',
+  'PA': 'Pennsylvania',
+  'RI': 'Rhode Island',
+  'SC': 'South Carolina',
+  'SD': 'South Dakota',
+  'TN': 'Tennessee',
+  'TX': 'Texas',
+  'UT': 'Utah',
+  'VT': 'Vermont',
+  'VA': 'Virginia',
+  'WA': 'Washington',
+  'WV': 'West Virginia',
+  'WI': 'Wisconsin',
+  'WY': 'Wyoming',
+  'DC': 'District of Columbia',
+  'AS': 'American Samoa',
+  'GU': 'Guam',
+  'MP': 'Northern Mariana Islands',
+  'PR': 'Puerto Rico',
+  'VI': 'U.S. Virgin Islands'
+};
+
+// Define state to region mapping
+export const stateRegions: Record<string, string> = {
+  // Northeast
+  'CT': 'Northeast', 'DE': 'Northeast', 'ME': 'Northeast', 'MD': 'Northeast', 
+  'MA': 'Northeast', 'NH': 'Northeast', 'NJ': 'Northeast', 'NY': 'Northeast', 
+  'PA': 'Northeast', 'RI': 'Northeast', 'VT': 'Northeast',
+  // Midwest
+  'IL': 'Midwest', 'IN': 'Midwest', 'IA': 'Midwest', 'KS': 'Midwest', 
+  'MI': 'Midwest', 'MN': 'Midwest', 'MO': 'Midwest', 'NE': 'Midwest', 
+  'ND': 'Midwest', 'OH': 'Midwest', 'SD': 'Midwest', 'WI': 'Midwest',
+  // South
+  'AL': 'South', 'AR': 'South', 'FL': 'South', 'GA': 'South', 
+  'KY': 'South', 'LA': 'South', 'MS': 'South', 'NC': 'South', 
+  'SC': 'South', 'TN': 'South', 'VA': 'South', 'WV': 'South', 'DC': 'South',
+  // West
+  'AK': 'West', 'AZ': 'West', 'CA': 'West', 'CO': 'West', 
+  'HI': 'West', 'ID': 'West', 'MT': 'West', 'NV': 'West', 
+  'NM': 'West', 'OR': 'West', 'UT': 'West', 'WA': 'West', 'WY': 'West',
+  // Territories
+  'AS': 'Territories', 'GU': 'Territories', 'MP': 'Territories', 
+  'PR': 'Territories', 'VI': 'Territories'
+};
+
+// Required for Astro dynamic routes
+export async function getStaticPaths() {
+  const stateNamesCopy = { ...stateNames }; // Create a local copy to use within this function
+  const stateRegionsCopy = { ...stateRegions }; // Create a local copy of stateRegions
+  
+  // Fetch all parks
+  const allParks = await fetchNationalParks({
+    sort: 'Name',
+    view: 'Grid view',
+    filterByFormula: ''
+  });
+  
+  // Extract unique states from all parks
+  const uniqueStates = new Set<string>();
+  
+  allParks.forEach(park => {
+    if (park.states) {
+      // Handle comma-separated states
+      const stateList = park.states.split(',').map((s: string) => s.trim());
+      stateList.forEach((state: string) => uniqueStates.add(state));
+    }
+    
+    // Also check statesMulti if available
+    if (park.statesMulti && Array.isArray(park.statesMulti)) {
+      park.statesMulti.forEach((state: string) => uniqueStates.add(state));
+    }
+  });
+  
+  // Create paths for each state
+  return Array.from(uniqueStates).map(state => {
+    // Filter parks for this state
+    const stateParks = allParks.filter(park => {
+      if (park.states && park.states.includes(state)) {
+        return true;
+      }
+      
+      if (park.statesMulti && Array.isArray(park.statesMulti)) {
+        return park.statesMulti.includes(state);
+      }
+      
+      return false;
+    });
+    
+    return {
+      params: { state },
+      props: { 
+        state,
+        stateName: stateNamesCopy[state] || state,
+        region: stateRegionsCopy[state] || 'Other',
+        parks: stateParks 
+      }
+    };
+  });
+}
+
+// Get the state and parks data from getStaticPaths
+const { state } = Astro.params;
+const { stateName, region, parks } = Astro.props;
+
+// Group parks by designation
+const parksByDesignation = parks.reduce((acc, park) => {
+  const designation = park.designation || 'Other';
+  if (!acc[designation]) {
+    acc[designation] = [];
+  }
+  acc[designation].push(park);
+  return acc;
+}, {} as Record<string, Park[]>);
+
+// Sort designations by count (descending) and then alphabetically
+const sortedDesignations = Object.keys(parksByDesignation).sort((a, b) => {
+  const countDiff = parksByDesignation[b].length - parksByDesignation[a].length;
+  if (countDiff !== 0) return countDiff;
+  return a.localeCompare(b);
+});
+
+// Region-based color scheme
+const regionColors = {
+  'Northeast': 'blue',
+  'Midwest': 'green',
+  'South': 'amber',
+  'West': 'red',
+  'Territories': 'purple',
+  'Other': 'gray'
+};
+
+const regionColor = regionColors[region as keyof typeof regionColors] || 'gray';
+const bgColor = `bg-${regionColor}-50`;
+const textColor = `text-${regionColor}-800`;
+const borderColor = `border-${regionColor}-200`;
+
+// Get state banner image - could be expanded with actual state images
+const stateBannerImage = `/images/states/${state.toLowerCase()}.svg`;
+const fallbackBannerImage = "/images/state-placeholder.svg";
+---
+
+<BaseLayout title={`${stateName} National Parks - National Park Directory`}>
+  <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div class="mb-8">
+      <a href="/" class="text-green-800 hover:underline">Home</a> &raquo; 
+      <a href="/states" class="text-green-800 hover:underline">States</a> &raquo; 
+      <span class="text-gray-600">{stateName}</span>
+    </div>
+    
+    <!-- State Header -->
+    <div class="bg-white rounded-lg shadow-md overflow-hidden mb-8">
+      <div class="relative h-64 md:h-80">
+        <!-- Placeholder background -->
+        <div class="absolute inset-0 flex items-center justify-center bg-blue-50">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-32 w-32 text-blue-200 fill-current" viewBox="0 0 20 20" fill="currentColor">
+            <path d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z" />
+          </svg>
+        </div>
+        
+        <img 
+          src={stateBannerImage}
+          alt={`${stateName} landscape`} 
+          class="state-banner-image w-full h-full object-cover relative z-10"
+          onload="this.classList.add('image-loaded'); this.parentElement.querySelector('div').classList.add('hidden');"
+          onerror="if (!this.src.includes('state-placeholder.svg')) { this.src='/images/state-placeholder.svg'; this.classList.add('fallback-applied'); }"
+        />
+        <div class="absolute inset-0 bg-black bg-opacity-40 flex items-end z-20">
+          <div class="p-6 text-white">
+            <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold">National Parks in {stateName}</h1>
+            <p class="text-xl mt-2">
+              Explore {parks.length} National Park Site{parks.length !== 1 ? 's' : ''} in {stateName}
+              <span class={`inline-block ml-2 px-3 py-1 rounded-full text-sm font-medium ${bgColor} ${textColor}`}>
+                {region}
+              </span>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- State Info -->
+    <div class={`bg-white rounded-lg shadow-md p-6 mb-8 border-t-4 ${borderColor}`}>
+      <h2 class="text-2xl font-bold text-gray-900 mb-4">About National Parks in {stateName}</h2>
+      <p class="text-gray-700 mb-4">
+        {stateName} is home to {parks.length} national park site{parks.length !== 1 ? 's' : ''} in the {region} region, 
+        offering visitors the chance to explore diverse landscapes, rich history, and unique ecosystems.
+        From stunning natural wonders to important cultural heritage sites, {stateName} has something for every type of traveler.
+      </p>
+    </div>
+    
+    <!-- Parks Listing -->
+    <h2 class="text-2xl font-bold text-gray-900 mb-4">National Park Sites in {stateName}</h2>
+    
+    {sortedDesignations.length > 0 ? (
+      sortedDesignations.map(designation => (
+        <div class="mb-8">
+          <h3 class={`text-xl font-semibold ${textColor} mb-3 pb-2 border-b ${borderColor}`}>
+            {designation} 
+            <span class="text-gray-500 text-base font-normal ml-2">
+              ({parksByDesignation[designation].length} site{parksByDesignation[designation].length !== 1 ? 's' : ''})
+            </span>
+          </h3>
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {parksByDesignation[designation].map((park: Park) => (
+              <ParkCard park={park} />
+            ))}
+          </div>
+        </div>
+      ))
+    ) : (
+      <div class="bg-yellow-50 border border-yellow-100 rounded-lg p-6 text-center">
+        <p class="text-yellow-800">
+          No national parks found for {stateName}. This could be due to data limitations.
+        </p>
+      </div>
+    )}
+    
+    <!-- Call to Action -->
+    <div class="bg-green-50 rounded-lg shadow-md p-8 mt-8 text-center">
+      <h2 class="text-2xl font-bold text-green-800 mb-4">Plan Your {stateName} Adventure</h2>
+      <p class="text-gray-700 max-w-2xl mx-auto mb-6">
+        Ready to explore {stateName}'s natural and historical treasures? Start planning your trip to one of these amazing national park sites.
+      </p>
+      <div class="flex flex-wrap justify-center gap-4">
+        <a 
+          href="/parks"
+          class="inline-flex items-center px-6 py-3 bg-green-800 text-white font-medium rounded-md shadow-sm hover:bg-green-700 transition-colors"
+        >
+          View All National Parks
+        </a>
+        <a 
+          href={`/states#section-${stateName[0]}`}
+          class="inline-flex items-center px-6 py-3 bg-blue-700 text-white font-medium rounded-md shadow-sm hover:bg-blue-600 transition-colors"
+        >
+          Browse Other States
+        </a>
+      </div>
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .image-loaded {
+    opacity: 1;
+  }
+  .state-banner-image.fallback-applied {
+    object-fit: contain !important;
+    padding: 2rem;
+    background-color: #f0f5ff;
+  }
+</style> 

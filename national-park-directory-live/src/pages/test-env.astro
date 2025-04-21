@@ -1,0 +1,40 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+// Check if environment variables are available
+const airtableToken = import.meta.env.AIRTABLE_TOKEN;
+const airtableBaseId = import.meta.env.AIRTABLE_BASE_ID;
+const airtableTableName = import.meta.env.AIRTABLE_TABLE_NAME;
+
+// Log to server console
+console.log('Environment variables in test-env.astro:');
+console.log('AIRTABLE_TOKEN exists:', !!airtableToken);
+console.log('AIRTABLE_TOKEN length:', airtableToken ? airtableToken.length : 0);
+console.log('AIRTABLE_BASE_ID:', airtableBaseId);
+console.log('AIRTABLE_TABLE_NAME:', airtableTableName);
+---
+
+<BaseLayout title="Environment Variables Test">
+  <div class="container mx-auto px-4 py-12">
+    <h1 class="text-3xl font-bold mb-4">Environment Variables Test</h1>
+    
+    <div class="bg-white p-6 rounded-lg shadow-md">
+      <h2 class="text-xl font-semibold mb-4">Environment Variables</h2>
+      
+      <ul class="space-y-2">
+        <li>
+          <strong>AIRTABLE_TOKEN:</strong> 
+          {airtableToken ? `Available (${airtableToken.length} characters)` : 'Not available'}
+        </li>
+        <li>
+          <strong>AIRTABLE_BASE_ID:</strong> 
+          {airtableBaseId || 'Not available'}
+        </li>
+        <li>
+          <strong>AIRTABLE_TABLE_NAME:</strong> 
+          {airtableTableName || 'Not available'}
+        </li>
+      </ul>
+    </div>
+  </div>
+</BaseLayout> 

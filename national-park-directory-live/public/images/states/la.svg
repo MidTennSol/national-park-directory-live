@@ -1,0 +1,74 @@
+<svg width="800" height="600" xmlns="http://www.w3.org/2000/svg">
+  <rect width="800" height="600" fill="#f0f5ff"/>
+  
+  <!-- Louisiana State Shape (simplified) -->
+  <path d="M 400,100
+           C 450,110 500,150 520,200
+           C 540,250 550,300 520,350
+           C 490,400 450,450 400,480
+           C 350,450 320,420 300,380
+           C 280,340 270,300 280,250
+           C 290,200 340,150 380,120
+           C 390,110 395,105 400,100 Z"
+        fill="#d0e8ff" stroke="#2563eb" stroke-width="3"/>
+  
+  <!-- Text -->
+  <text x="400" y="520" font-family="Arial, sans-serif" font-size="32" fill="#336699" text-anchor="middle" font-weight="bold">
+    Louisiana
+  </text>
+  
+  <!-- Decorative Elements -->
+  <g transform="translate(400, 280) scale(0.8)">
+    <!-- Fleur-de-lis -->
+    <path d="M0,-50 C-10,-30 -30,-20 -30,0 C-30,20 -10,30 0,30 C10,30 30,20 30,0 C30,-20 10,-30 0,-50 Z
+             M0,30 C-5,40 -10,50 -15,70 C-5,60 5,60 15,70 C10,50 5,40 0,30 Z
+             M-30,0 C-40,0 -50,10 -60,5 C-50,15 -45,25 -40,40 C-30,30 -25,15 -30,0 Z
+             M30,0 C40,0 50,10 60,5 C50,15 45,25 40,40 C30,30 25,15 30,0 Z"
+          fill="#2563eb" />
+  </g>
+  
+  <!-- Water elements -->
+  <path d="M200,350 C230,340 270,360 300,380 C280,400 260,430 240,440 C220,450 200,440 190,420 C180,400 180,370 200,350 Z" 
+        fill="#75b2ff" opacity="0.7" stroke="#2563eb" stroke-width="1"/>
+  
+  <path d="M330,450 C350,440 380,430 400,480 C390,490 370,500 350,500 C330,500 310,480 320,460 C325,455 328,452 330,450 Z" 
+        fill="#75b2ff" opacity="0.7" stroke="#2563eb" stroke-width="1"/>
+  
+  <!-- Cities (dots) -->
+  <circle cx="350" cy="260" r="8" fill="#e11d48"/>
+  <text x="350" y="245" font-family="Arial, sans-serif" font-size="14" fill="#336699" text-anchor="middle">
+    Baton Rouge
+  </text>
+  
+  <circle cx="300" cy="200" r="10" fill="#e11d48"/>
+  <text x="300" y="185" font-family="Arial, sans-serif" font-size="16" fill="#336699" text-anchor="middle">
+    New Orleans
+  </text>
+  
+  <circle cx="400" cy="330" r="6" fill="#e11d48"/>
+  <text x="400" y="318" font-family="Arial, sans-serif" font-size="12" fill="#336699" text-anchor="middle">
+    Lafayette
+  </text>
+  
+  <!-- Park marker -->
+  <g transform="translate(270, 340)">
+    <circle cx="0" cy="0" r="12" fill="#15803d"/>
+    <path d="M-4,-6 L-4,6 L8,0 Z" fill="white"/>
+    <text x="0" y="25" font-family="Arial, sans-serif" font-size="12" fill="#336699" text-anchor="middle">
+      Jean Lafitte
+    </text>
+  </g>
+  
+  <!-- Compass -->
+  <g transform="translate(700, 130)">
+    <circle cx="0" cy="0" r="30" fill="#f0f9ff" stroke="#2563eb" stroke-width="2"/>
+    <path d="M0,-20 L3,-5 L0,-8 L-3,-5 Z" fill="#2563eb"/>
+    <path d="M0,20 L3,5 L0,8 L-3,5 Z" fill="#2563eb"/>
+    <path d="M-20,0 L-5,3 L-8,0 L-5,-3 Z" fill="#2563eb"/>
+    <path d="M20,0 L5,3 L8,0 L5,-3 Z" fill="#2563eb"/>
+    <text x="0" y="-10" font-family="Arial, sans-serif" font-size="10" fill="#336699" text-anchor="middle">N</text>
+    <text x="0" y="15" font-family="Arial, sans-serif" font-size="10" fill="#336699" text-anchor="middle">S</text>
+    <text x="-15" y="3" font-family="Arial, sans-serif" font-size="10" fill="#336699" text-anchor="middle">W</text>
+    <text x="15" y="3" font-family="Arial, sans-serif" font-size="10" fill="#336699" text-anchor="middle">E</text>
+  </g>
+</svg> 
