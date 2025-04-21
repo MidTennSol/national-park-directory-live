@@ -3,4 +3,12 @@
   publish = "dist"
 
 [build.environment]
-  NODE_VERSION = "20.3.0" 
+  NODE_VERSION = "20.3.0"
+  # Disable any automatic language installers
+  NETLIFY_USE_MISE = "false"
+  NETLIFY_USE_YARN = "false"
+  NETLIFY_USE_PNPM = "false"
+
+# Make sure we're only using Node.js
+[build.processing]
+  skip_processing = true 
