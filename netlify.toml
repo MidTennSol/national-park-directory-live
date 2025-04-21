@@ -1,11 +1,12 @@
 [build]
   command = "bash ./build.sh"
   publish = "dist"
-  # Add a build timeout to ensure we get complete logs
-  environment = { NODE_ENV = "production", CI = "true", NODE_OPTIONS = "--max-old-space-size=4096" }
 
 [build.environment]
   NODE_VERSION = "20.3.0"
+  NODE_ENV = "production"
+  CI = "true"
+  NODE_OPTIONS = "--max-old-space-size=4096"
   # Disable any automatic language installers
   NETLIFY_USE_MISE = "false"
   NETLIFY_USE_YARN = "false"
@@ -14,7 +15,7 @@
   RUBY_VERSION = "false"
   PYTHON_VERSION = "false"
   # Increase verbosity for debugging
-  DEBUG = "netflify:*"
+  DEBUG = "netlify:*"
 
 # Disable post-processing to eliminate another source of potential issues
 [build.processing]
