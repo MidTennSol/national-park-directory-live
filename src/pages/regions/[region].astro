@@ -1,0 +1,332 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { fetchNationalParks } from '../../utils/airtable.js';
+
+// Define Park interface
+interface Park {
+  id: string;
+  name: string;
+  description: string;
+  summary?: string;
+  states: string;
+  statesMulti?: string[];
+  designation: string;
+  imageUrl: string;
+  region?: string[];
+  slug: string;
+}
+
+// Parks per page for pagination (if user has JavaScript disabled, they'll see all parks)
+const PARKS_PER_PAGE = 24;
+
+// Add getStaticPaths to pre-define all possible region routes
+export async function getStaticPaths() {
+  // Define the regions - matching update_regions.py
+  const REGIONS = ['Northeast', 'Midwest', 'South', 'West', 'Territories'] as const;
+  
+  return REGIONS.map(region => ({
+    params: { region: region.toLowerCase() },
+    props: { regionKey: region }
+  }));
+}
+
+// Define the regions type
+type Region = 'Northeast' | 'Midwest' | 'South' | 'West' | 'Territories';
+
+// Get region from props or URL
+const { regionKey = '' } = Astro.props;
+const { region: regionParam } = Astro.params;
+
+// Define the regions for local use
+const REGIONS = ['Northeast', 'Midwest', 'South', 'West', 'Territories'];
+
+// Validate region if not provided via props
+let validRegionKey = regionKey;
+if (!validRegionKey) {
+  const regionFromParam = regionParam ? regionParam.charAt(0).toUpperCase() + regionParam.slice(1) : '';
+  
+  // Validate region
+  if (!REGIONS.includes(regionFromParam as Region)) {
+    // If the region is not valid, try to find a match
+    const lowerCaseRegionParam = regionParam ? regionParam.toLowerCase() : '';
+    const matchedRegion = REGIONS.find(r => r.toLowerCase() === lowerCaseRegionParam);
+    
+    if (matchedRegion) {
+      validRegionKey = matchedRegion;
+    }
+  } else {
+    validRegionKey = regionFromParam;
+  }
+}
+
+// Fetch parks for this region
+let regionParks: Park[] = [];
+let parkCount = 0;
+
+if (validRegionKey) {
+  const allParks = await fetchNationalParks({
+    sort: 'Name',
+    view: 'Grid view',
+    filterByFormula: ''
+  });
+  
+  // Filter parks by region
+  regionParks = allParks.filter(park => {
+    if (park.region && park.region.length > 0) {
+      return park.region[0] === validRegionKey;
+    }
+    return false;
+  });
+  
+  parkCount = regionParks.length;
+}
+
+// Region descriptions
+const regionDescriptions: Record<string, string> = {
+  'Northeast': 'The Northeast region encompasses states from Maine to Pennsylvania, featuring historic sites, coastal treasures, and the beautiful Appalachian mountains.',
+  'Midwest': 'The Midwest region stretches from Ohio to the Dakotas, with diverse parks showcasing the Great Lakes, prairies, and river valleys.',
+  'South': 'The South region extends from Delaware to Texas, with parks that highlight rich history, diverse ecosystems, and coastal beauty.',
+  'West': 'The West region spans from the Rocky Mountains to the Pacific coast, featuring iconic national parks with breathtaking landscapes and geological wonders.',
+  'Territories': 'The Territories region includes Alaska, Hawaii, and U.S. territories, featuring unique ecosystems, volcanic landscapes, and stunning coastal sites.'
+};
+
+const regionDescription = validRegionKey && validRegionKey in regionDescriptions ? regionDescriptions[validRegionKey] : '';
+
+// Get the appropriate header background class based on the region
+function getRegionHeaderClass(region: string): string {
+  const baseClass = "relative h-64 md:h-80 bg-opacity-90";
+  
+  switch(region) {
+    case 'Northeast': 
+      return `${baseClass} bg-blue-600`;
+    case 'Midwest': 
+      return `${baseClass} bg-green-600`;
+    case 'South': 
+      return `${baseClass} bg-amber-600`;
+    case 'West': 
+      return `${baseClass} bg-red-600`;
+    case 'Territories': 
+      return `${baseClass} bg-purple-600`;
+    default: 
+      return `${baseClass} bg-gray-600`;
+  }
+}
+
+// For initial display, only show the first page of parks
+const initialParks = regionParks.slice(0, PARKS_PER_PAGE);
+---
+
+<BaseLayout title={validRegionKey ? `${validRegionKey} Region National Parks - National Park Directory` : 'Region Not Found'}>
+  <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div class="mb-8">
+      <a href="/" class="text-green-800 hover:underline">Home</a> &raquo; 
+      <a href="/regions" class="text-green-800 hover:underline">Regions</a> &raquo; 
+      <span class="text-gray-600">{validRegionKey || 'Not Found'}</span>
+    </div>
+    
+    {validRegionKey ? (
+      <>
+        <!-- Region Header -->
+        <div class="bg-white rounded-lg shadow-md overflow-hidden mb-8">
+          <div class={getRegionHeaderClass(validRegionKey)}>
+            <div class="absolute inset-0 flex items-end z-20">
+              <div class="p-6 text-white">
+                <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold">{validRegionKey} Region</h1>
+                <p class="text-xl mt-2">
+                  {parkCount} National Park {parkCount === 1 ? 'Site' : 'Sites'}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Region Info -->
+        <div class="bg-white rounded-lg shadow-md p-6 mb-8">
+          <h2 class="text-xl font-bold text-gray-900 mb-4">About the {validRegionKey} Region</h2>
+          <p class="text-gray-700">{regionDescription}</p>
+        </div>
+        
+        <!-- Parks List -->
+        <div class="mb-8">
+          <h2 class="text-2xl font-bold text-gray-900 mb-6">National Parks in the {validRegionKey} Region</h2>
+          
+          {regionParks.length > 0 ? (
+            <>
+              <div id="parks-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                {initialParks.map((park, index) => (
+                  <a href={`/parks/${park.slug}`} class="block group park-card">
+                    <div class="bg-white rounded-lg shadow-md overflow-hidden border border-gray-200 transition-all group-hover:shadow-lg h-full">
+                      <div class="relative h-48 bg-gray-100">
+                        <img 
+                          src={index < 12 ? (park.imageUrl || '/images/park-placeholder.jpg') : '/images/park-placeholder.jpg'} 
+                          data-src={park.imageUrl || '/images/park-placeholder.jpg'}
+                          alt={`${park.name}`}
+                          class="w-full h-full object-cover lazy-image"
+                          loading={index < 12 ? "eager" : "lazy"}
+                        />
+                      </div>
+                      <div class="p-4 flex flex-col flex-grow">
+                        <h3 class="text-lg font-semibold text-gray-900 group-hover:text-green-700 transition-colors">
+                          {park.name}
+                        </h3>
+                        <p class="text-gray-600 text-sm mt-1">{park.designation}</p>
+                        <p class="text-gray-500 text-sm mt-auto">
+                          {park.states}
+                        </p>
+                      </div>
+                    </div>
+                  </a>
+                ))}
+              </div>
+              
+              {parkCount > PARKS_PER_PAGE && (
+                <div id="load-more-container" class="mt-8 text-center">
+                  <button 
+                    id="load-more-btn"
+                    class="inline-flex items-center px-6 py-3 rounded-md font-medium text-white bg-green-600 hover:bg-green-700 transition-colors shadow-md"
+                    data-current-page="1"
+                    data-total-parks={parkCount}
+                  >
+                    Load More Parks
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-2" viewBox="0 0 20 20" fill="currentColor">
+                      <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                    </svg>
+                  </button>
+                </div>
+              )}
+            </>
+          ) : (
+            <div class="bg-yellow-50 rounded-lg p-6 text-center">
+              <p class="text-yellow-800">No parks found in this region.</p>
+            </div>
+          )}
+        </div>
+        
+        <!-- Back Button -->
+        <div class="text-center mt-8">
+          <a 
+            href="/regions" 
+            class="inline-flex items-center px-6 py-3 rounded-md font-medium text-white bg-green-700 hover:bg-green-800 transition-colors shadow-sm"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+              <path fill-rule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd" />
+            </svg>
+            Back to All Regions
+          </a>
+        </div>
+      </>
+    ) : (
+      <!-- Region Not Found -->
+      <div class="bg-red-50 rounded-lg p-8 text-center">
+        <h1 class="text-3xl font-bold text-red-800 mb-4">Region Not Found</h1>
+        <p class="text-gray-700 mb-6">
+          Sorry, we couldn't find a region matching "{regionParam}". Please check the URL and try again.
+        </p>
+        <a 
+          href="/regions" 
+          class="inline-flex items-center px-6 py-3 rounded-md font-medium text-white bg-green-700 hover:bg-green-800 transition-colors shadow-sm"
+        >
+          View All Regions
+        </a>
+      </div>
+    )}
+  </div>
+</BaseLayout>
+
+<script>
+  // Client-side script for lazy loading and pagination
+  document.addEventListener('DOMContentLoaded', function() {
+    const loadMoreBtn = document.getElementById('load-more-btn');
+    
+    if (loadMoreBtn) {
+      loadMoreBtn.addEventListener('click', async function() {
+        const btn = this as HTMLButtonElement;
+        
+        // Get current page and total parks
+        const currentPage = parseInt(btn.dataset.currentPage || '1');
+        const totalParks = parseInt(btn.dataset.totalParks || '0');
+        const perPage = 24;
+        
+        // Calculate next page
+        const nextPage = currentPage + 1;
+        const start = currentPage * perPage;
+        const end = Math.min(start + perPage, totalParks);
+        
+        // Show loading state
+        btn.disabled = true;
+        btn.innerHTML = 'Loading...';
+        
+        try {
+          // Fetch more parks from the server
+          const response = await fetch(`/api/parks?region=${window.location.pathname.split('/').pop()}&start=${start}&end=${end}`);
+          
+          // If we're using a client-side approach without an API, we can manually add more items
+          // This is a fallback that adds placeholder elements
+          const container = document.getElementById('parks-container');
+          
+          if (container) {
+            // Example: create placeholder cards
+            for (let i = start; i < end; i++) {
+              if (i >= totalParks) break;
+              
+              const template = document.querySelector('.park-card')?.cloneNode(true) as HTMLElement;
+              if (template) {
+                container.appendChild(template);
+              }
+            }
+          }
+          
+          // Update button state
+          btn.dataset.currentPage = nextPage.toString();
+          
+          // If we've loaded all parks, hide the button
+          if (end >= totalParks) {
+            const container = document.getElementById('load-more-container');
+            if (container) {
+              container.style.display = 'none';
+            }
+          }
+        } catch (error) {
+          console.error('Error loading more parks:', error);
+        } finally {
+          // Restore button state
+          btn.disabled = false;
+          btn.innerHTML = 'Load More Parks <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-2" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" /></svg>';
+        }
+      });
+    }
+    
+    // Implement lazy loading for images
+    if ('IntersectionObserver' in window) {
+      const lazyImages = document.querySelectorAll('.lazy-image');
+      
+      const imageObserver = new IntersectionObserver((entries, observer) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            const img = entry.target as HTMLImageElement;
+            if (img.dataset.src) {
+              img.src = img.dataset.src;
+            }
+            img.classList.remove('lazy-image');
+            imageObserver.unobserve(img);
+          }
+        });
+      });
+      
+      lazyImages.forEach(image => {
+        imageObserver.observe(image);
+      });
+    }
+  });
+</script>
+
+<style>
+  .lazy-image {
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  
+  .lazy-image[src] {
+    opacity: 1;
+  }
+</style> 
