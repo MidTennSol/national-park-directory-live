@@ -147,6 +147,15 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     </div>
     
     <div class="mb-12">
+      <h2 class="text-2xl font-semibold mb-4">Blog Post Scheduling</h2>
+      <p class="mb-4">Schedule your blog posts for future publishing or publish them immediately.</p>
+      
+      <div id="blog-scheduling" class="bg-white p-6 rounded-lg shadow-md">
+        <!-- Blog publisher.js will inject the scheduling interface here -->
+      </div>
+    </div>
+    
+    <div class="mb-12">
       <h2 class="text-2xl font-semibold mb-4">Blog Post Template</h2>
       <div class="bg-white p-6 rounded-lg shadow-md">
         <p class="mb-4">Copy this template as a starting point for your blog posts:</p>
@@ -391,4 +400,5 @@ Wrap up your post with a summary of key takeaways and possibly a call to action.
 </script>
 
 <script is:inline src="/js/blog-image-helper.js"></script>
-<script is:inline src="/js/markdown-preview.js"></script> 
+<script is:inline src="/js/markdown-preview.js"></script>
+<script is:inline src="/js/blog-publisher.js"></script> 
