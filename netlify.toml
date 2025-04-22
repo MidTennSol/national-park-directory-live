@@ -28,3 +28,14 @@
 
 [context.deploy-preview.environment]
   NETLIFY_CONTEXT = "deploy-preview" 
+
+# Force Netlify to clear cache for blog pages
+[[headers]]
+  for = "/blog/*"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
+    
+[[headers]]
+  for = "/blog"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate" 

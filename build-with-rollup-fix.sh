@@ -29,10 +29,33 @@ if [[ $(uname -s) == "Linux" ]]; then
     fi
 fi
 
+# Verify content directory exists and contains blog files
+echo "======================================================"
+echo "VERIFYING CONTENT DIRECTORY:"
+if [ -d "src/content/blog" ]; then
+    echo "Content directory found"
+    echo "Blog files:"
+    ls -la src/content/blog/
+else
+    echo "ERROR: Content directory not found!"
+    mkdir -p src/content/blog
+    echo "Created src/content/blog directory"
+fi
+
 # Run the build
 echo "======================================================"
 echo "RUNNING BUILD:"
 NODE_OPTIONS="--max-old-space-size=4096" npm run build
+
+# Verify build directory includes blog content
+echo "======================================================"
+echo "VERIFYING BUILD OUTPUT:"
+if [ -d "dist/blog" ]; then
+    echo "Blog directory in build output found"
+    ls -la dist/blog/
+else
+    echo "WARNING: Blog directory not found in build output!"
+fi
 
 # Print final status
 echo "======================================================"
