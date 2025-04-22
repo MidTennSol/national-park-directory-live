@@ -1,0 +1,388 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="Blog Tools - National Park Directory">
+  <div class="container mx-auto px-4 py-8">
+    <h1 class="text-3xl font-bold mb-8">Blog Admin Tools</h1>
+    
+    <!-- Add new Markdown Live Preview Section -->
+    <div class="mb-12">
+      <h2 class="text-2xl font-semibold mb-4">Markdown Live Preview</h2>
+      <p class="mb-4">Write your blog post content and see a live preview of how it will look on the website.</p>
+      
+      <div class="bg-white p-6 rounded-lg shadow-md">
+        <div class="mb-4 flex items-center justify-between">
+          <div>
+            <button id="toggle-frontmatter" class="px-3 py-1 bg-blue-100 text-blue-700 rounded text-sm hover:bg-blue-200">
+              Show Frontmatter
+            </button>
+            <button id="load-template" class="ml-2 px-3 py-1 bg-green-100 text-green-700 rounded text-sm hover:bg-green-200">
+              Load Template
+            </button>
+          </div>
+          <div class="text-sm text-gray-500">
+            Auto-saves to local storage
+          </div>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <!-- Editor -->
+          <div>
+            <div class="mb-2 font-medium text-gray-700">Editor</div>
+            <textarea 
+              id="markdown-editor" 
+              class="w-full h-[600px] p-4 border border-gray-300 rounded-md font-mono text-sm focus:ring-2 focus:ring-green-600 focus:border-transparent"
+              placeholder="Write your markdown here..."></textarea>
+          </div>
+          
+          <!-- Preview -->
+          <div>
+            <div class="mb-2 font-medium text-gray-700">Preview</div>
+            <div 
+              id="markdown-preview" 
+              class="w-full h-[600px] p-4 border border-gray-300 rounded-md overflow-auto bg-white prose prose-green max-w-none">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="mb-12">
+      <h2 class="text-2xl font-semibold mb-4">Image Optimizer</h2>
+      <p class="mb-4">Use this tool to optimize your blog images before uploading them to the site.</p>
+      
+      <div class="bg-white p-6 rounded-lg shadow-md">
+        <div class="blog-image-upload mb-6">
+          <label class="block text-gray-700 mb-2">Select an image to optimize:</label>
+          <input 
+            type="file" 
+            accept="image/jpeg,image/png,image/webp" 
+            class="block w-full text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:bg-green-50 file:text-green-700 hover:file:bg-green-100"
+            id="imageInput"
+          />
+          <div class="image-feedback mt-3"></div>
+        </div>
+        
+        <div id="imagePreview" class="hidden mt-6 p-4 border border-gray-200 rounded-lg">
+          <h3 class="font-medium mb-3">Image Preview</h3>
+          <div class="flex flex-col md:flex-row gap-6">
+            <div class="flex-1">
+              <p class="text-sm text-gray-500 mb-2">Original Image:</p>
+              <div class="bg-gray-100 rounded-lg overflow-hidden">
+                <img id="originalImage" class="w-full h-auto max-h-[300px] object-contain" />
+              </div>
+              <div class="text-xs text-gray-500 mt-1" id="originalInfo"></div>
+            </div>
+            <div class="flex-1">
+              <p class="text-sm text-gray-500 mb-2">Optimized Preview:</p>
+              <div class="bg-gray-100 rounded-lg overflow-hidden">
+                <img id="optimizedImage" class="w-full h-auto max-h-[300px] object-contain" />
+              </div>
+              <div class="text-xs text-gray-500 mt-1" id="optimizedInfo"></div>
+            </div>
+          </div>
+          <div class="mt-4">
+            <button id="downloadBtn" class="bg-green-600 text-white py-2 px-4 rounded hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed">
+              Download Optimized Image
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="mb-12">
+      <h2 class="text-2xl font-semibold mb-4">Blog Post Checklist</h2>
+      <div class="bg-white p-6 rounded-lg shadow-md">
+        <ul class="space-y-3">
+          <li class="flex items-start">
+            <input type="checkbox" class="mt-1 mr-2" id="check1">
+            <label for="check1" class="text-gray-700">
+              <span class="font-medium">Create a descriptive title</span> - 
+              Keep it under 60 characters and include keywords
+            </label>
+          </li>
+          <li class="flex items-start">
+            <input type="checkbox" class="mt-1 mr-2" id="check2">
+            <label for="check2" class="text-gray-700">
+              <span class="font-medium">Write a compelling description</span> - 
+              120-160 characters summarizing the post
+            </label>
+          </li>
+          <li class="flex items-start">
+            <input type="checkbox" class="mt-1 mr-2" id="check3">
+            <label for="check3" class="text-gray-700">
+              <span class="font-medium">Optimize feature image</span> - 
+              1200×800px, JPG/PNG format, under 500KB
+            </label>
+          </li>
+          <li class="flex items-start">
+            <input type="checkbox" class="mt-1 mr-2" id="check4">
+            <label for="check4" class="text-gray-700">
+              <span class="font-medium">Add relevant tags</span> - 
+              3-5 tags that categorize your content
+            </label>
+          </li>
+          <li class="flex items-start">
+            <input type="checkbox" class="mt-1 mr-2" id="check5">
+            <label for="check5" class="text-gray-700">
+              <span class="font-medium">Format content with Markdown</span> - 
+              Use headings, lists, and emphasis appropriately
+            </label>
+          </li>
+          <li class="flex items-start">
+            <input type="checkbox" class="mt-1 mr-2" id="check6">
+            <label for="check6" class="text-gray-700">
+              <span class="font-medium">Check spelling and grammar</span>
+            </label>
+          </li>
+          <li class="flex items-start">
+            <input type="checkbox" class="mt-1 mr-2" id="check7">
+            <label for="check7" class="text-gray-700">
+              <span class="font-medium">Verify all links work</span>
+            </label>
+          </li>
+        </ul>
+      </div>
+    </div>
+    
+    <div class="mb-12">
+      <h2 class="text-2xl font-semibold mb-4">Blog Post Template</h2>
+      <div class="bg-white p-6 rounded-lg shadow-md">
+        <p class="mb-4">Copy this template as a starting point for your blog posts:</p>
+        <pre class="bg-gray-100 p-4 rounded-lg overflow-auto text-sm">---
+title: "Your Blog Post Title"
+description: "A concise description (120-160 characters)"
+publishDate: 2023-09-15
+author: "Author Name"
+image: "/images/blog/your-image-filename.jpg"
+tags: ["relevant", "tags", "for", "categorization"]
+featured: false
+draft: false
+---
+
+# Main Title
+
+Introduction paragraph...
+
+## Subheading
+
+Content paragraphs...
+
+### Sub-subheading
+
+- Bullet points
+- More points
+
+1. Numbered list
+2. Second item
+
+**Bold text** and *italic text*
+
+[Link text](https://example.com)
+
+![Image alt text](/images/blog/another-image.jpg)
+</pre>
+      </div>
+    </div>
+  </div>
+</BaseLayout>
+
+<script>
+  // Client-side image optimization
+  document.addEventListener('DOMContentLoaded', () => {
+    const imageInput = document.getElementById('imageInput') as HTMLInputElement;
+    const originalImage = document.getElementById('originalImage') as HTMLImageElement;
+    const optimizedImage = document.getElementById('optimizedImage') as HTMLImageElement;
+    const originalInfo = document.getElementById('originalInfo') as HTMLDivElement;
+    const optimizedInfo = document.getElementById('optimizedInfo') as HTMLDivElement;
+    const imagePreview = document.getElementById('imagePreview') as HTMLDivElement;
+    const downloadBtn = document.getElementById('downloadBtn') as HTMLButtonElement;
+    
+    if (!imageInput) return;
+    
+    imageInput.addEventListener('change', (e) => {
+      const file = imageInput.files?.[0];
+      if (!file) return;
+      
+      // Display original image
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        if (!originalImage || !e.target?.result) return;
+        originalImage.src = e.target.result as string;
+        
+        // Get image dimensions and size
+        const img = new Image();
+        img.onload = function() {
+          // Show image info
+          if (!originalInfo) return;
+          originalInfo.textContent = `${img.width}×${img.height}px, ${(file.size / 1024).toFixed(1)}KB`;
+          
+          // Create canvas for optimized version
+          createOptimizedVersion(img, file.name);
+          
+          // Show preview section
+          if (imagePreview) {
+            imagePreview.classList.remove('hidden');
+          }
+        };
+        img.src = e.target.result as string;
+      };
+      reader.readAsDataURL(file);
+    });
+    
+    function createOptimizedVersion(img: HTMLImageElement, filename: string) {
+      // Target dimensions
+      const targetWidth = 1200;
+      const targetHeight = 800;
+      
+      // Create canvas
+      const canvas = document.createElement('canvas');
+      
+      // Determine dimensions (maintain aspect ratio if needed)
+      let newWidth, newHeight;
+      const aspectRatio = img.width / img.height;
+      
+      if (Math.abs(aspectRatio - (targetWidth / targetHeight)) < 0.1) {
+        // Close enough to target aspect ratio, use target dimensions
+        newWidth = targetWidth;
+        newHeight = targetHeight;
+      } else if (aspectRatio > (targetWidth / targetHeight)) {
+        // Width-constrained
+        newWidth = targetWidth;
+        newHeight = Math.round(targetWidth / aspectRatio);
+      } else {
+        // Height-constrained
+        newHeight = targetHeight;
+        newWidth = Math.round(targetHeight * aspectRatio);
+      }
+      
+      // Set canvas dimensions
+      canvas.width = newWidth;
+      canvas.height = newHeight;
+      
+      // Draw image to canvas
+      const ctx = canvas.getContext('2d');
+      if (!ctx) return;
+      ctx.drawImage(img, 0, 0, newWidth, newHeight);
+      
+      // Get optimized image as DataURL (quality 0.8 is a good balance)
+      const optimizedDataUrl = canvas.toDataURL('image/jpeg', 0.8);
+      
+      // Display optimized image
+      if (optimizedImage) {
+        optimizedImage.src = optimizedDataUrl;
+      }
+      
+      // Calculate size (approximate)
+      const base64Data = optimizedDataUrl.split(',')[1];
+      const approximateSize = Math.round((base64Data.length * 3) / 4);
+      if (optimizedInfo) {
+        optimizedInfo.textContent = `${newWidth}×${newHeight}px, ~${(approximateSize / 1024).toFixed(1)}KB`;
+      }
+      
+      // Enable download button
+      if (downloadBtn) {
+        downloadBtn.disabled = false;
+        
+        // Set up download handler
+        downloadBtn.onclick = () => {
+          // Create suggested filename (convert to kebab-case if needed)
+          let suggestedName = filename.toLowerCase()
+            .replace(/\s+/g, '-')           // Replace spaces with hyphens
+            .replace(/[^a-z0-9\-\.]/g, '')  // Remove special characters
+            .replace(/\..*$/, '.jpg');       // Change extension to jpg
+          
+          // Create download link
+          const link = document.createElement('a');
+          link.download = suggestedName;
+          link.href = optimizedDataUrl;
+          link.click();
+        };
+      }
+    }
+  });
+  
+  // Add local storage save/restore functionality to Markdown editor
+  document.addEventListener('DOMContentLoaded', () => {
+    const editor = document.getElementById('markdown-editor') as HTMLTextAreaElement;
+    const loadTemplateBtn = document.getElementById('load-template');
+    
+    if (editor) {
+      // Load any saved content
+      const savedContent = localStorage.getItem('blog-markdown-content');
+      if (savedContent) {
+        editor.value = savedContent;
+      }
+      
+      // Save content as user types
+      editor.addEventListener('input', () => {
+        localStorage.setItem('blog-markdown-content', editor.value);
+      });
+      
+      // Load template button
+      if (loadTemplateBtn) {
+        loadTemplateBtn.addEventListener('click', () => {
+          const blogTemplate = `---
+title: "Your Blog Post Title"
+description: "A concise description (120-160 characters)"
+publishDate: ${new Date().toISOString().split('T')[0]}
+author: "Author Name"
+image: "/images/blog/your-image-filename.jpg"
+tags: ["relevant", "tags", "for", "categorization"]
+featured: false
+draft: false
+---
+
+# Main Title
+
+Introduction paragraph with some context about what readers will learn or discover in this post.
+
+## What You'll Find in This Guide
+
+This section provides an overview of the topics covered in this blog post.
+
+- First key point or section
+- Second important area
+- Third valuable insight
+
+## First Main Section
+
+Here's where you dive into your first major topic. Include relevant information, tips, and examples.
+
+### Subsection with More Detail
+
+Add more specific information here with:
+
+1. Numbered steps if appropriate
+2. Clear instructions
+3. Helpful guidance
+
+**Bold text** can be used for emphasis, and *italic text* for secondary emphasis.
+
+## Second Main Section
+
+Continue with your next important topic. Consider adding an image:
+
+![Beautiful view of a national park](/images/blog/your-image-filename.jpg)
+
+## Conclusion
+
+Wrap up your post with a summary of key takeaways and possibly a call to action.
+
+[Visit our parks directory](/parks) to plan your next adventure!`;
+          
+          editor.value = blogTemplate;
+          localStorage.setItem('blog-markdown-content', blogTemplate);
+          
+          // Trigger the input event to update the preview
+          const inputEvent = new Event('input', { bubbles: true });
+          editor.dispatchEvent(inputEvent);
+        });
+      }
+    }
+  });
+</script>
+
+<script src="/js/blog-image-helper.js"></script>
+<script src="/js/markdown-preview.js"></script> 
