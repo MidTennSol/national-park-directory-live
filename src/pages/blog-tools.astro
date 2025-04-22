@@ -188,16 +188,17 @@ Content paragraphs...
   </div>
 </BaseLayout>
 
-<script>
+<script is:inline>
   // Client-side image optimization
   document.addEventListener('DOMContentLoaded', () => {
-    const imageInput = document.getElementById('imageInput') as HTMLInputElement;
-    const originalImage = document.getElementById('originalImage') as HTMLImageElement;
-    const optimizedImage = document.getElementById('optimizedImage') as HTMLImageElement;
-    const originalInfo = document.getElementById('originalInfo') as HTMLDivElement;
-    const optimizedInfo = document.getElementById('optimizedInfo') as HTMLDivElement;
-    const imagePreview = document.getElementById('imagePreview') as HTMLDivElement;
-    const downloadBtn = document.getElementById('downloadBtn') as HTMLButtonElement;
+    // Use JavaScript type assertions to correctly type DOM elements
+    const imageInput = /** @type {HTMLInputElement} */ (document.getElementById('imageInput'));
+    const originalImage = /** @type {HTMLImageElement} */ (document.getElementById('originalImage'));
+    const optimizedImage = /** @type {HTMLImageElement} */ (document.getElementById('optimizedImage'));
+    const originalInfo = /** @type {HTMLElement} */ (document.getElementById('originalInfo'));
+    const optimizedInfo = /** @type {HTMLElement} */ (document.getElementById('optimizedInfo'));
+    const imagePreview = /** @type {HTMLElement} */ (document.getElementById('imagePreview'));
+    const downloadBtn = /** @type {HTMLButtonElement} */ (document.getElementById('downloadBtn'));
     
     if (!imageInput) return;
     
@@ -209,7 +210,7 @@ Content paragraphs...
       const reader = new FileReader();
       reader.onload = (e) => {
         if (!originalImage || !e.target?.result) return;
-        originalImage.src = e.target.result as string;
+        originalImage.src = e.target.result.toString();
         
         // Get image dimensions and size
         const img = new Image();
@@ -226,12 +227,17 @@ Content paragraphs...
             imagePreview.classList.remove('hidden');
           }
         };
-        img.src = e.target.result as string;
+        img.src = e.target.result.toString();
       };
       reader.readAsDataURL(file);
     });
     
-    function createOptimizedVersion(img: HTMLImageElement, filename: string) {
+    /**
+     * Create optimized version of the image with proper dimensions
+     * @param {HTMLImageElement} img - The original image element
+     * @param {string} filename - The original filename
+     */
+    function createOptimizedVersion(img, filename) {
       // Target dimensions
       const targetWidth = 1200;
       const targetHeight = 800;
@@ -305,7 +311,7 @@ Content paragraphs...
   
   // Add local storage save/restore functionality to Markdown editor
   document.addEventListener('DOMContentLoaded', () => {
-    const editor = document.getElementById('markdown-editor') as HTMLTextAreaElement;
+    const editor = /** @type {HTMLTextAreaElement} */ (document.getElementById('markdown-editor'));
     const loadTemplateBtn = document.getElementById('load-template');
     
     if (editor) {
@@ -384,5 +390,5 @@ Wrap up your post with a summary of key takeaways and possibly a call to action.
   });
 </script>
 
-<script src="/js/blog-image-helper.js"></script>
-<script src="/js/markdown-preview.js"></script> 
+<script is:inline src="/js/blog-image-helper.js"></script>
+<script is:inline src="/js/markdown-preview.js"></script> 
