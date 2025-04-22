@@ -1,0 +1,8 @@
+{
+  "buildTimestamp": "2025-04-21T18:00:00Z",
+  "hasContentCollections": true,
+  "blogPostCount": 5,
+  "testPost": "debugging-static-blog-issue",
+  "astroVersion": "5.7.4",
+  "notes": "This file is created during build to help diagnose content loading issues"
+} 

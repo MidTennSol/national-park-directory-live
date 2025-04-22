@@ -16,6 +16,15 @@ const sortedPosts = allBlogPosts.sort((a: CollectionEntry<'blog'>, b: Collection
 
 // Get featured posts
 const featuredPosts = sortedPosts.filter((post: CollectionEntry<'blog'>) => post.data.featured);
+
+// Add debug info
+const debugInfo = {
+  pageType: "blog-index",
+  postCount: sortedPosts.length,
+  featuredCount: featuredPosts.length,
+  postSlugs: sortedPosts.map(post => post.slug),
+  buildTime: new Date().toISOString()
+};
 ---
 
 <BaseLayout title="Blog - National Park Directory">
@@ -128,6 +137,11 @@ const featuredPosts = sortedPosts.filter((post: CollectionEntry<'blog'>) => post
         ))}
       </div>
     </div>
+    
+    <!-- Debug Information -->
+    <div id="debug-info" class="hidden">
+      <pre>{JSON.stringify(debugInfo, null, 2)}</pre>
+    </div>
   </div>
 </BaseLayout>
 
@@ -144,4 +158,26 @@ const featuredPosts = sortedPosts.filter((post: CollectionEntry<'blog'>) => post
     padding: 2rem;
     background-color: #f9fafb;
   }
-</style> 
+</style>
+
+<!-- Debug script - will only activate when ?debug=true is in URL -->
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    // Check for debug parameter
+    const urlParams = new URLSearchParams(window.location.search);
+    const debug = urlParams.get('debug');
+    
+    if (debug === 'true') {
+      // Load debug script
+      const script = document.createElement('script');
+      script.src = '/debug-build.js';
+      document.body.appendChild(script);
+      
+      // Show debug info
+      const debugInfo = document.getElementById('debug-info');
+      if (debugInfo) {
+        debugInfo.classList.remove('hidden');
+      }
+    }
+  });
+</script> 
