@@ -39,6 +39,24 @@
   for = "/blog"
   [headers.values]
     Cache-Control = "public, max-age=0, must-revalidate"
+    
+[[headers]]
+  for = "/images/blog/*"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
+
+# Add redirects for blog images to ensure they're found regardless of path format
+[[redirects]]
+  from = "/blog/images/*"
+  to = "/images/blog/:splat"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/images/*"
+  to = "/images/:splat"
+  status = 200
+  force = true
 
 # Add debug plugin to identify blog content issues
 [[plugins]]
