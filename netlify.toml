@@ -38,4 +38,8 @@
 [[headers]]
   for = "/blog"
   [headers.values]
-    Cache-Control = "public, max-age=0, must-revalidate" 
+    Cache-Control = "public, max-age=0, must-revalidate"
+
+# Add debug plugin to identify blog content issues
+[[plugins]]
+  package = "./netlify-plugins/netlify-blog-debug-plugin.js" 

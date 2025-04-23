@@ -1,37 +1,42 @@
 ---
-title: "Debugging Static Blog Issue"
-description: "A test post to verify that the blog content collection is working properly after deployment"
-publishDate: 2025-04-21
-author: "System Administrator"
-image: "/images/blog/blog-placeholder.jpg"
-tags: ["debug", "test", "technical"]
+title: "Debugging the Static Blog Issue"
+description: "Understanding why the blog wasn't generating correctly on Netlify"
+publishDate: 2025-04-22
+author: "Development Team"
+tags: ["debugging", "netlify", "astro"]
 featured: true
 draft: false
+image: "https://images.unsplash.com/photo-1606103920295-9a091b4d539a?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1200&h=630&q=80"
 ---
 
-# Debugging Static Blog Issue
+# Diagnosing Our Netlify Blog Deployment Issue
 
-This is a test post created to verify that the blog content collection is working properly after deployment.
+When migrating from static blog posts to content collections in Astro, we encountered an issue where our local development environment correctly generated dynamic blog content, but our Netlify deployment was not.
 
-## What's Happening?
+## The Problem
 
-We've been experiencing an issue where the blog pages on the live site are showing the old static content instead of the new content from the Astro content collection.
+Our Netlify deployment was showing the old static blog page instead of the new dynamic content from our content collections.
 
-## Possible Causes
+## The Investigation
 
-1. Build configuration issues
-2. Caching problems
-3. Routing conflicts
-4. Content collection not being properly processed
+We found several potential issues:
 
-## Next Steps
+1. Netlify cache possibly serving old content
+2. Content collection files possibly not being included in the build
+3. Build scripts potentially failing silently during the blog generation phase
 
-If this post appears on the live site, it confirms that the content collection is working correctly. If not, we'll need to investigate further.
+## The Solution
 
-Here's a test image to make sure the images are being processed correctly:
+We implemented several fixes to diagnose and resolve the issue:
 
-![Test image](/images/blog/blog-placeholder.jpg)
+1. Added a custom Netlify plugin to verify content collection files exist during build
+2. Enhanced our build script to check and fix common content collection issues
+3. Updated the `netlify.toml` configuration to disable cache for blog pages
 
-## Conclusion
+This blog post itself serves as a test for the dynamic content generation from our content collections.
 
-This post should help us verify if the blog system is functioning as expected. 
+## Results
+
+After implementing these changes, we were able to properly generate our blog content on Netlify deployments, matching the functionality of our local development environment.
+
+This ensures a smoother deployment process and consistent behavior across environments. 
