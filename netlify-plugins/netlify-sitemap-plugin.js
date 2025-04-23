@@ -1,12 +1,13 @@
 /**
  * Netlify plugin to create a proper sitemap.xml file during build
  */
-module.exports = {
+import { promises as fs } from 'fs';
+import path from 'path';
+import { writeFileSync } from 'fs';
+
+export default {
   onPostBuild: async ({ utils }) => {
-    console.log('Creating sitemap.xml file...');
-    
-    const fs = require('fs');
-    const path = require('path');
+    console.log('🔍 Creating sitemap.xml file...');
     
     // Make sure we're generating the file in the publish directory
     const publishDir = process.env.PUBLISH_DIR || 'dist';
@@ -19,7 +20,7 @@ module.exports = {
     
     // Write the sitemap.xml file
     try {
-      fs.writeFileSync(path.join(publishDir, 'sitemap.xml'), sitemapContent);
+      writeFileSync(path.join(publishDir, 'sitemap.xml'), sitemapContent);
       console.log('✅ Successfully created sitemap.xml');
     } catch (error) {
       console.error('❌ Error creating sitemap.xml:', error.message);
