@@ -209,6 +209,22 @@ else
     ls -la dist/images/blog/
 fi
 
+# ENHANCEMENT: Also copy images to /blog/images/ for alternative path resolution
+echo "======================================================"
+echo "ENSURING BLOG IMAGES ARE ALSO AVAILABLE AT /blog/images PATH:"
+if [ -d "dist/blog" ]; then
+    # Create blog/images directory
+    mkdir -p dist/blog/images
+    
+    # Copy all blog images
+    cp -f public/images/blog/* dist/blog/images/
+    
+    echo "✅ Blog images copied to /blog/images/ path"
+    ls -la dist/blog/images/
+else
+    echo "❌ Cannot copy to /blog/images/ because /blog directory doesn't exist!"
+fi
+
 # Print final status
 echo "======================================================"
 echo "BUILD PROCESS COMPLETED"

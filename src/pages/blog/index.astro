@@ -49,6 +49,8 @@ const debugInfo = {
                     src={post.data.image} 
                     alt={post.data.title}
                     class="w-full h-full object-cover"
+                    data-blog-image="true"
+                    data-original-path={post.data.image}
                     onload="this.classList.add('image-loaded')"
                     onerror="if (!this.src.includes('blog-placeholder.jpg')) { this.src='/images/blog-placeholder.jpg'; }"
                   />
@@ -97,6 +99,8 @@ const debugInfo = {
                   src={post.data.image} 
                   alt={post.data.title}
                   class="w-full h-full object-cover"
+                  data-blog-image="true"
+                  data-original-path={post.data.image}
                   onload="this.classList.add('image-loaded')"
                   onerror="if (!this.src.includes('blog-placeholder.jpg')) { this.src='/images/blog-placeholder.jpg'; }"
                 />
