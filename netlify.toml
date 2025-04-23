@@ -20,7 +20,7 @@
 
 # Disable post-processing to eliminate another source of potential issues
 [build.processing]
-  skip_processing = false
+  skip_processing = true
 
 # Add a deploy environment notification in case something is different in production
 [context.production.environment]
@@ -45,13 +45,6 @@
   [headers.values]
     Cache-Control = "public, max-age=0, must-revalidate"
 
-[[headers]]
-  for = "/sitemap.xml"
-  [headers.values]
-    Content-Type = "application/xml"
-    Cache-Control = "public, max-age=3600"
-    X-Robots-Tag = "noindex"
-
 # Add redirects for blog images to ensure they're found regardless of path format
 [[redirects]]
   from = "/blog/images/*"
@@ -62,6 +55,13 @@
 [[redirects]]
   from = "/images/*"
   to = "/images/:splat"
+  status = 200
+  force = true
+
+# Add sitemap redirect
+[[redirects]]
+  from = "/sitemap.xml"
+  to = "/sitemap-index.xml"
   status = 200
   force = true
 
