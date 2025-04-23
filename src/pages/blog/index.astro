@@ -52,7 +52,7 @@ const debugInfo = {
                     data-blog-image="true"
                     data-original-path={post.data.image}
                     onload="this.classList.add('image-loaded')"
-                    onerror="if (!this.src.includes('blog-placeholder.jpg')) { this.src='/images/blog-placeholder.jpg'; }"
+                    onerror="if (!this.src.includes('blog-placeholder.jpg') && !this.src.includes('park-placeholder.svg')) { this.setAttribute('data-failed-src', this.src); this.src='/images/park-placeholder.svg'; this.classList.add('fallback-applied'); }"
                   />
                 </div>
               )}
@@ -102,7 +102,7 @@ const debugInfo = {
                   data-blog-image="true"
                   data-original-path={post.data.image}
                   onload="this.classList.add('image-loaded')"
-                  onerror="if (!this.src.includes('blog-placeholder.jpg')) { this.src='/images/blog-placeholder.jpg'; }"
+                  onerror="if (!this.src.includes('blog-placeholder.jpg') && !this.src.includes('park-placeholder.svg')) { this.setAttribute('data-failed-src', this.src); this.src='/images/park-placeholder.svg'; this.classList.add('fallback-applied'); }"
                 />
               </div>
             )}
