@@ -23,13 +23,14 @@
     "astro": "^5.7.4"
   },
   "devDependencies": {
+    "@astrojs/sitemap": "^3.3.1",
     "autoprefixer": "^10.4.21",
     "postcss": "^8.5.3",
     "tailwindcss": "^4.1.4"
   },
   "optionalDependencies": {
-    "@rollup/rollup-win32-x64-msvc": "4.9.6",
     "@rollup/rollup-darwin-x64": "4.9.6",
-    "@rollup/rollup-linux-x64-musl": "4.9.6"
+    "@rollup/rollup-linux-x64-musl": "4.9.6",
+    "@rollup/rollup-win32-x64-msvc": "4.9.6"
   }
 }
