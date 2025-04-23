@@ -63,4 +63,10 @@
 
 # Add debug plugin to identify blog content issues
 [[plugins]]
-  package = "./netlify-plugins/netlify-blog-debug-plugin.js" 
+  package = "./netlify-plugins/netlify-blog-debug-plugin.js"
+
+# Explicitly set 404 page to handle all not found errors
+[[redirects]]
+  from = "/*"
+  to = "/404.html"
+  status = 404 

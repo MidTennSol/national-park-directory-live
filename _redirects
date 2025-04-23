@@ -1,4 +1,4 @@
-# Netlify _redirects file - takes precedence over netlify.toml redirects
+# Netlify _redirects file - highest priority rules
 
 # Redirects for common paths
 /blog/*  /blog/:splat  200
@@ -25,18 +25,8 @@
 # More fallback patterns
 /blog/*.jpg                     /images/blog/:splat.jpg                     200
 
-# Wildcard fallback for any image with blog in the name
-/*.jpg  /images/blog/:splat  200!  Hostname=*netlify.app*
-
 # Fallback to index for SPA-like functionality
 /  /index.html  200
 
 # Fallback for 404s - this should be last
-/*  /404.html  404
-
-# Primary blog image paths
-/images/blog/*  /images/blog/:splat  200
-
-# Cache control for blog pages
-/blog/*  /blog/:splat  200
-/blog/   /blog/        200 
+/*  /404.html  404 
