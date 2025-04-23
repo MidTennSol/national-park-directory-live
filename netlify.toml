@@ -18,10 +18,6 @@
   # Add npm config directly to environment
   NPM_CONFIG_NODE_LINKER = "hoisted"
 
-# Disable post-processing to eliminate another source of potential issues
-[build.processing]
-  skip_processing = true
-
 # Add a deploy environment notification in case something is different in production
 [context.production.environment]
   NETLIFY_CONTEXT = "production"
