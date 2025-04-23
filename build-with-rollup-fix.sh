@@ -211,18 +211,55 @@ fi
 
 # ENHANCEMENT: Also copy images to /blog/images/ for alternative path resolution
 echo "======================================================"
-echo "ENSURING BLOG IMAGES ARE ALSO AVAILABLE AT /blog/images PATH:"
-if [ -d "dist/blog" ]; then
-    # Create blog/images directory
-    mkdir -p dist/blog/images
+echo "ENSURING BLOG IMAGES ARE ALSO AVAILABLE AT MULTIPLE PATHS:"
+
+# Create all possible image directories
+mkdir -p dist/blog/images
+mkdir -p dist/blog-images
+mkdir -p dist/assets/images/blog
+mkdir -p dist/public/images/blog
+
+# Copy all blog images to each location
+if [ -d "public/images/blog" ]; then
+    echo "Copying blog images to multiple locations for redundancy..."
     
-    # Copy all blog images
-    cp -f public/images/blog/* dist/blog/images/
+    # Copy to /blog/images/
+    cp -f public/images/blog/* dist/blog/images/ 2>/dev/null || echo "Copy to blog/images failed"
+    echo "✅ Copied to /blog/images/"
     
-    echo "✅ Blog images copied to /blog/images/ path"
-    ls -la dist/blog/images/
+    # Copy directly to /blog/ folder
+    cp -f public/images/blog/* dist/blog/ 2>/dev/null || echo "Copy to blog/ failed"
+    echo "✅ Copied to /blog/"
+    
+    # Copy to /blog-images/
+    cp -f public/images/blog/* dist/blog-images/ 2>/dev/null || echo "Copy to blog-images failed"
+    echo "✅ Copied to /blog-images/"
+    
+    # Copy to /assets/images/blog/
+    cp -f public/images/blog/* dist/assets/images/blog/ 2>/dev/null || echo "Copy to assets/images/blog failed"
+    echo "✅ Copied to /assets/images/blog/"
+    
+    # Copy to /public/images/blog/
+    cp -f public/images/blog/* dist/public/images/blog/ 2>/dev/null || echo "Copy to public/images/blog failed"
+    echo "✅ Copied to /public/images/blog/"
+    
+    echo "✅ Blog images copied to all possible locations"
 else
-    echo "❌ Cannot copy to /blog/images/ because /blog directory doesn't exist!"
+    echo "❌ Source blog images directory not found!"
+fi
+
+# Also copy the redirects file to ensure it's properly deployed
+if [ -f "public/_redirects" ]; then
+    echo "Copying _redirects file to dist..."
+    cp -f public/_redirects dist/
+    echo "✅ _redirects file copied"
+fi
+
+# Also copy our fallback image JSON file
+if [ -f "public/blog-images.json" ]; then
+    echo "Copying blog-images.json to dist..."
+    cp -f public/blog-images.json dist/
+    echo "✅ blog-images.json copied"
 fi
 
 # Print final status
