@@ -1,21 +1,15 @@
 # Netlify _redirects file - takes precedence over netlify.toml redirects
-
-# Redirects for common paths
-/blog/*  /blog/:splat  200
-/parks/*  /parks/:splat  200
-/states/*  /states/:splat  200
-/regions/*  /regions/:splat  200
-
-# Handle blog image paths
+# Primary blog image paths
 /images/blog/*  /images/blog/:splat  200
+
+# Fallback for any blog image
 /blog/images/*  /images/blog/:splat  200
 
-# Special handling for site assets
-/assets/*  /assets/:splat  200
-/js/*  /js/:splat  200
-/css/*  /css/:splat  200
+# Cache control for blog pages
+/blog/*  /blog/:splat  200
+/blog/   /blog/        200
 
-# Fallback for specific images
+# Fallback rules for specific images
 /wildlife-photography.jpg       /images/blog/wildlife-photography.jpg       200
 /spring-parks.jpg               /images/blog/spring-parks.jpg               200
 /welcome-header.jpg             /images/blog/welcome-header.jpg             200
@@ -26,17 +20,4 @@
 /blog/*.jpg                     /images/blog/:splat.jpg                     200
 
 # Wildcard fallback for any image with blog in the name
-/*.jpg  /images/blog/:splat  200!  Hostname=*netlify.app*
-
-# Fallback to index for SPA-like functionality
-/  /index.html  200
-
-# Fallback for 404s - this should be last
-/*  /404.html  404
-
-# Primary blog image paths
-/images/blog/*  /images/blog/:splat  200
-
-# Cache control for blog pages
-/blog/*  /blog/:splat  200
-/blog/   /blog/        200 
+/*.jpg  /images/blog/:splat  200!  Hostname=*netlify.app* 
