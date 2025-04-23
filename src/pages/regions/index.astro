@@ -1,0 +1,266 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { fetchNationalParks } from '../../utils/airtable.js';
+
+// Define Park interface
+interface Park {
+  id: string;
+  name: string;
+  description: string;
+  summary?: string;
+  states: string;
+  statesMulti?: string[];
+  designation: string;
+  imageUrl: string;
+  region?: string[];
+  slug: string;
+}
+
+// Define the regions - matching update_regions.py
+const REGIONS = ['Northeast', 'Midwest', 'South', 'West', 'Territories'] as const;
+type Region = typeof REGIONS[number];
+type RegionWithUnassigned = Region | 'Unassigned';
+
+// Number of parks to show per region
+const PARKS_PER_REGION = 6;
+
+// Fetch all parks with their region data
+const allParks = await fetchNationalParks({
+  sort: 'Name',
+  view: 'Grid view',
+  filterByFormula: ''
+});
+
+// Group parks by region
+type ParksByRegion = Record<RegionWithUnassigned, Park[]>;
+
+// Initialize parksByRegion with all possible keys
+const parksByRegion: ParksByRegion = {
+  'Northeast': [],
+  'Midwest': [],
+  'South': [],
+  'West': [],
+  'Territories': [],
+  'Unassigned': []
+};
+
+// Group parks by region
+allParks.forEach((park: Park) => {
+  if (park.region && park.region.length > 0) {
+    // Park has a region assigned
+    const region = park.region[0]; // Use the first region if multiple
+    if (region in parksByRegion) {
+      parksByRegion[region as RegionWithUnassigned].push(park);
+    } else {
+      // If region doesn't match our predefined regions, add to unassigned
+      parksByRegion['Unassigned'].push(park);
+    }
+  } else {
+    // No region assigned
+    parksByRegion['Unassigned'].push(park);
+  }
+});
+
+// Region-based color scheme (matching the state page)
+const regionColors: Record<RegionWithUnassigned, string> = {
+  'Northeast': 'blue',
+  'Midwest': 'green',
+  'South': 'amber',
+  'West': 'red',
+  'Territories': 'purple',
+  'Unassigned': 'gray'
+};
+
+// Get counts for each region
+const regionCounts: Record<RegionWithUnassigned, number> = {
+  'Northeast': 0,
+  'Midwest': 0, 
+  'South': 0,
+  'West': 0,
+  'Territories': 0,
+  'Unassigned': 0
+};
+
+Object.keys(parksByRegion).forEach(region => {
+  regionCounts[region as RegionWithUnassigned] = parksByRegion[region as RegionWithUnassigned].length;
+});
+
+// Sort regions for display - assigned regions first, then unassigned
+const sortedRegions: RegionWithUnassigned[] = [...REGIONS].sort((a, b) => 
+  regionCounts[b] - regionCounts[a]
+);
+if (regionCounts['Unassigned'] > 0) {
+  sortedRegions.push('Unassigned');
+}
+
+// Get limited parks for each region for display
+const limitedParksByRegion: ParksByRegion = {} as ParksByRegion;
+Object.keys(parksByRegion).forEach(region => {
+  limitedParksByRegion[region as RegionWithUnassigned] = parksByRegion[region as RegionWithUnassigned].slice(0, PARKS_PER_REGION);
+});
+---
+
+<BaseLayout title="National Parks by Region - National Park Directory">
+  <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div class="mb-8">
+      <a href="/" class="text-green-800 hover:underline">Home</a> &raquo; 
+      <span class="text-gray-600">Regions</span>
+    </div>
+    
+    <!-- Page Header -->
+    <div class="bg-white rounded-lg shadow-md overflow-hidden mb-8">
+      <div class="relative h-64 md:h-80">
+        <div class="absolute inset-0 bg-gradient-to-r from-blue-500 via-green-500 to-red-500 opacity-80"></div>
+        <div class="absolute inset-0 flex items-end z-20">
+          <div class="p-6 text-white">
+            <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold">National Parks by Region</h1>
+            <p class="text-xl mt-2">
+              Explore the National Park System across the United States by geographic region
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Regions Quick Links -->
+    <div class="bg-white rounded-lg shadow-md p-6 mb-8">
+      <h2 class="text-xl font-bold text-gray-900 mb-4">Jump to Region</h2>
+      <div class="flex flex-wrap gap-2">
+        {sortedRegions.map(region => {
+          let buttonClass = "px-4 py-2 rounded-full text-white transition-colors";
+          
+          // Hardcode specific background colors based on region
+          if (region === 'Northeast') {
+            buttonClass += " bg-blue-600 hover:bg-blue-700";
+          } else if (region === 'Midwest') {
+            buttonClass += " bg-green-600 hover:bg-green-700";
+          } else if (region === 'South') {
+            buttonClass += " bg-amber-600 hover:bg-amber-700";
+          } else if (region === 'West') {
+            buttonClass += " bg-red-600 hover:bg-red-700";
+          } else if (region === 'Territories') {
+            buttonClass += " bg-purple-600 hover:bg-purple-700";
+          } else {
+            buttonClass += " bg-gray-600 hover:bg-gray-700";
+          }
+          
+          return (
+            <a 
+              href={`#region-${region.toLowerCase()}`} 
+              class={buttonClass}
+            >
+              {region} ({regionCounts[region]})
+            </a>
+          );
+        })}
+      </div>
+    </div>
+    
+    <!-- Regions Sections -->
+    {sortedRegions.map(region => {
+      // Define hardcoded styles for each region
+      let borderClass = "border-t-4";
+      let bgClass = "p-6";
+      let textClass = "text-2xl font-bold mb-2";
+      
+      if (region === 'Northeast') {
+        borderClass += " border-blue-500";
+        bgClass += " bg-blue-50";
+        textClass += " text-blue-800";
+      } else if (region === 'Midwest') {
+        borderClass += " border-green-500";
+        bgClass += " bg-green-50";
+        textClass += " text-green-800";
+      } else if (region === 'South') {
+        borderClass += " border-amber-500";
+        bgClass += " bg-amber-50";
+        textClass += " text-amber-800";
+      } else if (region === 'West') {
+        borderClass += " border-red-500";
+        bgClass += " bg-red-50";
+        textClass += " text-red-800";
+      } else if (region === 'Territories') {
+        borderClass += " border-purple-500";
+        bgClass += " bg-purple-50";
+        textClass += " text-purple-800";
+      } else {
+        borderClass += " border-gray-500";
+        bgClass += " bg-gray-50";
+        textClass += " text-gray-800";
+      }
+      
+      return (
+        <div id={`region-${region.toLowerCase()}`} class="mb-12">
+          <div class={`bg-white rounded-lg shadow-md overflow-hidden ${borderClass}`}>
+            <div class={bgClass}>
+              <h2 class={textClass}>
+                {region} Region
+              </h2>
+              <p class="text-gray-700">
+                {regionCounts[region]} National Park {regionCounts[region] === 1 ? 'Site' : 'Sites'}
+              </p>
+            </div>
+            
+            <div class="p-6">
+              {limitedParksByRegion[region].length > 0 ? (
+                <>
+                  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {limitedParksByRegion[region].map(park => (
+                      <a href={`/parks/${park.slug}`} class="block group">
+                        <div class="bg-white rounded-lg shadow-md overflow-hidden border border-gray-200 transition-all group-hover:shadow-lg h-full">
+                          <div class="relative h-48 bg-gray-100">
+                            <img 
+                              src={park.imageUrl || '/images/park-placeholder.jpg'} 
+                              alt={`${park.name}`}
+                              class="w-full h-full object-cover"
+                              loading="lazy"
+                            />
+                          </div>
+                          <div class="p-4 h-full flex flex-col">
+                            <h3 class="text-lg font-semibold text-gray-900 group-hover:text-green-700 transition-colors">
+                              {park.name}
+                            </h3>
+                            <p class="text-gray-600 text-sm mt-1">{park.designation}</p>
+                            <p class="text-gray-500 text-sm mt-auto">
+                              {park.states}
+                            </p>
+                          </div>
+                        </div>
+                      </a>
+                    ))}
+                  </div>
+                  
+                  {regionCounts[region] > PARKS_PER_REGION && (
+                    <div class="mt-8 text-center">
+                      <a 
+                        href={`/regions/${region.toLowerCase()}`} 
+                        class="inline-flex items-center px-6 py-3 rounded-md font-medium text-white bg-green-600 hover:bg-green-700 transition-colors shadow-md"
+                      >
+                        View All {regionCounts[region]} Parks in {region}
+                        <span class="ml-2 bg-white text-green-700 rounded-full px-2 py-1 text-xs font-bold">
+                          {regionCounts[region] - PARKS_PER_REGION}+ more
+                        </span>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-2" viewBox="0 0 20 20" fill="currentColor">
+                          <path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd" />
+                        </svg>
+                      </a>
+                    </div>
+                  )}
+                </>
+              ) : (
+                <p class="text-gray-500 italic">No parks assigned to this region yet.</p>
+              )}
+            </div>
+          </div>
+        </div>
+      );
+    })}
+  </div>
+</BaseLayout>
+
+<style>
+  [astro-icon] {
+    width: 1em;
+    height: 1em;
+  }
+</style> 
