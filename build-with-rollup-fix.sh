@@ -91,6 +91,21 @@ EOF
     echo "✅ Created sample blog post"
 fi
 
+# Check blog image directory
+echo "======================================================"
+echo "CHECKING BLOG IMAGES:"
+if [ -d "public/images/blog" ]; then
+    echo "✅ Blog images directory found"
+    echo "Blog images:"
+    ls -la public/images/blog/
+    echo "Blog image count: $(ls -1 public/images/blog/ | wc -l)"
+else
+    echo "❌ Blog images directory MISSING!"
+    mkdir -p public/images/blog
+    echo "Created public/images/blog directory"
+    echo "⚠️ No blog images available. Pages may show placeholders instead."
+fi
+
 # Check the blog page files
 echo "======================================================"
 echo "CHECKING BLOG PAGE FILES:"
@@ -148,6 +163,50 @@ else
     else
         echo "No build log found to diagnose errors"
     fi
+fi
+
+# Verify blog images in build output
+echo "======================================================"
+echo "VERIFYING BLOG IMAGES IN BUILD OUTPUT:"
+if [ -d "dist/images/blog" ]; then
+    echo "✅ Blog images directory found in build output"
+    echo "Blog images in build output:"
+    ls -la dist/images/blog/
+    
+    # Count images
+    build_image_count=$(ls -1 dist/images/blog/ | wc -l)
+    source_image_count=$(ls -1 public/images/blog/ | wc -l)
+    
+    echo "Blog image count in build: $build_image_count"
+    echo "Blog image count in source: $source_image_count"
+    
+    if [ "$build_image_count" -eq "$source_image_count" ]; then
+        echo "✅ All blog images were copied to build output"
+    else
+        echo "❌ Some blog images are missing in build output"
+        echo "Manually copying missing images..."
+        
+        # Create destination directory if it doesn't exist
+        mkdir -p dist/images/blog
+        
+        # Copy all images from source to destination
+        cp -f public/images/blog/* dist/images/blog/
+        
+        echo "✅ Manually copied blog images to build output"
+        ls -la dist/images/blog/
+    fi
+else
+    echo "❌ Blog images directory MISSING in build output!"
+    echo "Creating images directory and copying blog images..."
+    
+    # Create destination directory
+    mkdir -p dist/images/blog
+    
+    # Copy all images from source to destination
+    cp -f public/images/blog/* dist/images/blog/
+    
+    echo "✅ Manually copied blog images to build output"
+    ls -la dist/images/blog/
 fi
 
 # Print final status
