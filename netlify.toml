@@ -54,9 +54,15 @@
   status = 200
   force = true
 
-# Add sitemap redirect
+# Add sitemap redirects
 [[redirects]]
   from = "/sitemap.xml"
+  to = "/sitemap-index.xml"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/sitemap"
   to = "/sitemap-index.xml"
   status = 200
   force = true
