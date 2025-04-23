@@ -63,21 +63,6 @@ While the park itself doesn’t offer frontcountry campgrounds, nearby **Wildern
 - [Trail Maps and Brochures](https://www.nps.gov/cuga/planyourvisit/maps.htm)  
 - [Current Conditions & Alerts](https://www.nps.gov/cuga/planyourvisit/conditions.htm)
 
-## Related Posts on NationalParkDirectory.org
-
-- [Top Historical National Parks in the Eastern U.S.](#)  
-- [10 Must-See Scenic Overlooks in Appalachian Parks](#)  
-- [Ultimate Guide to Hiking the Wilderness Road Trail](#)
-
-## Visual & Media Suggestions
-
-**Featured Image Filename:** `cumberland-gap-overlook.jpg`  
-**Additional Media Ideas:**
-
-- Video: A drone flyover of the Pinnacle Overlook  
-- Infographic: Timeline of historic events tied to Cumberland Gap  
-- Map: Interactive trail map with historical points of interest  
-
 ## Final Thoughts
 
 Cumberland Gap National Historical Park is where nature meets legacy. From breathtaking panoramas to centuries-old paths, every step through the Gap is a step back in time. Whether you spend a day or a week, the memories you make here will be as enduring as the Appalachian Mountains themselves.
