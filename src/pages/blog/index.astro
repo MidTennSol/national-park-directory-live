@@ -14,8 +14,8 @@ const sortedPosts = allBlogPosts.sort((a: CollectionEntry<'blog'>, b: Collection
   b.data.publishDate.valueOf() - a.data.publishDate.valueOf()
 );
 
-// Get featured posts
-const featuredPosts = sortedPosts.filter((post: CollectionEntry<'blog'>) => post.data.featured);
+// Get the 2 newest posts as featured posts
+const featuredPosts = sortedPosts.slice(0, 2);
 
 // Add debug info
 const debugInfo = {
