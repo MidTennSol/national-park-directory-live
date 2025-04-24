@@ -18,107 +18,131 @@ export default {
       // Current date for lastmod
       const currentDate = new Date().toISOString().split('T')[0];
       
-      // Create a simple sitemap with known content
-      const sitemapContent = `<?xml version="1.0" encoding="UTF-8"?>
+      // Start building the sitemap content
+      let sitemapContent = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>${siteUrl}/</loc>
+    <loc>${siteUrl}</loc>
     <lastmod>${currentDate}</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>${siteUrl}/parks/</loc>
+    <loc>${siteUrl}/parks</loc>
+    <lastmod>${currentDate}</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>`;
+
+      // Popular National Parks - without trailing slashes
+      const popularParks = [
+        'yellowstone',
+        'grand-canyon',
+        'yosemite',
+        'zion',
+        'acadia',
+        'olympic',
+        'great-smoky-mountains',
+        'rocky-mountain',
+        'glacier',
+        'arches',
+        'bryce-canyon',
+        'sequoia',
+        'joshua-tree',
+        'shenandoah',
+        'everglades'
+      ];
+      
+      // Add park pages
+      popularParks.forEach(park => {
+        sitemapContent += `
+  <url>
+    <loc>${siteUrl}/parks/${park}</loc>
+    <lastmod>${currentDate}</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>`;
+      });
+      
+      // Add states section
+      sitemapContent += `
+  <url>
+    <loc>${siteUrl}/states</loc>
+    <lastmod>${currentDate}</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>`;
+      
+      // All 50 states + DC
+      const states = [
+        'alabama', 'alaska', 'arizona', 'arkansas', 'california', 'colorado', 
+        'connecticut', 'delaware', 'florida', 'georgia', 'hawaii', 'idaho', 
+        'illinois', 'indiana', 'iowa', 'kansas', 'kentucky', 'louisiana', 
+        'maine', 'maryland', 'massachusetts', 'michigan', 'minnesota', 
+        'mississippi', 'missouri', 'montana', 'nebraska', 'nevada', 
+        'new-hampshire', 'new-jersey', 'new-mexico', 'new-york', 
+        'north-carolina', 'north-dakota', 'ohio', 'oklahoma', 'oregon', 
+        'pennsylvania', 'rhode-island', 'south-carolina', 'south-dakota', 
+        'tennessee', 'texas', 'utah', 'vermont', 'virginia', 'washington', 
+        'west-virginia', 'wisconsin', 'wyoming', 'district-of-columbia'
+      ];
+      
+      // Add state pages
+      states.forEach(state => {
+        sitemapContent += `
+  <url>
+    <loc>${siteUrl}/states/${state}</loc>
+    <lastmod>${currentDate}</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>`;
+      });
+      
+      // Add regions section
+      sitemapContent += `
+  <url>
+    <loc>${siteUrl}/regions</loc>
+    <lastmod>${currentDate}</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>`;
+      
+      // Regions
+      const regions = ['west', 'midwest', 'northeast', 'southeast', 'southwest'];
+      
+      // Add region pages
+      regions.forEach(region => {
+        sitemapContent += `
+  <url>
+    <loc>${siteUrl}/regions/${region}</loc>
+    <lastmod>${currentDate}</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>`;
+      });
+      
+      // Add blog section and posts
+      sitemapContent += `
+  <url>
+    <loc>${siteUrl}/blog</loc>
     <lastmod>${currentDate}</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>${siteUrl}/parks/yellowstone/</loc>
-    <lastmod>${currentDate}</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>${siteUrl}/parks/grand-canyon/</loc>
-    <lastmod>${currentDate}</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>${siteUrl}/parks/yosemite/</loc>
-    <lastmod>${currentDate}</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>${siteUrl}/parks/zion/</loc>
-    <lastmod>${currentDate}</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>${siteUrl}/parks/acadia/</loc>
-    <lastmod>${currentDate}</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>${siteUrl}/parks/olympic/</loc>
-    <lastmod>${currentDate}</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>${siteUrl}/states/</loc>
-    <lastmod>${currentDate}</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>${siteUrl}/states/california/</loc>
-    <lastmod>${currentDate}</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>${siteUrl}/states/utah/</loc>
-    <lastmod>${currentDate}</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>${siteUrl}/regions/</loc>
-    <lastmod>${currentDate}</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>${siteUrl}/regions/west/</loc>
-    <lastmod>${currentDate}</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>${siteUrl}/blog/</loc>
-    <lastmod>${currentDate}</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>${siteUrl}/blog/wildlife-watching-in-national-parks/</loc>
+    <loc>${siteUrl}/blog/wildlife-watching-in-national-parks</loc>
     <lastmod>${currentDate}</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>${siteUrl}/blog/best-hiking-trails-in-yellowstone/</loc>
+    <loc>${siteUrl}/blog/best-hiking-trails-in-yellowstone</loc>
     <lastmod>${currentDate}</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>${siteUrl}/blog/national-parks-to-visit-in-spring/</loc>
+    <loc>${siteUrl}/blog/national-parks-to-visit-in-spring</loc>
     <lastmod>${currentDate}</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
@@ -127,7 +151,7 @@ export default {
 
       // Write the sitemap.xml file
       writeFileSync(path.join(publishDir, 'sitemap.xml'), sitemapContent);
-      console.log('✅ Successfully created sitemap.xml with hardcoded content');
+      console.log(`✅ Successfully created sitemap.xml with ${popularParks.length + states.length + regions.length + 7} URLs`);
       
       console.log('🎉 Sitemap generation completed successfully');
     } catch (error) {
