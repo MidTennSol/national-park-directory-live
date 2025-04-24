@@ -23,8 +23,12 @@
 /*.jpg  /images/blog/:splat  200!  Hostname=*netlify.app*
 
 # Ensure sitemap.xml is properly redirected
-/sitemap.xml  /sitemap-index.xml  200
-/sitemap      /sitemap-index.xml  200
+# Removed sitemap redirects since we now have a proper sitemap.xml file
+# /sitemap.xml  /sitemap-index.xml  200
+# /sitemap      /sitemap-index.xml  200
+
+# Redirect old HTML sitemap page to new location
+/sitemap /site-map 301
 
 # Redirects for common paths
 /blog/*  /blog/:splat  200
