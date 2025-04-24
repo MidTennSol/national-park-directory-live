@@ -3,28 +3,31 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 ---
 
 <BaseLayout title="Page Not Found - National Park Directory">
-	<div class="min-h-screen flex flex-col items-center justify-center px-4 text-center">
-		<h1 class="text-7xl font-bold text-green-800 mb-4">404</h1>
-		<h2 class="text-3xl font-semibold mb-6">Page Not Found</h2>
-		<p class="text-xl text-gray-600 mb-8 max-w-lg">
-			Oops! The trail you were following seems to have disappeared. 
-			Let's help you find your way back to a marked path.
-		</p>
-		
-		<div class="flex flex-wrap gap-4 justify-center">
-			<a href="/" class="px-4 py-2 bg-green-800 text-white rounded-md hover:bg-green-700 transition-colors">
-				Return to Home
-			</a>
-			<a href="/parks" class="px-4 py-2 bg-green-800 text-white rounded-md hover:bg-green-700 transition-colors">
-				Explore Parks
-			</a>
-			<a href="/site-map" class="px-4 py-2 bg-green-800 text-white rounded-md hover:bg-green-700 transition-colors">Sitemap</a>
-		</div>
-		
-		<div class="mt-16">
-			<p class="text-gray-500">
-				If you believe this is an error, please <a href="/contact" class="text-green-700 hover:underline">contact us</a>.
-			</p>
+	<div class="container mx-auto px-4 py-16 text-center">
+		<div class="max-w-xl mx-auto">
+			<h1 class="text-6xl font-bold text-green-800 mb-6">404</h1>
+			<h2 class="text-3xl font-semibold mb-4">Trail Not Found</h2>
+			<p class="text-xl text-gray-600 mb-8">Looks like you've wandered off the beaten path. The page you're looking for doesn't exist or has been moved.</p>
+			
+			<div class="bg-gray-100 p-8 rounded-lg mb-8">
+				<h3 class="text-xl font-medium mb-4">Looking for something?</h3>
+				<p class="mb-4">You might find what you're looking for in one of these popular destinations:</p>
+				<div class="flex flex-wrap justify-center gap-4 mt-6">
+					<a href="/" class="px-4 py-2 bg-green-800 text-white rounded-md hover:bg-green-700 transition-colors">Home Page</a>
+					<a href="/about" class="px-4 py-2 bg-green-800 text-white rounded-md hover:bg-green-700 transition-colors">About Us</a>
+					<a href="/contact" class="px-4 py-2 bg-green-800 text-white rounded-md hover:bg-green-700 transition-colors">Contact Us</a>
+					<a href="/sitemap" class="px-4 py-2 bg-green-800 text-white rounded-md hover:bg-green-700 transition-colors">Sitemap</a>
+				</div>
+			</div>
+			
+			<div>
+				<a href="/" class="inline-flex items-center text-green-800 font-medium hover:underline">
+					<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+						<path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" />
+					</svg>
+					Return to Home Page
+				</a>
+			</div>
 		</div>
 	</div>
 </BaseLayout> 

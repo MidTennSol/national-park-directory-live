@@ -147,43 +147,11 @@ export default {
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
-
-  <!-- Other important pages -->
-  <url>
-    <loc>${siteUrl}/about</loc>
-    <lastmod>${currentDate}</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>${siteUrl}/contact</loc>
-    <lastmod>${currentDate}</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>${siteUrl}/site-map</loc>
-    <lastmod>${currentDate}</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
-    <loc>${siteUrl}/privacy-policy</loc>
-    <lastmod>${currentDate}</lastmod>
-    <changefreq>yearly</changefreq>
-    <priority>0.4</priority>
-  </url>
-  <url>
-    <loc>${siteUrl}/terms</loc>
-    <lastmod>${currentDate}</lastmod>
-    <changefreq>yearly</changefreq>
-    <priority>0.4</priority>
-  </url>
 </urlset>`;
 
       // Write the sitemap.xml file
       writeFileSync(path.join(publishDir, 'sitemap.xml'), sitemapContent);
-      console.log(`✅ Successfully created sitemap.xml with ${popularParks.length + states.length + regions.length + 12} URLs`);
+      console.log(`✅ Successfully created sitemap.xml with ${popularParks.length + states.length + regions.length + 7} URLs`);
       
       console.log('🎉 Sitemap generation completed successfully');
     } catch (error) {
