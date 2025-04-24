@@ -57,7 +57,3 @@
 # Add debug plugin to identify blog content issues
 [[plugins]]
   package = "./netlify-plugins/netlify-blog-debug-plugin.js" 
-
-# Add sitemap generation plugin
-[[plugins]]
-  package = "./netlify-plugins/netlify-sitemap-plugin.js" 

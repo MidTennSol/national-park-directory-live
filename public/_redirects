@@ -22,10 +22,6 @@
 # Wildcard fallback for any image with blog in the name
 /*.jpg  /images/blog/:splat  200!  Hostname=*netlify.app*
 
-# Ensure sitemap.xml is properly redirected
-/sitemap.xml  /sitemap-index.xml  200
-/sitemap      /sitemap-index.xml  200
-
 # Redirects for common paths
 /blog/*  /blog/:splat  200
 /parks/*  /parks/:splat  200
