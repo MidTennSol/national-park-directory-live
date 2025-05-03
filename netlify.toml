@@ -62,6 +62,19 @@
   status = 200
   force = true
 
+# Ensure index.html is served for the root path
+[[redirects]]
+  from = "/"
+  to = "/index.html"
+  status = 200
+  force = true
+
+# Fallback for SPA routing
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
 # Add debug plugin to identify blog content issues
 [[plugins]]
   package = "./netlify-plugins/netlify-blog-debug-plugin.js" 
