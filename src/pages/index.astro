@@ -8,22 +8,16 @@ console.log('Fetching parks for homepage...');
 // Define error state
 let error = null;
 
-// Fetch parks and randomly select 6 for the homepage
-let featuredParks = [];
+// Fetch all parks
+let allParks = [];
 try {
   console.log('Making Airtable API request...');
-  // Fetch all parks first
-  const allParks = await fetchNationalParks({
+  allParks = await fetchNationalParks({
     sort: 'Name',
     view: 'Grid view',
     filterByFormula: ''
   });
   console.log(`Fetched ${allParks.length} parks successfully`);
-  
-  // Randomly select 6 parks
-  const shuffled = [...allParks].sort(() => 0.5 - Math.random());
-  featuredParks = shuffled.slice(0, 6);
-  console.log(`Selected 6 random parks for the homepage`);
 } catch (err) {
   console.error('Error fetching parks:', err);
   error = err instanceof Error ? err.message : String(err);
@@ -33,36 +27,26 @@ try {
 const debug = false;
 ---
 
-<BaseLayout title="National Park Directory - Discover America's National Parks">
+<BaseLayout title="National Park Directory - Explore America's Parks">
   <!-- Hero Section -->
-  <div class="bg-gradient-to-r from-green-800 to-green-700 text-white">
-    <div class="container mx-auto px-4 py-20 md:py-24 lg:py-32">
-      <div class="max-w-3xl">
-        <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold mb-4">
-          Discover America's National Parks
-        </h1>
-        <p class="text-xl md:text-2xl mb-8 text-green-100">
-          Explore natural wonders, historical sites, and recreational areas across the United States.
-        </p>
-        <div class="flex flex-wrap gap-4">
-          <a 
-            href="/parks" 
-            class="bg-white text-green-800 px-6 py-3 rounded-md font-medium hover:bg-green-100 transition-colors shadow-md"
-          >
-            View All Parks
-          </a>
-          <a 
-            href="/states" 
-            class="bg-green-600 text-white px-6 py-3 rounded-md font-medium hover:bg-green-500 transition-colors shadow-md"
-          >
-            Browse by State
-          </a>
-        </div>
-      </div>
+  <div class="relative bg-green-800 text-white py-24 sm:py-32">
+    <div class="absolute inset-0 overflow-hidden">
+      <img 
+        src="/images/hero-background.jpg" 
+        alt="National Park landscape" 
+        class="w-full h-full object-cover opacity-30"
+      />
+    </div>
+    <div class="relative container mx-auto px-4 sm:px-6 lg:px-8">
+      <h1 class="text-4xl sm:text-5xl lg:text-6xl font-bold text-center mb-6">
+        National Park Directory
+      </h1>
+      <p class="text-xl sm:text-2xl text-center max-w-3xl mx-auto">
+        Explore America's natural and cultural heritage through our comprehensive guide to national parks, monuments, historic sites, and more.
+      </p>
     </div>
   </div>
-  
-  <!-- Featured Parks Section -->
+
   <div class="container mx-auto px-4 py-16">
     <h2 class="text-3xl font-bold text-gray-900 mb-8 text-center">Featured National Parks</h2>
     
@@ -73,11 +57,9 @@ const debug = false;
         </p>
         {debug && <p class="text-red-600 mt-2">Error: {error}</p>}
       </div>
-    ) : featuredParks.length > 0 ? (
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        {featuredParks.map((park) => (
-          <ParkCard park={park} />
-        ))}
+    ) : allParks.length > 0 ? (
+      <div id="featured-parks" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        {/* Parks will be populated by JavaScript */}
       </div>
     ) : (
       <div class="bg-yellow-50 border border-yellow-100 rounded-lg p-6 text-center">
@@ -86,7 +68,7 @@ const debug = false;
         </p>
       </div>
     )}
-    
+
     <div class="mt-12 text-center">
       <a 
         href="/parks" 
@@ -99,7 +81,7 @@ const debug = false;
       </a>
     </div>
   </div>
-  
+
   <!-- Navigation Cards -->
   <div class="bg-gray-50 py-16">
     <div class="container mx-auto px-4">
@@ -132,19 +114,19 @@ const debug = false;
         
         <!-- Parks by State Card -->
         <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
-          <div class="h-48 bg-blue-700 flex items-center justify-center">
+          <div class="h-48 bg-blue-800 flex items-center justify-center">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-24 w-24 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 21v-4m0 0V5a2 2 0 012-2h6.5l1 1H21l-3 6 3 6h-8.5l-1-1H5a2 2 0 00-2 2zm9-13.5V9" />
             </svg>
           </div>
           <div class="p-6">
             <h3 class="text-xl font-bold text-gray-900 mb-2">Parks by State</h3>
             <p class="text-gray-700 mb-4">
-              Find national parks in your state or plan a trip to discover parks in a new region.
+              Find national parks and sites in your state or plan your next adventure.
             </p>
             <a 
               href="/states" 
-              class="text-blue-700 font-medium hover:text-blue-600 flex items-center"
+              class="text-blue-800 font-medium hover:text-blue-700 flex items-center"
             >
               Browse by State
               <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-1" viewBox="0 0 20 20" fill="currentColor">
@@ -156,19 +138,19 @@ const debug = false;
         
         <!-- Parks by Type Card -->
         <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
-          <div class="h-48 bg-purple-700 flex items-center justify-center">
+          <div class="h-48 bg-yellow-800 flex items-center justify-center">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-24 w-24 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
             </svg>
           </div>
           <div class="p-6">
             <h3 class="text-xl font-bold text-gray-900 mb-2">Parks by Type</h3>
             <p class="text-gray-700 mb-4">
-              Explore different types of park designations, from National Parks to Historic Sites and Monuments.
+              Discover different types of national parks and protected areas.
             </p>
             <a 
               href="/types" 
-              class="text-purple-700 font-medium hover:text-purple-600 flex items-center"
+              class="text-yellow-800 font-medium hover:text-yellow-700 flex items-center"
             >
               Browse by Type
               <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-1" viewBox="0 0 20 20" fill="currentColor">
@@ -180,46 +162,66 @@ const debug = false;
       </div>
     </div>
   </div>
-  
-  <!-- About Section -->
-  <div id="about" class="container mx-auto px-4 py-16">
-    <div class="max-w-4xl mx-auto">
-      <h2 class="text-3xl font-bold text-gray-900 mb-6">About The National Park Directory</h2>
-      <div class="prose prose-lg max-w-none">
-        <p>
-          The National Park Directory is dedicated to showcasing the incredible diversity of America's national parks system. 
-          From iconic landscapes like Yellowstone and the Grand Canyon to lesser-known historical sites and monuments, 
-          this directory aims to help visitors discover and plan their adventures in these protected natural and cultural treasures.
-        </p>
-        <p>
-          Our directory includes comprehensive information about:
-        </p>
-        <ul>
-          <li>National Parks</li>
-          <li>National Monuments</li>
-          <li>National Historic Sites</li>
-          <li>National Recreation Areas</li>
-          <li>And other sites managed by the National Park Service</li>
-        </ul>
-        <p>
-          Whether you're planning a family vacation, a solo adventure, or simply interested in learning more about America's 
-          protected lands, we hope this directory serves as a valuable resource for your exploration.
-        </p>
-        
-        {debug && (
-          <div class="mt-8 p-4 bg-gray-100 rounded-lg">
-            <h3 class="text-lg font-bold mb-2">Debug Info</h3>
-            <p>Featured Parks Count: {featuredParks.length}</p>
-            {featuredParks.length > 0 && (
-              <div>
-                <p>First Park: {featuredParks[0].name}</p>
-                <p>Has Image URL: {Boolean(featuredParks[0].imageUrl).toString()}</p>
-                <p>Has Wikimedia Images: {Boolean(featuredParks[0].wikimediaImages).toString()}</p>
-              </div>
-            )}
-          </div>
-        )}
-      </div>
-    </div>
-  </div>
 </BaseLayout>
+
+<script define:vars={{ allParks }}>
+// Function to shuffle array
+function shuffleArray(array) {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+  return array;
+}
+
+// Function to create park card HTML
+function createParkCard(park) {
+  return `
+    <a href="/parks/${park.slug}" class="block group">
+      <div class="bg-white rounded-lg shadow-md overflow-hidden border border-gray-200 transition-all group-hover:shadow-lg h-full">
+        <div class="relative h-48 bg-gray-100">
+          <img 
+            src="${park.imageUrl || '/images/park-placeholder.jpg'}" 
+            alt="${park.name}"
+            class="w-full h-full object-cover"
+            loading="lazy"
+          />
+        </div>
+        <div class="p-4 flex flex-col flex-grow">
+          <h3 class="text-lg font-semibold text-gray-900 group-hover:text-green-700 transition-colors">
+            ${park.name}
+          </h3>
+          <p class="text-gray-600 text-sm mt-1">${park.designation || ''}</p>
+          <p class="text-gray-500 text-sm mt-auto">
+            ${park.states}
+          </p>
+        </div>
+      </div>
+    </a>
+  `;
+}
+
+// Function to update featured parks
+function updateFeaturedParks() {
+  const container = document.getElementById('featured-parks');
+  if (!container) return;
+
+  // Shuffle parks and take first 6
+  const shuffled = shuffleArray([...allParks]);
+  const featured = shuffled.slice(0, 6);
+
+  // Create HTML for all 6 parks
+  const html = featured.map(park => createParkCard(park)).join('');
+  container.innerHTML = html;
+}
+
+// Update featured parks on page load
+updateFeaturedParks();
+
+// Optional: Update featured parks when the page becomes visible again
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState === 'visible') {
+    updateFeaturedParks();
+  }
+});
+</script>
