@@ -54,7 +54,13 @@ export default defineConfig({
           changefreq,
           lastmod: new Date().toISOString()
         };
-      }
+      },
+      // Ensure sitemap is generated at the root
+      outfile: 'sitemap.xml',
+      serialize: (item) => ({
+        ...item,
+        url: item.url.replace(/\/+$/, '') // Remove trailing slashes
+      })
     })
   ],
   vite: {
