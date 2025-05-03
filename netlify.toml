@@ -43,10 +43,11 @@
 
 # Add sitemap header to ensure correct content type
 [[headers]]
-  for = "/sitemap.xml"
+  for = "/*.xml"
   [headers.values]
     Content-Type = "application/xml"
     Cache-Control = "public, max-age=3600"
+    X-Content-Type-Options = "nosniff"
 
 # Add redirects for blog images to ensure they're found regardless of path format
 [[redirects]]

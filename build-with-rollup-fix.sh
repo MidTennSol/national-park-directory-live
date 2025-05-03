@@ -126,6 +126,26 @@ echo "======================================================"
 echo "RUNNING BUILD:"
 NODE_OPTIONS="--max-old-space-size=4096" npm run build
 
+# Verify sitemap files
+echo "======================================================"
+echo "VERIFYING SITEMAP FILES:"
+if [ -f "dist/sitemap.xml" ]; then
+    echo "✅ Main sitemap.xml found"
+    ls -la dist/sitemap.xml
+else
+    echo "❌ Main sitemap.xml MISSING!"
+fi
+
+if ls dist/sitemap-*.xml 1> /dev/null 2>&1; then
+    echo "✅ Additional sitemap files found:"
+    ls -la dist/sitemap-*.xml
+else
+    echo "⚠️ No additional sitemap files found"
+fi
+
+# Ensure proper permissions
+chmod 644 dist/*.xml 2>/dev/null || true
+
 # Verify build directory includes blog content
 echo "======================================================"
 echo "VERIFYING BUILD OUTPUT:"
