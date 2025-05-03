@@ -41,6 +41,13 @@
   [headers.values]
     Cache-Control = "public, max-age=0, must-revalidate"
 
+# Add sitemap header to ensure correct content type
+[[headers]]
+  for = "/sitemap.xml"
+  [headers.values]
+    Content-Type = "application/xml"
+    Cache-Control = "public, max-age=3600"
+
 # Add redirects for blog images to ensure they're found regardless of path format
 [[redirects]]
   from = "/blog/images/*"
