@@ -1,24 +1,32 @@
-const fs = require('fs');
-const path = require('path');
-const { promisify } = require('util');
-const rimraf = promisify(require('rimraf'));
+import { promises as fs } from 'fs';
+import { fileURLToPath } from 'url';
+import { dirname, join } from 'path';
+import { rm, mkdir } from 'fs/promises';
+
+// Get __dirname equivalent in ES modules
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 async function cleanDist() {
-  const distPath = path.join(process.cwd(), 'dist');
+  const distPath = join(dirname(__dirname), 'dist');
   
   console.log('🧹 Cleaning dist directory...');
   
   try {
     // Check if dist exists
-    if (fs.existsSync(distPath)) {
+    try {
+      await fs.access(distPath);
       // Remove everything in dist
-      await rimraf(path.join(distPath, '*'));
+      await rm(distPath, { recursive: true, force: true });
       console.log('✅ Dist directory cleaned successfully');
-    } else {
+    } catch {
       console.log('📂 Dist directory does not exist, creating it...');
-      fs.mkdirSync(distPath);
-      console.log('✅ Dist directory created');
     }
+    
+    // Create fresh dist directory
+    await mkdir(distPath, { recursive: true });
+    console.log('✅ Dist directory ready');
+    
   } catch (error) {
     console.error('❌ Error cleaning dist directory:', error);
     process.exit(1);

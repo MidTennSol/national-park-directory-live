@@ -22,8 +22,7 @@
   "dependencies": {
     "@rollup/rollup-linux-x64-gnu": "4.9.6",
     "@tailwindcss/vite": "^4.1.4",
-    "astro": "^5.7.4",
-    "rimraf": "^5.0.10"
+    "astro": "^5.7.4"
   },
   "devDependencies": {
     "@astrojs/sitemap": "^3.3.1",
