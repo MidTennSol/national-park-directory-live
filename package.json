@@ -15,12 +15,15 @@
     "debug-build": "NODE_OPTIONS=--trace-warnings NODE_ENV=production astro build --verbose",
     "preview": "astro preview",
     "astro": "astro",
-    "postinstall": "node ./postinstall.js"
+    "postinstall": "node ./postinstall.js",
+    "pre-deploy": "node scripts/pre-deploy.js",
+    "deploy": "npm run pre-deploy && npm run build && netlify deploy --prod"
   },
   "dependencies": {
     "@rollup/rollup-linux-x64-gnu": "4.9.6",
     "@tailwindcss/vite": "^4.1.4",
-    "astro": "^5.7.4"
+    "astro": "^5.7.4",
+    "rimraf": "^5.0.10"
   },
   "devDependencies": {
     "@astrojs/sitemap": "^3.3.1",
