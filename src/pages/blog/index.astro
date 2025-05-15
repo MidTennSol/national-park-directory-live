@@ -3,6 +3,8 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import { getCollection } from 'astro:content';
 import { formatDate } from '../../utils/dateUtils';
 import type { CollectionEntry } from 'astro:content';
+import HeroSection from '../../components/HeroSection.astro';
+import heroImages from '../../config/heroImages.js';
 
 // Get all blog posts that aren't marked as draft
 const allBlogPosts = await getCollection('blog', ({ data }) => {
@@ -28,6 +30,7 @@ const debugInfo = {
 ---
 
 <BaseLayout title="Blog - National Park Directory">
+  <HeroSection {...heroImages.blog} />
   <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
     <div class="text-center mb-16">
       <h1 class="text-4xl md:text-5xl font-bold text-green-800">National Park Blog</h1>

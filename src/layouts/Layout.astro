@@ -3,9 +3,19 @@ import '../styles/global.css';
 
 interface Props {
 	title?: string;
+	description?: string;
+	ogImage?: string;
+	ogType?: string;
+	jsonLd?: string;
 }
 
-const { title = "National Park Directory" } = Astro.props;
+const {
+	title = "National Park Directory",
+	description = "Explore America's national parks, monuments, and historic sites with our comprehensive directory.",
+	ogImage = "/images/hero-background.jpg",
+	ogType = "website",
+	jsonLd = null
+} = Astro.props;
 
 // Define navigation items
 const mainNavItems = [
@@ -33,6 +43,20 @@ const footerNavItems = [
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<meta name="generator" content={Astro.generator} />
 		<title>{title}</title>
+		<meta name="description" content={description} />
+		<!-- Open Graph -->
+		<meta property="og:title" content={title} />
+		<meta property="og:description" content={description} />
+		<meta property="og:image" content={ogImage} />
+		<meta property="og:type" content={ogType} />
+		<meta property="og:url" content={Astro.site ? Astro.site.href : ''} />
+		<!-- Twitter Card -->
+		<meta name="twitter:card" content="summary_large_image" />
+		<meta name="twitter:title" content={title} />
+		<meta name="twitter:description" content={description} />
+		<meta name="twitter:image" content={ogImage} />
+		<!-- JSON-LD Schema -->
+		{jsonLd && <script type="application/ld+json" set:html={jsonLd} />}
 		
 		<!-- Image fallback script -->
 		<script>

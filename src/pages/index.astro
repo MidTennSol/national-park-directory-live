@@ -1,6 +1,8 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import ParkCard from '../components/ParkCard.astro';
+import HeroSection from '../components/HeroSection.astro';
+import heroImages from '../config/heroImages.js';
 import { fetchNationalParks } from '../utils/airtable.js';
 
 console.log('Fetching parks for homepage...');
@@ -28,24 +30,7 @@ const debug = false;
 ---
 
 <BaseLayout title="National Park Directory - Explore America's Parks">
-  <!-- Hero Section -->
-  <div class="relative bg-green-800 text-white py-24 sm:py-32">
-    <div class="absolute inset-0 overflow-hidden">
-      <img 
-        src="/images/hero-background.jpg" 
-        alt="National Park landscape" 
-        class="w-full h-full object-cover opacity-30"
-      />
-    </div>
-    <div class="relative container mx-auto px-4 sm:px-6 lg:px-8">
-      <h1 class="text-4xl sm:text-5xl lg:text-6xl font-bold text-center mb-6">
-        National Park Directory
-      </h1>
-      <p class="text-xl sm:text-2xl text-center max-w-3xl mx-auto">
-        Explore America's natural and cultural heritage through our comprehensive guide to national parks, monuments, historic sites, and more.
-      </p>
-    </div>
-  </div>
+  <HeroSection {...heroImages.home} />
 
   <div class="container mx-auto px-4 py-16">
     <h2 class="text-3xl font-bold text-gray-900 mb-8 text-center">Featured National Parks</h2>

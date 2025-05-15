@@ -20,9 +20,8 @@
     "deploy": "npm run pre-deploy && npm run build && netlify deploy --prod"
   },
   "dependencies": {
-    "@rollup/rollup-linux-x64-gnu": "4.9.6",
     "@tailwindcss/vite": "^4.1.4",
-    "astro": "^5.7.4"
+    "astro": "5.7.13"
   },
   "devDependencies": {
     "@astrojs/sitemap": "^3.3.1",

@@ -94,15 +94,117 @@ The project is experiencing a critical integrated issue where fixing the sitemap
    - Success Criteria: Complete documentation and prevention measures
 
 ## Project Status Board
-- 🟡 Phase 1: Not Started
-- 🔴 Phase 2: Not Started
-- 🔴 Phase 3: Not Started
+- 🟢 Phase 1: Done
+- 🟢 Phase 2: Done
+- 🟡 Phase 3: In Progress
 
 ## Executor's Feedback or Assistance Requests
-*No feedback yet - awaiting initial investigation phase*
+- Phase 1 (Google Maps): Issue was .env file encoding (UTF-16 LE). Solution: convert to UTF-8. Map now works and API key is read. Proceeding to Phase 2 (Hero Image System).
+- Phase 2 (Hero Image): Centralized hero image config and reusable component implemented for all main pages. Proceeding to Phase 3 (SEO Enhancement).
 
 ## Lessons
 1. Integrated issues require holistic solutions - fixing individual symptoms leads to regression cycles
 2. Build pipeline order and timing is critical for static file generation
 3. Configuration conflicts can create subtle deployment issues
-4. Proper monitoring and verification steps are essential for stability 
+4. Proper monitoring and verification steps are essential for stability
+
+# National Park Directory - Core Feature Enhancements
+
+## Background and Motivation
+The project requires three major enhancements to improve functionality and SEO:
+1. Google Maps integration for park pages
+2. Unified hero image system across main pages
+3. Comprehensive SEO metadata and schema implementation
+
+These changes will improve user experience, maintainability, and search engine visibility.
+
+## Key Challenges and Analysis
+
+### 1. Google Maps Integration
+- No existing API key configuration
+- Need for graceful fallback handling
+- Dynamic loading requirements
+- Security considerations for API key storage
+
+### 2. Hero Image System
+- Multiple pages requiring consistent design
+- Need for centralized configuration
+- Potential impact on build system
+- Maintainability requirements
+
+### 3. SEO Implementation
+- Dynamic metadata generation
+- Schema.org integration
+- Multiple page types to handle
+- Integration with existing Airtable data
+
+## High-level Task Breakdown
+
+### Phase 1: Google Maps Integration
+1. **Environment Setup**
+   - [ ] Create .env file structure
+   - [ ] Add GOOGLE_MAPS_API_KEY configuration
+   - [ ] Update documentation for API key requirement
+   - Success Criteria: Environment configuration working locally and in production
+
+2. **Maps Component Development**
+   - [ ] Create reusable Google Maps component
+   - [ ] Implement coordinate-based rendering
+   - [ ] Add city/state fallback logic
+   - [ ] Add error handling and loading states
+   - Success Criteria: Maps component working with both coordinate and address data
+
+3. **Integration Testing**
+   - [ ] Test with valid API key
+   - [ ] Test fallback scenarios
+   - [ ] Verify error handling
+   - Success Criteria: Maps working correctly in all scenarios
+
+### Phase 2: Hero Image System
+1. **Component Architecture**
+   - [ ] Create shared hero component
+   - [ ] Implement configuration system
+   - [ ] Add image optimization handling
+   - Success Criteria: Reusable hero component with configurable image
+
+2. **Page Integration**
+   - [ ] Implement on homepage
+   - [ ] Add to about, contact, FAQ, and blog pages
+   - [ ] Test responsive behavior
+   - Success Criteria: Consistent hero sections across all main pages
+
+### Phase 3: SEO Enhancement
+1. **Metadata System**
+   - [ ] Create dynamic meta tag generation
+   - [ ] Implement Open Graph tags
+   - [ ] Add Twitter card support
+   - Success Criteria: Complete meta tag coverage for all pages
+
+2. **Schema Implementation**
+   - [ ] Create JSON-LD generator for parks
+   - [ ] Implement schema.org/NationalPark markup
+   - [ ] Add default schemas for other pages
+   - Success Criteria: Valid schema markup for all page types
+
+3. **Testing and Verification**
+   - [ ] Validate metadata generation
+   - [ ] Test schema markup
+   - [ ] Verify social media previews
+   - Success Criteria: All SEO elements validated and working
+
+## Project Status Board
+- 🟢 Phase 1: Done
+- 🟢 Phase 2: Done
+- 🟡 Phase 3: In Progress
+
+## Executor's Feedback or Assistance Requests
+*No feedback yet - awaiting initial implementation phase*
+
+## Lessons
+1. Include info useful for debugging in the program output
+2. Read files before editing
+3. Run npm audit if vulnerabilities appear
+4. Ask before using git -force
+5. Maintain secure API key handling
+6. Ensure graceful degradation for all features
+7. Keep configuration centralized for maintainability 

@@ -231,14 +231,66 @@ const hasValidCoordinates = park.latitude && park.longitude &&
 
 // Create map URL if coordinates are valid
 let mapUrl = '';
+let mapError = '';
+
 if (hasValidCoordinates) {
   const latitude = parseFloat(park.latitude as string);
   const longitude = parseFloat(park.longitude as string);
-  mapUrl = `https://www.google.com/maps/embed/v1/place?key=AIzaSyBJF0B95x6qv1eaNBwCbCLJF9-UI_KUHJo&q=${latitude},${longitude}&zoom=10`;
+  const apiKey = import.meta.env.PUBLIC_GOOGLE_MAPS_API_KEY;
+  
+  if (apiKey) {
+    mapUrl = `https://www.google.com/maps/embed/v1/place?key=${apiKey}&q=${latitude},${longitude}&zoom=10`;
+  } else {
+    console.error('Google Maps API key not found in environment variables');
+    mapError = 'Map configuration is incomplete. Please try again later.';
+  }
+} else {
+  console.log(`No valid coordinates found for ${park.name}`);
+  // If we have city and state, we can still show a map
+  if (park.city && park.states) {
+    const apiKey = import.meta.env.PUBLIC_GOOGLE_MAPS_API_KEY;
+    if (apiKey) {
+      const location = `${park.city}, ${park.states.split(',')[0].trim()}`;
+      mapUrl = `https://www.google.com/maps/embed/v1/place?key=${apiKey}&q=${encodeURIComponent(location)}&zoom=10`;
+    } else {
+      console.error('Google Maps API key not found in environment variables');
+      mapError = 'Map configuration is incomplete. Please try again later.';
+    }
+  }
 }
+
+// SEO and Open Graph
+const seoTitle = `${park.name} - National Park Directory`;
+const seoDescription = fullDescription?.slice(0, 160) || `Discover ${park.name}, a national park in ${park.city || park.states}.`;
+const ogImage = parkImages[0] || '/images/hero-background.jpg';
+const ogType = 'article';
+
+// JSON-LD Schema
+const jsonLd = JSON.stringify({
+  '@context': 'https://schema.org',
+  '@type': 'NationalPark',
+  'name': park.name,
+  'description': fullDescription,
+  'url': `https://nationalparkdirectory.com/parks/${park.slug}`,
+  'image': ogImage,
+  'geo': park.latitude && park.longitude ? {
+    '@type': 'GeoCoordinates',
+    'latitude': park.latitude,
+    'longitude': park.longitude
+  } : undefined,
+  'address': park.city || undefined,
+  'containedInPlace': park.states ? park.states.split(',').map(s => s.trim()) : undefined,
+  'sameAs': park.websiteUrl || undefined
+});
 ---
 
-<BaseLayout title={`${park.name} - National Park Directory`}>
+<BaseLayout
+  title={seoTitle}
+  description={seoDescription}
+  ogImage={ogImage}
+  ogType={ogType}
+  jsonLd={jsonLd}
+>
   <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
     <div class="mb-8">
       <a href="/" class="text-green-800 hover:underline">Home</a> &raquo; 
@@ -325,18 +377,57 @@ if (hasValidCoordinates) {
           </section>
         )}
         
-        {hasValidCoordinates && (
+        {(hasValidCoordinates || (park.city && park.states)) && (
           <section class="bg-white rounded-lg shadow-md p-6 mb-8">
             <h2 class="text-2xl font-bold text-gray-900 mb-4">Location</h2>
             <div class="aspect-video w-full rounded overflow-hidden">
-              <iframe
-                width="100%"
-                height="100%"
-                style="border:0"
-                loading="lazy"
-                allowfullscreen
-                src={mapUrl}
-              ></iframe>
+              {mapUrl ? (
+                <iframe
+                  width="100%"
+                  height="100%"
+                  style="border:0"
+                  loading="lazy"
+                  allowfullscreen
+                  referrerpolicy="no-referrer-when-downgrade"
+                  src={mapUrl}
+                  class="rounded-lg"
+                  onerror="
+                    const iframe = this;
+                    const parent = iframe.parentElement;
+                    if (parent) {
+                      parent.innerHTML = `
+                        <div class='flex items-center justify-center h-full bg-gray-100 rounded-lg'>
+                          <div class='text-center p-4'>
+                            <p class='text-gray-600 mb-2'>Unable to load map</p>
+                            <a 
+                              href='https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(park.name)}'
+                              target='_blank'
+                              rel='noopener noreferrer'
+                              class='text-green-800 hover:underline'
+                            >
+                              View on Google Maps →
+                            </a>
+                          </div>
+                        </div>
+                      `;
+                    }
+                  "
+                ></iframe>
+              ) : (
+                <div class="flex items-center justify-center h-full bg-gray-100 rounded-lg">
+                  <div class="text-center p-4">
+                    <p class="text-gray-600 mb-2">{mapError || 'Map not available'}</p>
+                    <a 
+                      href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(park.name)}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      class="text-green-800 hover:underline"
+                    >
+                      View on Google Maps →
+                    </a>
+                  </div>
+                </div>
+              )}
             </div>
             <div class="mt-4 text-sm text-gray-500">
               {park.city && <p class="mb-1">Located in {park.city}</p>}
@@ -526,6 +617,12 @@ if (hasValidCoordinates) {
     </div>
   </div>
 </BaseLayout>
+
+<script>
+  if (typeof window !== 'undefined') {
+    console.log('DEBUG: PUBLIC_GOOGLE_MAPS_API_KEY:', import.meta.env.PUBLIC_GOOGLE_MAPS_API_KEY);
+  }
+</script>
 
 <style>
   .image-loaded {
