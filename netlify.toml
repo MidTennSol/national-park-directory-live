@@ -104,4 +104,9 @@
 
 # Add debug plugin to identify blog content issues
 [[plugins]]
-  package = "./netlify-plugins/netlify-blog-debug-plugin.js" 
+  package = "./netlify-plugins/netlify-blog-debug-plugin.js"
+
+[[redirects]]
+  from = "/*.xml"
+  to = "/:splat"
+  status = 200 
