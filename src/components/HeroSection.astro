@@ -6,20 +6,23 @@ export interface Props {
 }
 const { image, title, description } = Astro.props;
 ---
-<div class="relative bg-green-800 text-white py-24 sm:py-32">
+<div class="relative text-white min-h-[420px] sm:min-h-[520px] md:min-h-[600px] lg:min-h-[700px] flex items-center justify-center">
   <div class="absolute inset-0 overflow-hidden">
     <img 
       src={image} 
       alt={title} 
-      class="w-full h-full object-cover opacity-30" 
+      class="w-full h-full object-cover"
+      style="min-height: 420px; max-height: 700px;"
     />
+    <div class="absolute inset-0 bg-black bg-opacity-30"></div>
   </div>
-  <div class="relative container mx-auto px-4 sm:px-6 lg:px-8">
-    <h1 class="text-4xl sm:text-5xl lg:text-6xl font-bold text-center mb-6">
+  <div class="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 flex flex-col items-center justify-center text-center">
+    <h1 class="text-4xl sm:text-5xl lg:text-6xl font-bold mb-6 drop-shadow-lg">
       {title}
     </h1>
     {description && (
-      <p class="text-xl sm:text-2xl text-center max-w-3xl mx-auto">{description}</p>
+      <p class="text-xl sm:text-2xl max-w-3xl mx-auto mb-6 drop-shadow-md">{description}</p>
     )}
+    {/* Future: Search bar, dropdowns, etc. */}
   </div>
 </div> 
