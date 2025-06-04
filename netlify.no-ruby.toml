@@ -1,9 +1,0 @@
-[build]
-  command = "bash ./build-no-ruby.sh"
-  publish = "dist"
-
-[build.environment]
-  NODE_VERSION = "20.3.0"
-  # Explicitly disable Ruby
-  SKIP_RUBY_INSTALL = "true"
-  NETLIFY_RUBY_INSTALL = "false" 
