@@ -1,9 +1,0 @@
-[build]
-  command = "bash ./build-with-rollup-fix.sh"
-  publish = "dist"
-
-[build.environment]
-  NODE_VERSION = "20.3.0"
-  NODE_ENV = "production"
-  # Explicitly set path for rollup modules
-  NODE_PATH = "node_modules" 
