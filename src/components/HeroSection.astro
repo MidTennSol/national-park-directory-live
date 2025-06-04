@@ -1,28 +1,272 @@
 ---
 export interface Props {
-  image: string;
+  image?: string;
+  images?: string[];
   title: string;
   description?: string;
+  cycleInterval?: number;
 }
-const { image, title, description } = Astro.props;
+const { image, images, title, description, cycleInterval = 6000 } = Astro.props;
+
+// Use images array if provided, otherwise fallback to single image
+const heroImages = images || (image ? [image] : ['/images/hero-background.jpg']);
+const shouldCycle = heroImages.length > 1;
 ---
-<div class="relative text-white min-h-[420px] sm:min-h-[520px] md:min-h-[600px] lg:min-h-[700px] flex items-center justify-center">
+<div class="hero-container relative text-white min-h-[420px] sm:min-h-[520px] md:min-h-[600px] lg:min-h-[700px] flex items-center justify-center">
   <div class="absolute inset-0 overflow-hidden">
-    <img 
-      src={image} 
-      alt={title} 
-      class="w-full h-full object-cover"
-      style="min-height: 420px; max-height: 700px;"
-    />
-    <div class="absolute inset-0 bg-black bg-opacity-30"></div>
+    {heroImages.map((imgSrc, index) => (
+      <img 
+        src={imgSrc} 
+        alt={title} 
+        class={`hero-bg-image absolute inset-0 w-full h-full object-cover ${index === 0 ? 'active' : ''}`}
+        data-hero-idx={index}
+        loading={index === 0 ? "eager" : "lazy"}
+        onload="console.log('Image loaded successfully:', this.src); this.style.display = 'block';"
+        onerror="console.error('Image failed to load:', this.src); this.onerror=null; this.src='/images/park-placeholder.svg';"
+      />
+    ))}
+    <div class="absolute inset-0 bg-black bg-opacity-30 z-5"></div>
   </div>
-  <div class="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 flex flex-col items-center justify-center text-center">
+  
+  <!-- Arrow Navigation -->
+  {shouldCycle && (
+    <>
+      <button 
+        class="absolute left-4 top-1/2 transform -translate-y-1/2 z-50 bg-black bg-opacity-50 hover:bg-opacity-70 text-white p-3 rounded-full transition-all duration-300 shadow-lg"
+        data-hero-prev
+        aria-label="Previous image"
+        style="z-index: 50 !important;"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+        </svg>
+      </button>
+      <button 
+        class="absolute right-4 top-1/2 transform -translate-y-1/2 z-50 bg-black bg-opacity-50 hover:bg-opacity-70 text-white p-3 rounded-full transition-all duration-300 shadow-lg"
+        data-hero-next
+        aria-label="Next image"
+        style="z-index: 50 !important;"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+        </svg>
+      </button>
+    </>
+  )}
+  
+  <div class="relative z-20 container mx-auto px-4 sm:px-6 lg:px-8 flex flex-col items-center justify-center text-center">
     <h1 class="text-4xl sm:text-5xl lg:text-6xl font-bold mb-6 drop-shadow-lg">
       {title}
     </h1>
     {description && (
       <p class="text-xl sm:text-2xl max-w-3xl mx-auto mb-6 drop-shadow-md">{description}</p>
     )}
-    {/* Future: Search bar, dropdowns, etc. */}
+    <!-- Search bar with semi-transparent background -->
+    <div class="w-full max-w-2xl mt-8">
+      <div class="flex flex-col sm:flex-row gap-4 bg-white bg-opacity-20 backdrop-blur-sm rounded-lg p-4">
+        <input 
+          type="text" 
+          placeholder="Search parks by name, state, or features..." 
+          class="flex-1 px-4 py-3 rounded-lg text-gray-900 placeholder-gray-600 border-0 focus:ring-1 focus:ring-green-500 bg-white bg-opacity-90"
+        />
+        <button class="px-6 py-3 bg-green-600 text-white rounded-lg font-medium hover:bg-green-700 transition-colors">
+          Search
+        </button>
+      </div>
+    </div>
   </div>
-</div> 
+  
+  {/* Optional cycling indicators */}
+  {shouldCycle && (
+    <div class="absolute bottom-6 left-1/2 transform -translate-x-1/2 flex space-x-2 z-50" style="z-index: 50 !important;">
+      {heroImages.map((_, index) => (
+        <button
+          class={`w-3 h-3 rounded-full transition-all duration-300 shadow-lg ${index === 0 ? 'bg-white' : 'bg-white bg-opacity-50'} hover:bg-white hover:scale-110`}
+          data-hero-indicator={index}
+          aria-label={`Go to image ${index + 1}`}
+          style="z-index: 50 !important;"
+        ></button>
+      ))}
+    </div>
+  )}
+</div>
+
+<style>
+  .hero-container {
+    background: linear-gradient(135deg, #1f2937 0%, #374151 100%);
+    position: relative;
+  }
+  
+  .hero-bg-image {
+    opacity: 0;
+    transition: opacity 1s ease-in-out;
+    z-index: 10 !important;
+    min-height: 420px;
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+  }
+  
+  .hero-bg-image.active {
+    opacity: 1 !important;
+    z-index: 15 !important;
+  }
+  
+  .hero-container > div:first-child {
+    z-index: 1;
+  }
+  
+  /* Responsive image sizing */
+  @media (max-width: 640px) {
+    .hero-bg-image {
+      min-height: 420px;
+    }
+  }
+</style>
+
+<script define:vars={{ shouldCycle, cycleInterval }}>
+  let currentImageIndex = 0;
+  let heroInterval = null;
+  
+  function clearHeroInterval() {
+    if (heroInterval) {
+      clearInterval(heroInterval);
+      heroInterval = null;
+    }
+  }
+  
+  function initHeroCycling() {
+    if (!shouldCycle) return;
+    
+    const heroImages = document.querySelectorAll('.hero-bg-image');
+    const indicators = document.querySelectorAll('[data-hero-indicator]');
+    const prevButton = document.querySelector('[data-hero-prev]');
+    const nextButton = document.querySelector('[data-hero-next]');
+    
+    if (heroImages.length <= 1) return;
+    
+    // Clear any existing interval first
+    clearHeroInterval();
+    
+    function showImage(index) {
+      // Hide all images
+      heroImages.forEach((img, i) => {
+        img.classList.remove('active');
+        if (i === index) {
+          img.classList.add('active');
+        }
+      });
+      
+      // Update indicators
+      indicators.forEach((indicator, i) => {
+        if (i === index) {
+          indicator.classList.remove('bg-opacity-50');
+          indicator.classList.add('bg-white');
+        } else {
+          indicator.classList.remove('bg-white');
+          indicator.classList.add('bg-white', 'bg-opacity-50');
+        }
+      });
+    }
+    
+    function nextImage() {
+      currentImageIndex = (currentImageIndex + 1) % heroImages.length;
+      showImage(currentImageIndex);
+    }
+    
+    function prevImage() {
+      currentImageIndex = (currentImageIndex - 1 + heroImages.length) % heroImages.length;
+      showImage(currentImageIndex);
+    }
+    
+    // Set up automatic cycling with consistent timing
+    heroInterval = setInterval(nextImage, cycleInterval);
+    
+    // Add click handlers for indicators
+    indicators.forEach((indicator, index) => {
+      indicator.addEventListener('click', () => {
+        currentImageIndex = index;
+        showImage(currentImageIndex);
+        
+        // Reset the interval to maintain consistent timing
+        clearHeroInterval();
+        heroInterval = setInterval(nextImage, cycleInterval);
+      });
+    });
+    
+    // Add arrow navigation
+    if (prevButton) {
+      prevButton.addEventListener('click', () => {
+        prevImage();
+        // Reset the interval
+        clearHeroInterval();
+        heroInterval = setInterval(nextImage, cycleInterval);
+      });
+    }
+    
+    if (nextButton) {
+      nextButton.addEventListener('click', () => {
+        nextImage();
+        // Reset the interval
+        clearHeroInterval();
+        heroInterval = setInterval(nextImage, cycleInterval);
+      });
+    }
+    
+    // Pause cycling on hover (optional - comment out if not wanted)
+    const heroContainer = document.querySelector('.hero-container');
+    if (heroContainer) {
+      heroContainer.addEventListener('mouseenter', () => {
+        clearHeroInterval();
+      });
+      heroContainer.addEventListener('mouseleave', () => {
+        clearHeroInterval();
+        heroInterval = setInterval(nextImage, cycleInterval);
+      });
+    }
+  }
+  
+  // Initialize when DOM is ready
+  document.addEventListener('DOMContentLoaded', initHeroCycling);
+  
+  // Clean up on page unload
+  window.addEventListener('beforeunload', clearHeroInterval);
+  
+  // Simplified page visibility handling
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'visible' && shouldCycle) {
+      // Only restart if not already running
+      if (!heroInterval) {
+        clearHeroInterval();
+        const heroImages = document.querySelectorAll('.hero-bg-image');
+        if (heroImages.length > 1) {
+          heroInterval = setInterval(() => {
+            currentImageIndex = (currentImageIndex + 1) % heroImages.length;
+            const indicators = document.querySelectorAll('[data-hero-indicator]');
+            
+            heroImages.forEach((img, i) => {
+              img.classList.remove('active');
+              if (i === currentImageIndex) {
+                img.classList.add('active');
+              }
+            });
+            
+            indicators.forEach((indicator, i) => {
+              if (i === currentImageIndex) {
+                indicator.classList.remove('bg-opacity-50');
+                indicator.classList.add('bg-white');
+              } else {
+                indicator.classList.remove('bg-white');
+                indicator.classList.add('bg-white', 'bg-opacity-50');
+              }
+            });
+          }, cycleInterval);
+        }
+      }
+    } else {
+      clearHeroInterval();
+    }
+  });
+</script> 

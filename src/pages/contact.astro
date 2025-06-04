@@ -18,15 +18,15 @@ import heroImages from '../config/heroImages.js';
 					<div class="space-y-4">
 						<div>
 							<h3 class="font-medium text-gray-700">Email</h3>
-							<p class="text-green-800">info@nationalparkdirectory.example</p>
+							<p class="text-green-800">info@nationalparkdirectory.com</p>
 						</div>
 						<div>
 							<h3 class="font-medium text-gray-700">Phone</h3>
-							<p>(555) 123-4567</p>
+							<p>(931) 674-1840</p>
 						</div>
 						<div>
 							<h3 class="font-medium text-gray-700">Address</h3>
-							<p>123 Nature Trail<br>Outdoor City, ST 12345<br>United States</p>
+							<p>123 Nature Trail<br>Columbia, TN 38401<br>United States</p>
 						</div>
 						<div>
 							<h3 class="font-medium text-gray-700">Office Hours</h3>
@@ -37,26 +37,95 @@ import heroImages from '../config/heroImages.js';
 				
 				<div>
 					<h2 class="text-2xl font-semibold mb-4">Send Us a Message</h2>
-					<form class="space-y-4">
+					
+					<!-- Success Message -->
+					<div id="success-message" class="hidden mb-4 p-4 bg-green-50 border border-green-200 rounded-md">
+						<div class="flex">
+							<div class="flex-shrink-0">
+								<svg class="h-5 w-5 text-green-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+									<path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+								</svg>
+							</div>
+							<div class="ml-3">
+								<p class="text-sm font-medium text-green-800">
+									Thank you! Your message has been sent successfully. We'll get back to you soon.
+								</p>
+							</div>
+						</div>
+					</div>
+
+					<!-- Error Message -->
+					<div id="error-message" class="hidden mb-4 p-4 bg-red-50 border border-red-200 rounded-md">
+						<div class="flex">
+							<div class="flex-shrink-0">
+								<svg class="h-5 w-5 text-red-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+									<path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+								</svg>
+							</div>
+							<div class="ml-3">
+								<p class="text-sm font-medium text-red-800" id="error-text">
+									Sorry, there was an error sending your message. Please try again or contact us directly.
+								</p>
+							</div>
+						</div>
+					</div>
+
+					<form id="contact-form" class="space-y-6">
 						<div>
-							<label for="name" class="block text-sm font-medium text-gray-700">Name</label>
-							<input type="text" id="name" name="name" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500">
+							<label for="name" class="block text-sm font-medium text-gray-700 mb-2">Name *</label>
+							<input 
+								type="text" 
+								id="name" 
+								name="name" 
+								required
+								class="w-full px-4 py-3 border-2 border-gray-200 bg-white rounded-lg text-gray-900 placeholder-gray-500 focus:border-green-500 focus:ring-2 focus:ring-green-200 focus:outline-none transition-all duration-200 shadow-sm hover:border-gray-300"
+								placeholder="Enter your full name"
+							>
 						</div>
 						<div>
-							<label for="email" class="block text-sm font-medium text-gray-700">Email</label>
-							<input type="email" id="email" name="email" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500">
+							<label for="email" class="block text-sm font-medium text-gray-700 mb-2">Email *</label>
+							<input 
+								type="email" 
+								id="email" 
+								name="email" 
+								required
+								class="w-full px-4 py-3 border-2 border-gray-200 bg-white rounded-lg text-gray-900 placeholder-gray-500 focus:border-green-500 focus:ring-2 focus:ring-green-200 focus:outline-none transition-all duration-200 shadow-sm hover:border-gray-300"
+								placeholder="Enter your email address"
+							>
 						</div>
 						<div>
-							<label for="subject" class="block text-sm font-medium text-gray-700">Subject</label>
-							<input type="text" id="subject" name="subject" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500">
+							<label for="subject" class="block text-sm font-medium text-gray-700 mb-2">Subject *</label>
+							<input 
+								type="text" 
+								id="subject" 
+								name="subject" 
+								required
+								class="w-full px-4 py-3 border-2 border-gray-200 bg-white rounded-lg text-gray-900 placeholder-gray-500 focus:border-green-500 focus:ring-2 focus:ring-green-200 focus:outline-none transition-all duration-200 shadow-sm hover:border-gray-300"
+								placeholder="What is this regarding?"
+							>
 						</div>
 						<div>
-							<label for="message" class="block text-sm font-medium text-gray-700">Message</label>
-							<textarea id="message" name="message" rows="4" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500"></textarea>
+							<label for="message" class="block text-sm font-medium text-gray-700 mb-2">Message *</label>
+							<textarea 
+								id="message" 
+								name="message" 
+								rows="5" 
+								required
+								class="w-full px-4 py-3 border-2 border-gray-200 bg-white rounded-lg text-gray-900 placeholder-gray-500 focus:border-green-500 focus:ring-2 focus:ring-green-200 focus:outline-none transition-all duration-200 shadow-sm hover:border-gray-300 resize-vertical"
+								placeholder="Tell us more about your inquiry..."
+							></textarea>
 						</div>
 						<div>
-							<button type="submit" class="inline-flex items-center px-4 py-2 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-green-800 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
-								Send Message
+							<button 
+								type="submit" 
+								id="submit-btn"
+								class="w-full inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-lg shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
+							>
+								<span id="submit-text">Send Message</span>
+								<svg id="loading-spinner" class="hidden animate-spin ml-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+									<circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+									<path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+								</svg>
 							</button>
 						</div>
 					</form>
@@ -64,4 +133,118 @@ import heroImages from '../config/heroImages.js';
 			</div>
 		</div>
 	</div>
-</BaseLayout> 
+</BaseLayout>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+	const form = document.getElementById('contact-form') as HTMLFormElement | null;
+	const submitBtn = document.getElementById('submit-btn') as HTMLButtonElement | null;
+	const submitText = document.getElementById('submit-text') as HTMLElement | null;
+	const loadingSpinner = document.getElementById('loading-spinner') as HTMLElement | null;
+	const successMessage = document.getElementById('success-message') as HTMLElement | null;
+	const errorMessage = document.getElementById('error-message') as HTMLElement | null;
+	const errorText = document.getElementById('error-text') as HTMLElement | null;
+
+	if (!form || !submitBtn || !submitText || !loadingSpinner || !successMessage || !errorMessage || !errorText) {
+		console.error('Required form elements not found');
+		return;
+	}
+
+	form.addEventListener('submit', async function(e) {
+		e.preventDefault();
+		
+		console.log('🚀 Form submission started');
+		
+		// Reset messages
+		successMessage.classList.add('hidden');
+		errorMessage.classList.add('hidden');
+		
+		// Show loading state
+		submitBtn.disabled = true;
+		submitText.textContent = 'Sending...';
+		loadingSpinner.classList.remove('hidden');
+		
+		try {
+			// Get form data
+			const formData = new FormData(form);
+			
+			// Log individual form values
+			console.log('📋 Individual form values:');
+			console.log('  Name:', formData.get('name'));
+			console.log('  Email:', formData.get('email'));
+			console.log('  Subject:', formData.get('subject'));
+			console.log('  Message:', formData.get('message'));
+			
+			const data = {
+				name: formData.get('name'),
+				email: formData.get('email'),
+				subject: formData.get('subject'),
+				message: formData.get('message')
+			};
+			
+			console.log('📤 Sending form data object:', data);
+			
+			// Convert to JSON and log it
+			const jsonString = JSON.stringify(data);
+			console.log('📝 JSON string to be sent:', jsonString);
+			console.log('📏 JSON string length:', jsonString.length);
+			
+			// Send to our API endpoint
+			const response = await fetch('/api/contact', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				body: jsonString
+			});
+			
+			console.log('📨 Response received:', {
+				status: response.status,
+				statusText: response.statusText,
+				ok: response.ok
+			});
+			
+			let responseData;
+			try {
+				responseData = await response.json();
+				console.log('📄 Response data:', responseData);
+			} catch (parseError) {
+				console.error('❌ Failed to parse response JSON:', parseError);
+				throw new Error('Invalid response from server');
+			}
+			
+			if (response.ok && responseData.success) {
+				// Success
+				console.log('✅ Form submitted successfully');
+				successMessage.classList.remove('hidden');
+				form.reset();
+			} else {
+				// Error
+				console.log('❌ Form submission failed:', responseData);
+				throw new Error(responseData.message || 'Failed to send message');
+			}
+		} catch (error) {
+			console.error('❌ Error sending message:', error);
+			let errorMsg;
+			
+			if (error instanceof TypeError && error.message.includes('fetch')) {
+				errorMsg = 'Network error. Please check your connection and try again.';
+			} else if (error instanceof Error) {
+				errorMsg = error.message;
+			} else {
+				errorMsg = 'Sorry, there was an error sending your message. Please try again or contact us directly.';
+			}
+			
+			console.log('❌ Displaying error message:', errorMsg);
+			errorText.textContent = errorMsg;
+			errorMessage.classList.remove('hidden');
+		} finally {
+			// Reset button state
+			console.log('🔄 Resetting form state');
+			submitBtn.disabled = false;
+			submitText.textContent = 'Send Message';
+			loadingSpinner.classList.add('hidden');
+		}
+	});
+});
+</script> 

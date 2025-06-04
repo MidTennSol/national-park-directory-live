@@ -17,17 +17,28 @@
     "astro": "astro",
     "postinstall": "node ./postinstall.js",
     "pre-deploy": "node scripts/pre-deploy.js",
-    "deploy": "npm run pre-deploy && npm run build && netlify deploy --prod"
+    "deploy": "npm run pre-deploy && npm run build && netlify deploy --prod",
+    "generate-blog-post": "node scripts/blog-automation/generate-blog-post.js",
+    "preview-blog-post": "node scripts/blog-automation/generate-blog-post.js --preview",
+    "test-ai": "node scripts/blog-automation/test-ai.js",
+    "blog-help": "node scripts/blog-automation/generate-blog-post.js --help"
   },
   "dependencies": {
-    "@tailwindcss/vite": "^4.1.4",
-    "astro": "5.7.13"
+    "@astrojs/check": "^0.9.4",
+    "@astrojs/node": "^8.3.4",
+    "@astrojs/tailwind": "^5.1.2",
+    "@tailwindcss/vite": "^4.1.8",
+    "astro": "^4.16.10",
+    "dotenv": "^16.5.0",
+    "openai": "^5.1.0",
+    "resend": "^4.5.1"
   },
   "devDependencies": {
     "@astrojs/sitemap": "^3.3.1",
     "autoprefixer": "^10.4.21",
     "postcss": "^8.5.3",
-    "tailwindcss": "^4.1.4"
+    "tailwindcss": "^3.4.14",
+    "typescript": "^5.6.3"
   },
   "optionalDependencies": {
     "@rollup/rollup-darwin-x64": "4.9.6",
