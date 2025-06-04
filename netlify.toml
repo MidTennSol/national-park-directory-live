@@ -89,24 +89,32 @@
   status = 200
   force = true
 
-# Ensure index.html is served for the root path
+# Add debug plugin to identify blog content issues
+[[plugins]]
+  package = "./netlify-plugins/netlify-blog-debug-plugin.js"
+
+# Handle XML files properly
+[[redirects]]
+  from = "/*.xml"
+  to = "/:splat"
+  status = 200
+
+# Special handling for blog post routes - serve the actual HTML files
+[[redirects]]
+  from = "/blog/:slug"
+  to = "/blog/:slug/index.html"
+  status = 200
+  conditions = {Country = ["!XX"]}
+
+# Ensure root index.html is served
 [[redirects]]
   from = "/"
   to = "/index.html"
   status = 200
   force = true
 
-# Fallback for SPA routing
+# SPA fallback for non-existent routes only (this should be last and more specific)
 [[redirects]]
   from = "/*"
-  to = "/index.html"
-  status = 200
-
-# Add debug plugin to identify blog content issues
-[[plugins]]
-  package = "./netlify-plugins/netlify-blog-debug-plugin.js"
-
-[[redirects]]
-  from = "/*.xml"
-  to = "/:splat"
-  status = 200 
+  to = "/404.html"
+  status = 404 
