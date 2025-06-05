@@ -141,6 +141,13 @@ declare module 'astro:content' {
 
 	type ContentEntryMap = {
 		"blog": {
+"2025-06-05-prince-william-forest-park-unveiled-washington-dc-virginias-natural-wonder.md": {
+	id: "2025-06-05-prince-william-forest-park-unveiled-washington-dc-virginias-natural-wonder.md";
+  slug: "2025-06-05-prince-william-forest-park-unveiled-washington-dc-virginias-natural-wonder";
+  body: string;
+  collection: "blog";
+  data: InferEntrySchema<"blog">
+} & { render(): Render[".md"] };
 "best-hiking-trails-in-yellowstone.md": {
 	id: "best-hiking-trails-in-yellowstone.md";
   slug: "best-hiking-trails-in-yellowstone";
@@ -158,13 +165,6 @@ declare module 'astro:content' {
 "cumberland-gap.md": {
 	id: "cumberland-gap.md";
   slug: "cumberland-gap";
-  body: string;
-  collection: "blog";
-  data: InferEntrySchema<"blog">
-} & { render(): Render[".md"] };
-"unleashing-endless-family-fun-at-amistad-national-recreation-area.md": {
-	id: "unleashing-endless-family-fun-at-amistad-national-recreation-area.md";
-  slug: "unleashing-endless-family-fun-at-amistad-national-recreation-area";
   body: string;
   collection: "blog";
   data: InferEntrySchema<"blog">

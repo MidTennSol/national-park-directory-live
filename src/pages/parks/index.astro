@@ -1,7 +1,9 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import ParkCard from '../../components/ParkCard.astro';
+import HeroSection from '../../components/HeroSection.astro';
 import { fetchNationalParks } from '../../utils/airtable.js';
+import heroImages from '../../config/heroImages.js';
 
 // Define the Park interface
 interface Park {
@@ -76,9 +78,8 @@ const pagedLetters = Object.keys(pagedParksByLetter).sort();
 ---
 
 <BaseLayout title="All National Parks - National Park Directory">
+  <HeroSection {...heroImages.parks} />
   <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
-    <h1 class="text-4xl md:text-5xl font-bold text-center my-16">National Parks Directory</h1>
-    
     <div class="max-w-3xl mx-auto text-center mb-12">
       <p class="text-lg text-gray-700">Explore all national parks, monuments, historic sites, and more across the United States.</p>
       <p class="text-sm text-gray-500 mt-2">Showing {parksForPage.length} of {allParks.length} parks and sites</p>

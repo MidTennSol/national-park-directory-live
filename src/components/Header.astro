@@ -18,25 +18,25 @@ const isActive = (path: string) => pathname === path || pathname.startsWith(`${p
         <nav class="hidden sm:ml-6 sm:flex sm:space-x-8">
           <a 
             href="/" 
-            class={`inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium ${isActive('/') && !isActive('/parks') && !isActive('/states') ? 'border-green-800 text-gray-900' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'}`}
+            class={`inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium ${isActive('/') && !isActive('/parks') && !isActive('/states') ? 'border-gray-900 text-gray-900' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'}`}
           >
             Home
           </a>
           <a 
             href="/parks" 
-            class={`inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium ${isActive('/parks') ? 'border-green-800 text-gray-900' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'}`}
+            class={`inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium ${isActive('/parks') ? 'border-gray-900 text-gray-900' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'}`}
           >
             Parks
           </a>
           <a 
             href="/states" 
-            class={`inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium ${isActive('/states') ? 'border-green-800 text-gray-900' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'}`}
+            class={`inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium ${isActive('/states') ? 'border-gray-900 text-gray-900' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'}`}
           >
             States
           </a>
           <a 
             href="/about" 
-            class={`inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium ${isActive('/about') ? 'border-green-800 text-gray-900' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'}`}
+            class={`inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium ${isActive('/about') ? 'border-gray-900 text-gray-900' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'}`}
           >
             About
           </a>
@@ -59,16 +59,16 @@ const isActive = (path: string) => pathname === path || pathname.startsWith(`${p
   <!-- Mobile menu, show/hide based on menu state. -->
   <div class="hidden sm:hidden" id="mobile-menu">
     <div class="pt-2 pb-3 space-y-1">
-      <a href="/" class={`block pl-3 pr-4 py-2 border-l-4 text-base font-medium ${isActive('/') && !isActive('/parks') && !isActive('/states') ? 'border-green-800 text-green-800 bg-green-50' : 'border-transparent text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700'}`}>
+      <a href="/" class={`block pl-3 pr-4 py-2 border-l-4 text-base font-medium ${isActive('/') && !isActive('/parks') && !isActive('/states') ? 'border-gray-900 text-gray-900 bg-gray-50' : 'border-transparent text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700'}`}>
         Home
       </a>
-      <a href="/parks" class={`block pl-3 pr-4 py-2 border-l-4 text-base font-medium ${isActive('/parks') ? 'border-green-800 text-green-800 bg-green-50' : 'border-transparent text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700'}`}>
+      <a href="/parks" class={`block pl-3 pr-4 py-2 border-l-4 text-base font-medium ${isActive('/parks') ? 'border-gray-900 text-gray-900 bg-gray-50' : 'border-transparent text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700'}`}>
         Parks
       </a>
-      <a href="/states" class={`block pl-3 pr-4 py-2 border-l-4 text-base font-medium ${isActive('/states') ? 'border-green-800 text-green-800 bg-green-50' : 'border-transparent text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700'}`}>
+      <a href="/states" class={`block pl-3 pr-4 py-2 border-l-4 text-base font-medium ${isActive('/states') ? 'border-gray-900 text-gray-900 bg-gray-50' : 'border-transparent text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700'}`}>
         States
       </a>
-      <a href="/about" class={`block pl-3 pr-4 py-2 border-l-4 text-base font-medium ${isActive('/about') ? 'border-green-800 text-green-800 bg-green-50' : 'border-transparent text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700'}`}>
+      <a href="/about" class={`block pl-3 pr-4 py-2 border-l-4 text-base font-medium ${isActive('/about') ? 'border-gray-900 text-gray-900 bg-gray-50' : 'border-transparent text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700'}`}>
         About
       </a>
     </div>

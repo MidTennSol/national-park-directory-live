@@ -21,6 +21,11 @@ export default {
     title: 'National Park Directory',
     description: "Explore America's natural and cultural heritage through our comprehensive guide to national parks, monuments, historic sites, and more."
   },
+  parks: {
+    ...sharedHeroConfig,
+    title: 'National Parks Directory',
+    description: 'Explore all national parks, monuments, historic sites, and more across the United States.'
+  },
   about: {
     ...sharedHeroConfig,
     title: 'About Us',

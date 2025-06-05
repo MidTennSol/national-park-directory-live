@@ -17,11 +17,7 @@
     "astro": "astro",
     "postinstall": "node ./postinstall.js",
     "pre-deploy": "node scripts/pre-deploy.js",
-    "deploy": "npm run pre-deploy && npm run build && netlify deploy --prod",
-    "generate-blog-post": "node scripts/blog-automation/generate-blog-post.js",
-    "preview-blog-post": "node scripts/blog-automation/generate-blog-post.js --preview",
-    "test-ai": "node scripts/blog-automation/test-ai.js",
-    "blog-help": "node scripts/blog-automation/generate-blog-post.js --help"
+    "deploy": "npm run pre-deploy && npm run build && netlify deploy --prod"
   },
   "dependencies": {
     "@astrojs/check": "^0.9.4",
