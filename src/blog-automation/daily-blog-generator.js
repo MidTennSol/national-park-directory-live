@@ -10,31 +10,65 @@
 
 import { getNextParkForBlog, markParkAsBlogged, getBlogStats } from './airtable-connector.js';
 import { generateCompleteBlogPost } from './blog-orchestrator.js';
+import fs from 'fs/promises';
+import path from 'path';
 
-// Campaign configuration
-const CAMPAIGN_START_DATE = '2025-06-05'; // When dual generation started
+// Campaign configuration - using a counter system for reliable progression
+const CAMPAIGN_START_DATE = '2025-06-05'; // Reference date for calculating dates
+const COUNTER_FILE = '.campaign-counter.json';
 
 /**
- * Calculate how many days have passed since campaign start
+ * Get or initialize the campaign counter
  */
-function getDaysSinceCampaignStart() {
-  const startDate = new Date(CAMPAIGN_START_DATE);
-  const today = new Date();
-  return Math.floor((today - startDate) / (1000 * 60 * 60 * 24));
+async function getCampaignCounter() {
+  try {
+    const counterData = await fs.readFile(COUNTER_FILE, 'utf8');
+    const data = JSON.parse(counterData);
+    return data.dayCount || 0;
+  } catch (error) {
+    // File doesn't exist, start at 0
+    return 0;
+  }
 }
 
 /**
- * Calculate the back-date for today's historical post
+ * Increment and save the campaign counter
  */
-function calculateBackDate() {
-  const daysPassed = getDaysSinceCampaignStart();
-  const daysBack = daysPassed + 2; // Start at -2 days, increment each day
+async function incrementCampaignCounter() {
+  try {
+    let currentCount = await getCampaignCounter();
+    currentCount++;
+    
+    const data = {
+      dayCount: currentCount,
+      lastRun: new Date().toISOString(),
+      totalRuns: currentCount
+    };
+    
+    await fs.writeFile(COUNTER_FILE, JSON.stringify(data, null, 2));
+    return currentCount;
+  } catch (error) {
+    console.error('❌ Error updating campaign counter:', error);
+    return 1; // Fallback to day 1
+  }
+}
+
+/**
+ * Calculate current and historical dates based on campaign day
+ */
+function calculateDatesForCampaignDay(dayCount) {
+  const startDate = new Date(CAMPAIGN_START_DATE);
   
-  const today = new Date();
-  const backDate = new Date(today);
-  backDate.setDate(today.getDate() - daysBack);
+  // Current date: start date + day count
+  const currentDate = new Date(startDate);
+  currentDate.setDate(startDate.getDate() + dayCount);
   
-  return backDate;
+  // Historical date: start date - (day count + 1)
+  // This creates: Day 0: June 5 + June 3, Day 1: June 6 + June 2, etc.
+  const historicalDate = new Date(startDate);
+  historicalDate.setDate(startDate.getDate() - (dayCount + 2));
+  
+  return { currentDate, historicalDate };
 }
 
 /**
@@ -44,13 +78,12 @@ async function generateDualBlogPosts() {
   console.log('🚀 Starting dual blog post generation...');
   console.log('============================================================');
   
-  const daysPassed = getDaysSinceCampaignStart();
-  const currentDate = new Date();
-  const backDate = calculateBackDate();
+  const dayCount = await getCampaignCounter();
+  const { currentDate, historicalDate } = calculateDatesForCampaignDay(dayCount);
   
-  console.log(`📅 Campaign Day: ${daysPassed + 1}`);
+  console.log(`📅 Campaign Day: ${dayCount + 1}`);
   console.log(`📅 Current Date Post: ${currentDate.toDateString()}`);
-  console.log(`📅 Historical Date Post: ${backDate.toDateString()}`);
+  console.log(`📅 Historical Date Post: ${historicalDate.toDateString()}`);
   console.log('');
   
   const results = [];
@@ -109,17 +142,17 @@ async function generateDualBlogPosts() {
     }
     
     console.log(`✅ Selected historical park: ${historicalPark.name} (${historicalPark.city}, ${historicalPark.state})`);
-    console.log(`📅 Publishing as: ${backDate.toDateString()}`);
+    console.log(`📅 Publishing as: ${historicalDate.toDateString()}`);
     
     const historicalPost = await generateCompleteBlogPost(historicalPark, {
-      publishDate: backDate,
+      publishDate: historicalDate,
       topic: 'complete visitor guide',
       dateType: 'historical'
     });
     
     results.push({
       type: 'historical',
-      date: backDate,
+      date: historicalDate,
       park: historicalPark,
       post: historicalPost
     });
@@ -172,6 +205,12 @@ async function main() {
     // Generate dual blog posts
     const results = await generateDualBlogPosts();
     
+    // Increment counter for next run (ensures progression)
+    const newDayCount = await incrementCampaignCounter();
+    console.log(`✅ Campaign counter incremented to: ${newDayCount}`);
+    console.log(`📅 Next run will be: Day ${newDayCount + 1}`);
+    console.log('');
+    
     // Final stats
     const finalStats = await getBlogStats();
     console.log('📊 FINAL STATISTICS:');
@@ -195,4 +234,4 @@ if (import.meta.url === `file://${process.argv[1]}`) {
   main();
 }
 
-export { generateDualBlogPosts, getDaysSinceCampaignStart, calculateBackDate }; 
+export { generateDualBlogPosts, getCampaignCounter, calculateDatesForCampaignDay }; 

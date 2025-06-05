@@ -60,7 +60,7 @@ export async function generateBlogPost(park, options = {}) {
         }
       ],
       temperature: 0.9, // Higher creativity for more varied content
-      max_tokens: 5500,  // Reduced to fit within GPT-4's 8192 token total limit
+      max_tokens: 7500,  // Dramatically increased for very long comprehensive content
       presence_penalty: 0.7, // Encourage more original ideas and topics
       frequency_penalty: 0.4  // Reduce repetitive language more aggressively
     });
@@ -70,10 +70,17 @@ export async function generateBlogPost(park, options = {}) {
     // Parse and structure the AI response
     const structuredContent = parseAIResponse(generatedContent, park, options);
     
+    // Validate content length to ensure quality
+    const wordCount = structuredContent.content.split(' ').length;
     console.log('✅ Blog post generated successfully');
     console.log(`   - Title: ${structuredContent.title}`);
-    console.log(`   - Word count: ~${structuredContent.content.split(' ').length} words`);
+    console.log(`   - Word count: ${wordCount} words`);
     console.log(`   - Meta description: ${structuredContent.description.length} characters`);
+    
+    // Warning if content is shorter than expected
+    if (wordCount < 1000) {
+      console.log(`⚠️ Warning: Content is only ${wordCount} words (minimum 1000 expected)`);
+    }
     
     return structuredContent;
     
@@ -87,122 +94,106 @@ export async function generateBlogPost(park, options = {}) {
  * Build system prompt for consistent, high-quality content generation
  */
 function buildSystemPrompt() {
-  return `You are an expert travel writer and national park specialist creating comprehensive, SEO-optimized blog content. Your writing must follow these EXACT requirements:
+  return `You are a professional travel writer for National Geographic. You MUST write comprehensive, detailed blog posts that are AT LEAST 1200 words. 
 
-CRITICAL WORD COUNT REQUIREMENTS:
-- MINIMUM 600 words - NEVER write less than 600 words
-- MAXIMUM 1200 words  
-- VARY the length: sometimes 650 words, sometimes 900 words, sometimes 1100 words
-- Word count is CRITICAL - if you write less than 600 words, the content will be rejected
-- Count your words as you write and ensure you meet the minimum
+CRITICAL: Look at this SUCCESSFUL EXAMPLE of the quality expected:
+- Title: "Waco Mammoth National Monument Mastery: Waco, Texas Insiders Guide"
+- Word count: 1500+ words
+- Detailed sections with specific information
+- Comprehensive practical advice
+- Multiple paragraphs per section
 
-CONTENT QUALITY REQUIREMENTS:
-- Write completely original, unique content with deep expertise
-- Include extensive practical advice and specific recommendations  
-- Write comprehensive, detailed content that provides exceptional value
-- Add insider tips and local knowledge that shows you know the park intimately
-- Include specific details about trails, viewpoints, facilities, and experiences
-- Write with engaging, enthusiastic but professional tone
-- Create content so detailed and helpful that visitors could plan their entire trip from your guide
+YOU MUST MATCH OR EXCEED THIS QUALITY AND LENGTH.
 
-SEO REQUIREMENTS (CRITICAL):
-- Park name must appear in title and naturally throughout content (8-12 times)
-- City and state must appear in title and be mentioned in first, middle, and last paragraphs  
-- Use primary keyword pattern: "Visit [park name] in [city], [state]" naturally
-- Include related long-tail keywords throughout the content
-- Create meta description 150-160 characters with park name and location
-- Include compelling 1-2 sentence excerpt for social media previews
+ABSOLUTE REQUIREMENTS:
+- MINIMUM 1200 words (count as you write)
+- Write EXACTLY like the Waco Mammoth example
+- Include extensive specific details in every paragraph
+- Never write generic advice - everything must be park-specific
+- Each section must be multiple paragraphs with detailed information
 
-TITLE CREATIVITY (IMPORTANT - VARY THESE PATTERNS):
-Create varied, engaging titles using different patterns each time:
-- "Discover [Park Name]: A Complete Guide to [City], [State]"
-- "[Park Name] Adventures: Your [City], [State] Travel Guide"  
-- "Exploring [Park Name]: Hidden Gems in [City], [State]"
-- "[Park Name] Unveiled: [City], [State]'s Natural Wonder"
-- "Journey to [Park Name]: [City], [State]'s Must-See Destination"
-- "[Park Name] Experience: [City], [State] Adventure Guide"
-- "Secrets of [Park Name]: Your [City], [State] Explorer's Guide"
-- "[Park Name] Mastery: [City], [State] Insider's Guide"
-- "Into the Wild: [Park Name], [City], [State]"
-- "[Park Name] Deep Dive: [City], [State] Nature Guide"
+STRUCTURE REQUIREMENTS:
+Write these sections with MINIMUM word counts:
 
-AVOID these overused patterns completely:
-- "Ultimate Guide to..." 
-- "The Ultimate..."
-- "Complete Guide to..."
-- Use creative, engaging alternatives instead
+## Introduction (300+ words)
+Write a compelling 300+ word introduction that:
+- Uses vivid, descriptive language to set the scene
+- Explains what makes this park unique and special
+- Provides historical or geological context
+- Includes the exact location and regional significance
+- Previews what visitors will discover in this comprehensive guide
+- Uses the primary keyword naturally 2-3 times
 
-MANDATORY CONTENT STRUCTURE (To ensure 600+ words):
-Your response MUST follow this exact format:
+## Historical/Cultural/Geological Background (400+ words)  
+Write 400+ words covering:
+- Detailed formation story or historical significance
+- Specific dates, names, and historical events
+- Geological processes or cultural importance
+- Connection to broader regional or national context
+- Interesting facts most visitors never learn
+- Multiple detailed paragraphs with rich information
 
-TITLE: [Creative, varied title with park name, city, and state]
+## Comprehensive Activities Guide (450+ words)
+Write 450+ words covering:
+- 8-12 specific activities with detailed descriptions
+- Exact trail names, distances, and difficulty levels
+- Specific timing: "this hike takes 2-3 hours"
+- Equipment needed and skill requirements
+- Best viewpoints with specific directions
+- Photography opportunities with timing advice
+- Hidden gems and insider spots
+- Activities for different fitness levels
+- Seasonal variations and availability
 
-DESCRIPTION: [Meta description 150-160 characters with park name and location]
-
-EXCERPT: [1-2 compelling sentences summarizing the blog topic for social media]
-
-CONTENT:
-[Full blog post content with markdown formatting - MUST be 600-1200 words]
-
-REQUIRED SECTIONS (each section must be detailed and comprehensive):
-## Introduction: [Creative Hook Name]
-- Engaging opening that immediately captures attention (150-250 words)
-- Location context and why this park is special
-- What readers will discover in this comprehensive guide
-- Include primary keyword naturally
-
-## [Historical/Cultural/Geological] Significance: [Creative Section Name]
-- Deep dive into the park's background, formation, or cultural importance (200-300 words)
-- Interesting facts and stories that most visitors don't know
-- Connection to broader regional or national significance
-- Specific details that show expertise
-
-## Top Activities & Attractions: [Creative Section Name]
-- Detailed descriptions of 5-8 specific activities (250-350 words)
-- Difficulty levels, time requirements, what to expect
-- Best spots for different interests (families, photographers, hikers, nature lovers)
-- Insider tips for getting the most out of each activity
-- Specific trail names, viewpoint locations, facility details
-
-## Practical Visitor Information: [Creative Section Name]
-- Detailed hours, entrance fees, best times to visit (150-250 words)
-- Seasonal considerations and weather tips
-- What to bring, parking information, accessibility notes
-- Reservation requirements, permits needed
+## Essential Visitor Information (300+ words)
+Write 300+ words covering:
+- Detailed hours, entrance fees, and reservation requirements
+- Comprehensive seasonal considerations
+- Specific parking information: locations, costs, busy times
+- What to bring: detailed packing lists for different seasons
 - Visitor center amenities and services
+- Accessibility information
+- Cell service and emergency information
+- Permits or passes required
 
-## Tips for Different Types of Visitors
-- Families with children: specific recommendations and safety tips (200-300 words)
-- Photography enthusiasts: best viewpoints, lighting conditions, equipment tips
-- Hikers and adventurers: trail recommendations, difficulty levels, hidden gems
-- First-time visitors: essential experiences not to miss
-- Accessibility information for visitors with mobility needs
+## Personalized Tips for Different Visitors (400+ words)
+Write 400+ words covering:
+- Families with children: specific activities and safety tips
+- Photography enthusiasts: exact locations and lighting advice
+- Hikers: challenging trails and skill requirements
+- First-time visitors: must-see attractions and time management
+- Accessibility needs: detailed mobility information
+- Senior visitors: comfortable activities and amenities
+- Seasonal considerations: spring, summer, fall, winter
 
-## Beyond the Park: [Regional Attractions/Accommodations]
-- Nearby attractions, restaurants, and accommodations (100-200 words)
-- Regional context and other things to do in the area
-- Travel logistics and planning tips
-- Connection to other parks or attractions in the region
+## Regional Context and Beyond (250+ words)
+Write 250+ words covering:
+- Nearby attractions with specific recommendations
+- Regional travel logistics and drive times
+- Cultural attractions and local experiences
+- Connection to other parks in the area
+- Accommodation and dining recommendations
+- Local events and festivals
 
-## Conclusion: [Creative Call-to-Action Name]
-- Compelling summary of why this park is worth visiting (100-150 words)
-- Inspirational call-to-action encouraging readers to plan their visit
-- Include location (city, state) one final time
-- End with memorable, inspiring final thought
+## Conclusion (150+ words)
+Write 150+ words:
+- Inspiring summary of why this park deserves a visit
+- Emotional connection to the visitor experience
+- Practical next steps for planning
+- Final location mention
+- Memorable closing thought
 
-TAGS: [8 specific, relevant tags including park name, state, and varied activities]
+CRITICAL EXECUTION RULES:
+1. Count your words as you write - you MUST exceed 1200 words total
+2. Write multiple detailed paragraphs for each section
+3. Include specific names, numbers, distances, and concrete details
+4. Use vivid, descriptive language throughout
+5. Make every sentence informative and valuable
+6. Include the park name and location naturally throughout
+7. Write with the expertise of someone who has spent extensive time at the park
+8. Never use filler content - every word must add value
 
-CRITICAL FORMATTING RULES:
-1. DO NOT include word counts in section headers - just use creative section names
-2. Write the specified number of words for each section without mentioning the count
-3. Content MUST be 600-1200 words total - count as you write
-4. Include specific, actionable details throughout 
-5. Write as if you've personally visited and know every trail, viewpoint, and secret spot
-6. Vary section lengths to create natural reading flow
-7. Include numbers, specific names, and concrete details
-8. Make every paragraph valuable and informative
-9. NEVER use generic travel advice - everything must be park-specific
-10. End word count should be clearly 600+ words when complete`;
+REMEMBER: You are writing the DEFINITIVE guide that visitors will use to plan their entire trip. Make it comprehensive, detailed, and authoritative.`;
 }
 
 /**
@@ -223,83 +214,111 @@ function buildBlogPrompt(park, options = {}) {
   const activities = park.activities.length > 0 ? park.activities.join(', ') : 'hiking, sightseeing, photography';
   const features = park.features.length > 0 ? park.features.join(', ') : 'natural beauty, outdoor recreation';
   
-  return `Create an SEO-optimized, comprehensive blog post about ${park.name} for the topic: "${topic}".
+  // Target word count (varying between 1100-1400)
+  const targetWordCount = Math.floor(Math.random() * 300) + 1100;
+  
+  return `WRITE A COMPREHENSIVE 1200+ WORD BLOG POST about ${park.name} in ${park.city}, ${park.state}.
 
-CRITICAL WORD COUNT REQUIREMENT: 
-- The blog post content MUST be between 600-1200 words
-- NEVER write less than 600 words - this is absolutely essential
-- Vary the length: aim for ${Math.floor(Math.random() * 600) + 600} words for this post
-- Count your words as you write to ensure you meet the minimum
+USE THIS SUCCESSFUL EXAMPLE AS YOUR TEMPLATE:
+"Waco Mammoth National Monument Mastery: Waco, Texas Insiders Guide" - 1500+ words of detailed, comprehensive content.
 
-PARK INFORMATION:
-- Name: ${park.name}
+YOU MUST WRITE EXACTLY LIKE THAT EXAMPLE:
+- Target: ${targetWordCount} words minimum (NEVER LESS THAN 1200 words)
+- Multiple detailed paragraphs per section
+- Specific trail names, distances, timing, and practical details
+- Historical context with dates and names
+- Comprehensive visitor information
+- Regional context and nearby attractions
+
+WRITE THESE EXACT SECTIONS:
+
+**TITLE:** Create a compelling title with park name, city, and state
+
+**DESCRIPTION:** Meta description (150-160 characters) with park name and location
+
+**EXCERPT:** 1-2 sentences for social sharing
+
+**CONTENT:** (MUST BE ${targetWordCount}+ WORDS)
+
+## Introduction: [Creative Name] 
+Write 300+ words covering:
+- Vivid opening that captures the park's essence
+- What makes ${park.name} special and unique
+- Location context: ${park.city}, ${park.state}
+- Preview of the comprehensive guide
+- Historical or geological significance
+- Use "Visit ${park.name} in ${park.city}, ${park.state}" naturally
+
+## [Historical/Geological/Cultural] Background: [Creative Name]
+Write 400+ words covering:
+- Detailed formation story or historical significance
+- Specific dates, names, and events
+- Connection to broader regional context
+- Interesting facts visitors don't know
+- Multiple detailed paragraphs
+
+## Activities & Attractions: [Creative Name]
+Write 450+ words covering:
+- 8-12 specific activities with detailed descriptions
+- Trail names, distances, difficulty levels
+- "This trail takes 2-3 hours" type specifics
+- Best viewpoints and photo spots
+- Equipment needed and skill requirements
+- Hidden gems and insider tips
+- Seasonal activity variations
+
+## Visitor Information: [Creative Name]
+Write 300+ words covering:
+- Hours, fees, reservation requirements
+- Parking details (locations, costs, busy times)
+- What to bring for different seasons
+- Visitor center amenities
+- Accessibility information
+- Cell service and emergency info
+
+## Tips for Different Visitors: [Creative Name]
+Write 400+ words covering:
+- Families with children (activities, safety)
+- Photographers (best spots, lighting, equipment)
+- Hikers (challenging trails, skill levels)
+- First-time visitors (must-sees, time management)
+- Accessibility needs (mobility assistance)
+- Seasonal considerations (spring, summer, fall, winter)
+
+## Beyond the Park: [Creative Name]
+Write 250+ words covering:
+- Nearby attractions and recommendations
+- Regional travel logistics
+- Dining and accommodation options
+- Drive times to other parks
+- Local events and festivals
+
+## Conclusion: [Creative Name]
+Write 150+ words:
+- Why ${park.name} deserves a visit
+- Emotional connection to the experience
+- Next steps for planning
+- Final mention of ${park.city}, ${park.state}
+- Inspiring closing thought
+
+**TAGS:** 8 relevant tags including ${park.name}, ${park.state}, activities
+
+CRITICAL REQUIREMENTS:
+- COUNT YOUR WORDS - must exceed ${targetWordCount} words
+- Use specific details: trail names, distances, times, costs
+- Write multiple paragraphs per section
+- Include ${park.name} naturally throughout (12-15 times)
+- Use vivid, descriptive language
+- Make every sentence valuable and informative
+- Write as an expert who knows every corner of ${park.name}
+
+PARK DETAILS TO INCLUDE:
 - Location: ${park.city}, ${park.state}
+- Activities: ${activities}
+- Features: ${features}
 - Description: ${park.description}
-- Available Activities: ${activities}
-- Key Features: ${features}
-- Images Available: ${hasImages ? `Yes (${imageCount} images)` : 'No'}
-- Season Focus: ${season}
 
-PRIMARY KEYWORD: "${primaryKeyword}"
-CONTENT THEME: ${topic}
-
-MANDATORY DETAILED REQUIREMENTS:
-1. Write 600-1200 words of original, comprehensive content (MINIMUM 600 words - count as you write)
-2. Include "${primaryKeyword}" naturally in the content (8-12 times)
-3. Mention ${park.city} and ${park.state} in introduction, middle sections, and conclusion
-4. Include extensive, specific, actionable advice for visitors
-5. Write for travelers who want a complete, expert-level guide to ${park.name}
-6. Include detailed practical tips, insider knowledge, and specific recommendations
-7. Use compelling headers and subheaders (minimum 6 main sections as outlined in system prompt)
-8. Make it feel like expert travel advice from someone who has extensively explored ${park.name}
-9. Include specific details about facilities, trails, viewpoints, timing, and logistics
-10. Add unique insights that distinguish this from generic travel content
-
-CONTENT DEPTH REQUIREMENTS (to ensure 600+ words):
-- Introduction with location context and compelling hook (150-250 words)
-- Historical/cultural/geological background with specific details (200-300 words)
-- Comprehensive activities guide with specific recommendations (250-350 words)
-- Detailed practical visitor information with insider tips (150-250 words)
-- Specialized advice for different visitor types (200-300 words)
-- Regional context and nearby attractions (100-200 words)
-- Inspiring conclusion with specific call-to-action (100-150 words)
-
-SPECIFIC CONTENT TO INCLUDE:
-- Exact trail names, distances, and difficulty levels where applicable
-- Specific viewpoint locations and what makes them special
-- Detailed facility information (visitor centers, restrooms, parking, accessibility)
-- Seasonal considerations and best times for different activities
-- What to bring and how to prepare for visits
-- Photography tips with specific locations and timing
-- Family-friendly activities with age recommendations
-- Safety considerations and important regulations
-- Nearby dining, lodging, and other attractions
-- Transportation and parking details
-- Permit or reservation requirements
-- Hidden gems and lesser-known features
-- Local wildlife and plant life visitors might encounter
-- Historical anecdotes and interesting facts
-- Tips for avoiding crowds and finding solitude
-
-LONG-TAIL KEYWORDS TO INCLUDE NATURALLY:
-- "things to do at ${park.name}"
-- "best time to visit ${park.name}"
-- "${park.name} hiking trails" (if applicable)
-- "${park.name} photography spots" (if applicable)  
-- "visiting ${park.name} with family" (if appropriate)
-- "${park.name} entrance fees"
-- "${park.name} visitor center"
-- "${park.name} camping" (if applicable)
-- "how to get to ${park.name}"
-- "${park.name} wildlife viewing"
-
-REMEMBER: 
-- The content must be comprehensive, detailed, and expert-level
-- Write as if you're creating the most complete guide to ${park.name} available online
-- Include specific details, practical advice, and insider tips that show deep knowledge
-- The final content MUST be at least 600 words - count your words to verify
-- Vary your writing to keep readers engaged throughout the entire piece
-- Make every sentence valuable and informative for potential visitors`;
+WRITE EXACTLY ${targetWordCount}+ WORDS. This is NON-NEGOTIABLE.`;
 }
 
 /**
