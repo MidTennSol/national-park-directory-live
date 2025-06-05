@@ -1,6 +1,7 @@
 /* ULTRA AGGRESSIVE BLOG CONTENT STYLING */
 /* This file forces blog content to display with proper formatting */
 /* Updated: 2025-01-06 - H1 styling refined */
+/* Updated: 2025-01-06 14:30 - H2 styling refined with cache bust */
 
 /* Reset everything inside blog content */
 .blog-content,
@@ -266,11 +267,12 @@
 }
 
 [class*="blog-content"] h2 {
-  font-size: 2.25rem !important;
-  border-bottom: 3px solid #2d7d32 !important;
-  padding-bottom: 0.75rem !important;
-  margin-top: 3.5rem !important;
-  margin-bottom: 1.75rem !important;
+  font-size: 2rem !important;
+  border-bottom: 2px solid #388e3c !important;
+  padding-bottom: 0.5rem !important;
+  margin-top: 3rem !important;
+  margin-bottom: 1.5rem !important;
+  font-weight: 700 !important;
 }
 
 [class*="blog-content"] p {
