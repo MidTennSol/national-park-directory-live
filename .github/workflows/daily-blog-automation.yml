@@ -18,6 +18,11 @@ on:
         type: string
         default: 'complete visitor guide'
 
+# Add permissions for the workflow
+permissions:
+  contents: write
+  actions: read
+
 env:
   NODE_VERSION: '18'
 
@@ -29,7 +34,8 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4
       with:
-        token: ${{ secrets.GITHUB_TOKEN }}
+        # Use PAT token for authentication if available, fallback to GITHUB_TOKEN
+        token: ${{ secrets.PAT_TOKEN || secrets.GITHUB_TOKEN }}
         fetch-depth: 0
     
     - name: Setup Node.js
