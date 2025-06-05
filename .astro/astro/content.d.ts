@@ -146,49 +146,56 @@ declare module 'astro:content' {
   slug: "2025-06-05-prince-william-forest-park-unveiled-washington-dc-virginias-natural-wonder";
   body: string;
   collection: "blog";
-  data: InferEntrySchema<"blog">
+  data: any
+} & { render(): Render[".md"] };
+"2025-06-05-waco-mammoth-national-monument-mastery-waco-texas-insiders-guide.md": {
+	id: "2025-06-05-waco-mammoth-national-monument-mastery-waco-texas-insiders-guide.md";
+  slug: "2025-06-05-waco-mammoth-national-monument-mastery-waco-texas-insiders-guide";
+  body: string;
+  collection: "blog";
+  data: any
 } & { render(): Render[".md"] };
 "best-hiking-trails-in-yellowstone.md": {
 	id: "best-hiking-trails-in-yellowstone.md";
   slug: "best-hiking-trails-in-yellowstone";
   body: string;
   collection: "blog";
-  data: InferEntrySchema<"blog">
+  data: any
 } & { render(): Render[".md"] };
 "best-national-parks-to-visit-in-spring.md": {
 	id: "best-national-parks-to-visit-in-spring.md";
   slug: "best-national-parks-to-visit-in-spring";
   body: string;
   collection: "blog";
-  data: InferEntrySchema<"blog">
+  data: any
 } & { render(): Render[".md"] };
 "cumberland-gap.md": {
 	id: "cumberland-gap.md";
   slug: "cumberland-gap";
   body: string;
   collection: "blog";
-  data: InferEntrySchema<"blog">
+  data: any
 } & { render(): Render[".md"] };
 "welcome-to-our-national-park-blog.md": {
 	id: "welcome-to-our-national-park-blog.md";
   slug: "welcome-to-our-national-park-blog";
   body: string;
   collection: "blog";
-  data: InferEntrySchema<"blog">
+  data: any
 } & { render(): Render[".md"] };
 "wildlife-photography-tips-national-parks.md": {
 	id: "wildlife-photography-tips-national-parks.md";
   slug: "wildlife-photography-tips-national-parks";
   body: string;
   collection: "blog";
-  data: InferEntrySchema<"blog">
+  data: any
 } & { render(): Render[".md"] };
 "wildlife-watching-guide-national-parks.md": {
 	id: "wildlife-watching-guide-national-parks.md";
   slug: "wildlife-watching-guide-national-parks";
   body: string;
   collection: "blog";
-  data: InferEntrySchema<"blog">
+  data: any
 } & { render(): Render[".md"] };
 };
 
@@ -200,5 +207,5 @@ declare module 'astro:content' {
 
 	type AnyEntryMap = ContentEntryMap & DataEntryMap;
 
-	export type ContentConfig = typeof import("./../../src/content/config.js");
+	export type ContentConfig = never;
 }

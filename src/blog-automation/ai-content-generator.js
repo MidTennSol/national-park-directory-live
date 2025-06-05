@@ -145,62 +145,64 @@ CONTENT:
 [Full blog post content with markdown formatting - MUST be 600-1200 words]
 
 REQUIRED SECTIONS (each section must be detailed and comprehensive):
-## Introduction: [Creative Hook Name] (150-250 words)
-- Engaging opening that immediately captures attention
+## Introduction: [Creative Hook Name]
+- Engaging opening that immediately captures attention (150-250 words)
 - Location context and why this park is special
 - What readers will discover in this comprehensive guide
 - Include primary keyword naturally
 
-## [Historical/Cultural/Geological] Significance: [Creative Section Name] (200-300 words) 
-- Deep dive into the park's background, formation, or cultural importance
+## [Historical/Cultural/Geological] Significance: [Creative Section Name]
+- Deep dive into the park's background, formation, or cultural importance (200-300 words)
 - Interesting facts and stories that most visitors don't know
 - Connection to broader regional or national significance
 - Specific details that show expertise
 
-## Top Activities & Attractions: [Creative Section Name] (250-350 words)
-- Detailed descriptions of 5-8 specific activities
+## Top Activities & Attractions: [Creative Section Name]
+- Detailed descriptions of 5-8 specific activities (250-350 words)
 - Difficulty levels, time requirements, what to expect
 - Best spots for different interests (families, photographers, hikers, nature lovers)
 - Insider tips for getting the most out of each activity
 - Specific trail names, viewpoint locations, facility details
 
-## Practical Visitor Information: [Creative Section Name] (150-250 words)
-- Detailed hours, entrance fees, best times to visit
+## Practical Visitor Information: [Creative Section Name]
+- Detailed hours, entrance fees, best times to visit (150-250 words)
 - Seasonal considerations and weather tips
 - What to bring, parking information, accessibility notes
 - Reservation requirements, permits needed
 - Visitor center amenities and services
 
-## Tips for Different Types of Visitors (200-300 words)
-- Families with children: specific recommendations and safety tips
+## Tips for Different Types of Visitors
+- Families with children: specific recommendations and safety tips (200-300 words)
 - Photography enthusiasts: best viewpoints, lighting conditions, equipment tips
 - Hikers and adventurers: trail recommendations, difficulty levels, hidden gems
 - First-time visitors: essential experiences not to miss
 - Accessibility information for visitors with mobility needs
 
-## Beyond the Park: [Regional Attractions/Accommodations] (100-200 words)
-- Nearby attractions, restaurants, and accommodations
+## Beyond the Park: [Regional Attractions/Accommodations]
+- Nearby attractions, restaurants, and accommodations (100-200 words)
 - Regional context and other things to do in the area
 - Travel logistics and planning tips
 - Connection to other parks or attractions in the region
 
-## Conclusion: [Creative Call-to-Action Name] (100-150 words)
-- Compelling summary of why this park is worth visiting
+## Conclusion: [Creative Call-to-Action Name]
+- Compelling summary of why this park is worth visiting (100-150 words)
 - Inspirational call-to-action encouraging readers to plan their visit
 - Include location (city, state) one final time
 - End with memorable, inspiring final thought
 
 TAGS: [8 specific, relevant tags including park name, state, and varied activities]
 
-ABSOLUTE REQUIREMENTS:
-1. Content MUST be 600-1200 words - count as you write
-2. Include specific, actionable details throughout 
-3. Write as if you've personally visited and know every trail, viewpoint, and secret spot
-4. Vary section lengths to create natural reading flow
-5. Include numbers, specific names, and concrete details
-6. Make every paragraph valuable and informative
-7. NEVER use generic travel advice - everything must be park-specific
-8. End word count should be clearly 600+ words when complete`;
+CRITICAL FORMATTING RULES:
+1. DO NOT include word counts in section headers - just use creative section names
+2. Write the specified number of words for each section without mentioning the count
+3. Content MUST be 600-1200 words total - count as you write
+4. Include specific, actionable details throughout 
+5. Write as if you've personally visited and know every trail, viewpoint, and secret spot
+6. Vary section lengths to create natural reading flow
+7. Include numbers, specific names, and concrete details
+8. Make every paragraph valuable and informative
+9. NEVER use generic travel advice - everything must be park-specific
+10. End word count should be clearly 600+ words when complete`;
 }
 
 /**
