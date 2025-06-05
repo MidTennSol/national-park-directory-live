@@ -11,12 +11,15 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 // Airtable configuration
-const AIRTABLE_TOKEN = process.env.AIRTABLE_TOKEN;
+const AIRTABLE_TOKEN = process.env.AIRTABLE_API_KEY;
 const AIRTABLE_BASE_ID = process.env.AIRTABLE_BASE_ID;
 const AIRTABLE_TABLE_NAME = process.env.AIRTABLE_TABLE_NAME || 'national-parks';
 
 // Validate configuration
 if (!AIRTABLE_TOKEN || !AIRTABLE_BASE_ID) {
+  console.error('❌ Missing Airtable configuration:');
+  console.error('  AIRTABLE_API_KEY:', process.env.AIRTABLE_API_KEY ? '✅ Set' : '❌ Missing');
+  console.error('  AIRTABLE_BASE_ID:', process.env.AIRTABLE_BASE_ID ? '✅ Set' : '❌ Missing');
   throw new Error('Missing required Airtable configuration. Please check your .env file.');
 }
 
