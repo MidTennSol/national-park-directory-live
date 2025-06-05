@@ -9,10 +9,7 @@ author: "The NPD Team"
 category: "Travel Guide"
 park: "Prince William Forest Park"
 state: "Virginia"
-city: "Washington, D.C."
-coordinates: 
-  lat: 0
-  lng: 0
+city: "Triangle"
 activities: ["Arts", "Culture & History", "Biking", "Camping", "Educational Activities", "Fishing & Hunting", "Games & Recreation", "Guided & Self-Guided Tours", "Hiking & Trekking", "Wildlife Viewing"]
 features: ["Science", "Innovation & Industry", "Art", "Music & Literature", "Wildlife & Conservation", "Transportation", "U.S. Wars & Conflicts", "Cultural Heritage & Society", "Natural Features & Ecosystems"]
 generatedBy: "AI"
