@@ -49,12 +49,13 @@
 /* Specific heading sizes and styles */
 .blog-content h1,
 .blog-content [data-astro-cid-4sn4zg3r] h1 {
-  font-size: 2.75rem !important;
-  border-bottom: 4px solid #1b5e20 !important;
-  padding-bottom: 1rem !important;
+  font-size: 2.25rem !important;
+  border-bottom: 2px solid #388e3c !important;
+  padding-bottom: 0.75rem !important;
   margin-top: 2rem !important;
   margin-bottom: 2rem !important;
-  color: #1b5e20 !important;
+  color: #2d7d32 !important;
+  font-weight: 700 !important;
 }
 
 .blog-content h2,
