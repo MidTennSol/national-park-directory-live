@@ -120,22 +120,23 @@ jobs:
         PARK_ID: ${{ github.event.inputs.park_id }}
         TOPIC: ${{ github.event.inputs.topic }}
       run: |
-        echo "📝 Generating daily blog post..."
+        echo "📝 Generating dual blog posts (current + historical)..."
+        echo "🔄 Using dual generation mode for maximum content velocity"
         
-        # Run the blog generation with enhanced error handling
+        # Run the dual blog generation
         if [ -n "$PARK_ID" ]; then
-          echo "🎯 Generating blog for specific park ID: $PARK_ID"
-          node src/blog-automation/daily-blog-generator.js --park-id="$PARK_ID" --topic="$TOPIC"
-        else
-          echo "🎲 Generating blog for next available park"
-          node src/blog-automation/daily-blog-generator.js --topic="$TOPIC"
+          echo "⚠️ Manual park selection not supported in dual mode"
+          echo "🎲 Proceeding with automatic dual park selection"
         fi
         
-        # Check if blog was generated
+        echo "🚀 Starting dual blog generation..."
+        node src/blog-automation/daily-blog-generator.js --topic="${TOPIC:-complete visitor guide}"
+        
+        # Check if blog generation was successful
         if [ $? -eq 0 ]; then
-          echo "✅ Blog post generated successfully"
+          echo "✅ Dual blog posts generated successfully"
         else
-          echo "❌ Blog generation failed"
+          echo "❌ Dual blog generation failed"
           exit 1
         fi
     
@@ -144,17 +145,21 @@ jobs:
       run: |
         git add .
         if git diff --cached --quiet; then
-          echo "📭 No new blog post generated (no parks available or other issue)"
+          echo "📭 No new blog posts generated (no parks available or other issue)"
           echo "has_changes=false" >> $GITHUB_OUTPUT
         else
-          echo "📄 New blog post detected"
+          echo "📄 New blog posts detected"
           echo "has_changes=true" >> $GITHUB_OUTPUT
           
-          # Get the name of the generated blog file
-          NEW_FILE=$(git diff --cached --name-only | grep "src/content/blog/" | head -1)
-          if [ -n "$NEW_FILE" ]; then
-            echo "blog_file=$NEW_FILE" >> $GITHUB_OUTPUT
-            echo "📝 Generated file: $NEW_FILE"
+          # Get the names of generated blog files
+          NEW_FILES=$(git diff --cached --name-only | grep "src/content/blog/" | tr '\n' ' ')
+          FILE_COUNT=$(git diff --cached --name-only | grep "src/content/blog/" | wc -l)
+          
+          if [ -n "$NEW_FILES" ]; then
+            echo "blog_files=$NEW_FILES" >> $GITHUB_OUTPUT
+            echo "file_count=$FILE_COUNT" >> $GITHUB_OUTPUT
+            echo "📝 Generated files: $NEW_FILES"
+            echo "📊 Total files: $FILE_COUNT"
           fi
         fi
     
@@ -166,10 +171,22 @@ jobs:
         
         # Get current date for commit message
         CURRENT_DATE=$(date "+%Y-%m-%d")
+        FILE_COUNT="${{ steps.check_changes.outputs.file_count }}"
         
-        # Create descriptive commit message
-        if [ -n "${{ steps.check_changes.outputs.blog_file }}" ]; then
-          BLOG_NAME=$(basename "${{ steps.check_changes.outputs.blog_file }}" .md | sed 's/^[0-9-]*-//')
+        # Create descriptive commit message for dual generation
+        if [ "$FILE_COUNT" = "2" ]; then
+          git commit -m "🤖 Auto-generated DUAL blog posts ($CURRENT_DATE)
+
+          - Generated via GitHub Actions dual automation
+          - 2 comprehensive travel guides (current + historical)
+          - SEO optimized with geographic targeting
+          - Updated Airtable tracking records
+          
+          Generated files:
+          ${{ steps.check_changes.outputs.blog_files }}"
+        elif [ "$FILE_COUNT" = "1" ]; then
+          # Fallback for single file
+          BLOG_NAME=$(basename "${{ steps.check_changes.outputs.blog_files }}" .md | sed 's/^[0-9-]*-//')
           git commit -m "🤖 Auto-generated blog post: $BLOG_NAME ($CURRENT_DATE)
 
           - Generated via GitHub Actions automation
@@ -177,15 +194,22 @@ jobs:
           - SEO optimized with geographic targeting
           - Updated Airtable tracking records
           
-          Generated file: ${{ steps.check_changes.outputs.blog_file }}"
+          Generated file: ${{ steps.check_changes.outputs.blog_files }}"
         else
-          git commit -m "🤖 Auto-generated daily blog post ($CURRENT_DATE)"
+          git commit -m "🤖 Auto-generated blog posts ($CURRENT_DATE)
+
+          - Generated via GitHub Actions automation
+          - Multiple comprehensive travel guides
+          - SEO optimized with geographic targeting
+          - Updated Airtable tracking records
+          
+          Generated files: $FILE_COUNT"
         fi
         
         echo "📤 Pushing changes to repository..."
         git push
         
-        echo "✅ Blog post successfully published!"
+        echo "✅ Blog posts successfully published!"
         echo "🚀 Site will auto-deploy via Vercel"
     
     - name: Get blog stats
@@ -214,15 +238,15 @@ jobs:
       if: steps.check_changes.outputs.has_changes == 'true'
       run: |
         echo "🎉 Blog Automation Success!"
-        echo "   ✅ New blog post generated and published"
+        echo "   ✅ New blog posts generated and published"
         echo "   🚀 Vercel will automatically deploy the changes"
-        echo "   🌐 New blog post will be live within 2-3 minutes"
-        echo "   📝 Blog file: ${{ steps.check_changes.outputs.blog_file }}"
+        echo "   🌐 New blog posts will be live within 2-3 minutes"
+        echo "   📝 Blog files: ${{ steps.check_changes.outputs.blog_files }}"
     
     - name: No content notification
       if: steps.check_changes.outputs.has_changes == 'false'
       run: |
-        echo "📭 No new blog post generated today"
+        echo "📭 No new blog posts generated today"
         echo "   This could mean:"
         echo "   • All parks already have blog posts"
         echo "   • Connection issues with Airtable or OpenAI"

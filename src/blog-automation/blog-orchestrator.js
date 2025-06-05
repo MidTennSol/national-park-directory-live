@@ -15,35 +15,43 @@ import { generateBlogFile, checkFileExists } from './file-generator.js';
 /**
  * Generate a complete blog post with full automation
  * 
- * @param {Object} options - Generation options
+ * @param {Object} park - Park data (optional, will fetch if not provided)
+ * @param {Object} options - Generation options including publishDate
  * @returns {Object} Generation result
  */
-export async function generateCompleteBlogPost(options = {}) {
+export async function generateCompleteBlogPost(park = null, options = {}) {
   console.log('🚀 Starting complete blog post generation...');
   console.log('='.repeat(60));
   
   const startTime = Date.now();
   
   try {
-    // Step 1: Get next park for blogging
-    console.log('\n1️⃣ Getting next park for blogging...');
-    const park = await getNextParkForBlog();
+    // Step 1: Get park for blogging (either provided or fetch next)
+    let selectedPark = park;
     
-    if (!park) {
-      throw new Error('No unblogged parks available. All parks may have been blogged already.');
+    if (!selectedPark) {
+      console.log('\n1️⃣ Getting next park for blogging...');
+      selectedPark = await getNextParkForBlog();
+      
+      if (!selectedPark) {
+        throw new Error('No unblogged parks available. All parks may have been blogged already.');
+      }
+    } else {
+      console.log('\n1️⃣ Using provided park for blogging...');
     }
     
-    console.log(`✅ Selected park: ${park.name} (${park.city}, ${park.state})`);
-    console.log(`   - Images available: ${park.images.length}`);
-    console.log(`   - Activities: ${park.activities.slice(0, 3).join(', ')}...`);
+    console.log(`✅ Selected park: ${selectedPark.name} (${selectedPark.city}, ${selectedPark.state})`);
+    console.log(`   - Images available: ${selectedPark.images.length}`);
+    console.log(`   - Activities: ${selectedPark.activities.slice(0, 3).join(', ')}...`);
     
     // Step 2: Generate AI content
     console.log('\n2️⃣ Generating AI blog content...');
     console.log('⏳ This may take 30-60 seconds...');
     
-    const blogContent = await generateBlogPost(park, {
+    const blogContent = await generateBlogPost(selectedPark, {
       topic: options.topic || 'complete visitor guide',
-      season: options.season || 'year-round'
+      season: options.season || 'year-round',
+      publishDate: options.publishDate || new Date()
     });
     
     console.log(`✅ AI content generated successfully`);
@@ -53,7 +61,7 @@ export async function generateCompleteBlogPost(options = {}) {
     
     // Step 3: Check for file conflicts
     console.log('\n3️⃣ Checking for file conflicts...');
-    const fileName = generateFileName(blogContent.title, park);
+    const fileName = generateFileName(blogContent.title, selectedPark, options.publishDate);
     const fileExists = await checkFileExists(fileName);
     
     if (fileExists) {
@@ -65,11 +73,15 @@ export async function generateCompleteBlogPost(options = {}) {
     
     // Step 4: Generate blog file
     console.log('\n4️⃣ Creating blog file...');
-    const fileResult = await generateBlogFile(blogContent, park, options);
+    const fileResult = await generateBlogFile(blogContent, selectedPark, {
+      ...options,
+      fileName: fileName
+    });
     
     console.log(`✅ Blog file created successfully`);
     console.log(`   - File: ${fileResult.fileName}`);
     console.log(`   - Size: ${fileResult.fileSize} characters`);
+    console.log(`   - Publish Date: ${options.publishDate ? options.publishDate.toDateString() : 'Today'}`);
     
     // Step 5: Update Airtable tracking (CRITICAL for duplicate prevention)
     console.log('\n5️⃣ Updating Airtable tracking...');
@@ -79,7 +91,7 @@ export async function generateCompleteBlogPost(options = {}) {
       fileName: fileResult.fileName
     };
     
-    await markParkAsBlogged(park.id, trackingData);
+    await markParkAsBlogged(selectedPark.id, trackingData);
     
     console.log(`✅ Airtable updated successfully`);
     console.log(`   - Park marked as blogged`);
@@ -97,9 +109,9 @@ export async function generateCompleteBlogPost(options = {}) {
       success: true,
       duration: `${duration} seconds`,
       park: {
-        id: park.id,
-        name: park.name,
-        location: `${park.city}, ${park.state}`
+        id: selectedPark.id,
+        name: selectedPark.name,
+        location: `${selectedPark.city}, ${selectedPark.state}`
       },
       content: {
         title: blogContent.title,
@@ -115,13 +127,15 @@ export async function generateCompleteBlogPost(options = {}) {
       tracking: {
         parkMarkedAsBlogged: true,
         duplicatePrevention: 'Active'
-      }
+      },
+      publishDate: options.publishDate || new Date()
     };
     
     console.log('\n📊 Generation Summary:');
     console.log(`   🏞️  Park: ${result.park.name} (${result.park.location})`);
     console.log(`   📝 Title: ${result.content.title}`);
     console.log(`   📄 File: ${result.file.name}`);
+    console.log(`   📅 Publish Date: ${result.publishDate.toDateString()}`);
     console.log(`   ⏱️  Duration: ${result.duration}`);
     console.log(`   🔒 Duplicate Prevention: ${result.tracking.duplicatePrevention}`);
     
@@ -222,7 +236,7 @@ export async function getSystemStats() {
 /**
  * Generate file name (helper function)
  */
-function generateFileName(title, park) {
+function generateFileName(title, park, publishDate) {
   const slug = title
     .toLowerCase()
     .replace(/[^a-z0-9\s-]/g, '')
@@ -230,7 +244,7 @@ function generateFileName(title, park) {
     .replace(/-+/g, '-')
     .replace(/^-|-$/g, '');
   
-  const date = new Date().toISOString().split('T')[0];
+  const date = publishDate ? publishDate.toISOString().split('T')[0] : new Date().toISOString().split('T')[0];
   return `${date}-${slug}.md`;
 }
 

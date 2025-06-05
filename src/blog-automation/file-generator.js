@@ -20,8 +20,8 @@ export async function generateBlogFile(blogContent, park, options = {}) {
   console.log(`📄 Generating blog file for ${park.name}...`);
   
   try {
-    // Generate the file name
-    const fileName = generateFileName(blogContent.title, park);
+    // Generate the file name (use provided fileName if available)
+    const fileName = options.fileName || generateFileName(blogContent.title, park, options.publishDate);
     const filePath = path.join('src', 'content', 'blog', fileName);
     
     // Generate frontmatter
@@ -63,7 +63,9 @@ ${blogContent.content}`;
  * Generate Astro-compatible frontmatter
  */
 function generateFrontmatter(blogContent, park, options = {}) {
-  const currentDate = new Date().toISOString().split('T')[0]; // YYYY-MM-DD format
+  // Use provided publishDate or current date
+  const publishDate = options.publishDate || new Date();
+  const dateString = publishDate.toISOString().split('T')[0]; // YYYY-MM-DD format
   
   // Get the first image URL for the featured image
   const featuredImage = park.images.length > 0 ? park.images[0] : '';
@@ -72,7 +74,7 @@ function generateFrontmatter(blogContent, park, options = {}) {
   const tags = blogContent.tags.map(tag => `"${tag.trim()}"`).join(', ');
   
   return `title: "${blogContent.title}"
-publishDate: ${currentDate}
+publishDate: ${dateString}
 image: "${featuredImage}"
 tags: [${tags}]
 description: "${blogContent.description}"
@@ -82,9 +84,6 @@ category: "Travel Guide"
 park: "${park.name}"
 state: "${park.state}"
 city: "${park.city}"
-coordinates: 
-  lat: ${park.latitude || 0}
-  lng: ${park.longitude || 0}
 activities: [${park.activities.map(a => `"${a.trim()}"`).join(', ')}]
 features: [${park.features.map(f => `"${f.trim()}"`).join(', ')}]
 generatedBy: "${blogContent.generatedBy}"
@@ -96,7 +95,7 @@ topic: "${blogContent.topic}"`;
 /**
  * Generate a clean file name from title and park
  */
-function generateFileName(title, park) {
+function generateFileName(title, park, publishDate = null) {
   // Create URL-friendly slug
   const slug = title
     .toLowerCase()
@@ -105,8 +104,8 @@ function generateFileName(title, park) {
     .replace(/-+/g, '-') // Replace multiple hyphens with single
     .replace(/^-|-$/g, ''); // Remove leading/trailing hyphens
   
-  // Add date prefix for uniqueness
-  const date = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
+  // Use provided publishDate or current date
+  const date = publishDate ? publishDate.toISOString().split('T')[0] : new Date().toISOString().split('T')[0];
   
   return `${date}-${slug}.md`;
 }
