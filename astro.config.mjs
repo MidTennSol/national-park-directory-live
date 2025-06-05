@@ -6,7 +6,7 @@ import sitemapIntegration from './src/integrations/sitemap.js';
 // https://astro.build/config
 export default defineConfig({
   site: 'https://nationalparkdirectory.com',
-  output: 'server',
+  output: 'static',
   integrations: [
     tailwind(),
     sitemapIntegration()
