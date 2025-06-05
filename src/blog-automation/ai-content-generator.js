@@ -405,6 +405,21 @@ function parseAIResponse(aiResponse, park, options) {
     // Clean up content
     content = content.trim();
     
+    // Remove any remaining formatting artifacts from content
+    content = content
+      .replace(/^\*\*TITLE:\*\*.*$/gm, '') // Remove title lines
+      .replace(/^\*\*DESCRIPTION:\*\*.*$/gm, '') // Remove description lines  
+      .replace(/^\*\*EXCERPT:\*\*.*$/gm, '') // Remove excerpt lines
+      .replace(/^\*\*CONTENT:\*\*.*$/gm, '') // Remove content labels
+      .replace(/^\*\*TAGS:\*\*.*$/gm, '') // Remove tags lines
+      .replace(/^TITLE:.*$/gm, '') // Remove unformatted title lines
+      .replace(/^DESCRIPTION:.*$/gm, '') // Remove unformatted description lines
+      .replace(/^EXCERPT:.*$/gm, '') // Remove unformatted excerpt lines
+      .replace(/^CONTENT:.*$/gm, '') // Remove unformatted content labels
+      .replace(/^TAGS:.*$/gm, '') // Remove unformatted tags lines
+      .replace(/\n\n\n+/g, '\n\n') // Clean up multiple line breaks
+      .trim();
+    
     // Validate content length
     const wordCount = content.split(' ').length;
     if (wordCount < 500) {
@@ -418,9 +433,9 @@ function parseAIResponse(aiResponse, park, options) {
     }
     
     return {
-      title: title.replace(/['"]/g, ''), // Clean quotes
-      description: description.replace(/['"]/g, ''),
-      excerpt: excerpt.replace(/['"]/g, ''),
+      title: title.replace(/['"*]/g, '').trim(), // Clean quotes and asterisks
+      description: description.replace(/['"*]/g, '').trim(),
+      excerpt: excerpt.replace(/['"*]/g, '').trim(),
       content: content,
       tags: tags,
       wordCount: wordCount,
