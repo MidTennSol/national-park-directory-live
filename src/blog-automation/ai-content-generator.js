@@ -232,7 +232,7 @@ YOU MUST WRITE EXACTLY LIKE THAT EXAMPLE:
 
 WRITE THESE EXACT SECTIONS:
 
-**TITLE:** Create a compelling title with park name, city, and state
+**TITLE:** Create a compelling SEO title like "Ultimate Guide to [Park Name]: [City], [State] Complete Visitor Experience" or "[Park Name] Mastery: [City], [State] Insider's Guide" (DO NOT START WITH "Introduction")
 
 **DESCRIPTION:** Meta description (150-160 characters) with park name and location
 
@@ -240,7 +240,7 @@ WRITE THESE EXACT SECTIONS:
 
 **CONTENT:** (MUST BE ${targetWordCount}+ WORDS)
 
-## Introduction: [Creative Name] 
+## Discover [Creative Descriptive Name] 
 Write 300+ words covering:
 - Vivid opening that captures the park's essence
 - What makes ${park.name} special and unique
@@ -249,7 +249,7 @@ Write 300+ words covering:
 - Historical or geological significance
 - Use "Visit ${park.name} in ${park.city}, ${park.state}" naturally
 
-## [Historical/Geological/Cultural] Background: [Creative Name]
+## [Historical/Geological/Cultural] Heritage: [Creative Name]
 Write 400+ words covering:
 - Detailed formation story or historical significance
 - Specific dates, names, and events
@@ -293,7 +293,7 @@ Write 250+ words covering:
 - Drive times to other parks
 - Local events and festivals
 
-## Conclusion: [Creative Name]
+## Final Thoughts: [Creative Name]
 Write 150+ words:
 - Why ${park.name} deserves a visit
 - Emotional connection to the experience
@@ -311,6 +311,7 @@ CRITICAL REQUIREMENTS:
 - Use vivid, descriptive language
 - Make every sentence valuable and informative
 - Write as an expert who knows every corner of ${park.name}
+- TITLE must be compelling and SEO-friendly (NOT starting with "Introduction")
 
 PARK DETAILS TO INCLUDE:
 - Location: ${park.city}, ${park.state}
@@ -362,12 +363,24 @@ function parseAIResponse(aiResponse, park, options) {
     if (!title || !content) {
       console.log('⚠️ AI response format not perfect, applying fallback parsing...');
       
-      // Try to extract title from headers
+      // Try to extract title from headers (but skip section headers like "Introduction:", "Discover", etc.)
       const lines = aiResponse.split('\n');
       for (const line of lines) {
         if (line.startsWith('#') && !title) {
-          title = line.replace(/#/g, '').trim();
-          break;
+          const headerText = line.replace(/#/g, '').trim();
+          // Skip section headers - we want the main blog title, not section headers
+          if (!headerText.toLowerCase().startsWith('introduction:') && 
+              !headerText.toLowerCase().startsWith('discover ') && 
+              !headerText.toLowerCase().startsWith('activities ') && 
+              !headerText.toLowerCase().startsWith('visitor ') && 
+              !headerText.toLowerCase().startsWith('tips ') && 
+              !headerText.toLowerCase().startsWith('beyond ') && 
+              !headerText.toLowerCase().startsWith('final ') &&
+              !headerText.toLowerCase().includes('heritage:') &&
+              !headerText.toLowerCase().includes('background:')) {
+            title = headerText;
+            break;
+          }
         }
       }
       
@@ -378,7 +391,7 @@ function parseAIResponse(aiResponse, park, options) {
       
       // Generate fallbacks
       if (!title) {
-        title = `Discover ${park.name}: Your Complete Guide to ${park.city}, ${park.state}`;
+        title = `Ultimate Guide to ${park.name}: ${park.city}, ${park.state} Complete Visitor Experience`;
       }
       if (!description) {
         description = `Explore ${park.name} in ${park.city}, ${park.state} with our comprehensive visitor guide featuring activities, tips, and local insights.`;
