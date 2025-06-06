@@ -1,6 +1,6 @@
 ---
 title: "Waco Mammoth National Monument Mastery: Waco, Texas Insiders Guide"
-publishDate: 2025-06-05
+publishDate: 2025-05-24
 image: "https://upload.wikimedia.org/wikipedia/commons/8/82/Waco_mammoth_site_sign.jpg"
 tags: ["Waco Mammoth National Monument", "Waco Texas", "Fossil Park", "Ice Age Adventure", "Columbian Mammoths", "Wildlife Encounters", "Historical Landmarks", "Family Friendly Attractions"]
 description: "Discover the historical and natural wonders of Waco Mammoth National Monument in Waco, Texas with our expert insiders guide."

@@ -1,6 +1,6 @@
 ---
 title: "El Morro National Monument Mastery: Albuquerque, New Mexico Insiders Guide"
-publishDate: 2025-05-29
+publishDate: 2025-06-03
 image: "https://upload.wikimedia.org/wikipedia/commons/8/80/El_morro_view.JPG"
 tags: ["El Morro National Monument", "New Mexico", "National Parks", "Travel Guide", "Albuquerque", "Outdoor Recreation", "Family Travel", "Adventure"]
 description: "Explore El Morro National Monument in Albuquerque, New Mexico with our comprehensive visitor guide featuring activities, tips, and local insights."

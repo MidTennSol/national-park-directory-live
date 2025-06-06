@@ -63,10 +63,10 @@ function calculateDatesForCampaignDay(dayCount) {
   const currentDate = new Date(startDate);
   currentDate.setDate(startDate.getDate() + dayCount);
   
-  // Historical date: start date - (day count + 1)
-  // This creates: Day 0: June 5 + June 3, Day 1: June 6 + June 2, etc.
-  const historicalDate = new Date(startDate);
-  historicalDate.setDate(startDate.getDate() - (dayCount + 2));
+  // Historical date: Custom mapping for the reorganized sequence
+  // Day 1: June 6 + May 18, Day 2: June 7 + May 17, etc.
+  const historicalDate = new Date('2025-05-19'); // Base historical date
+  historicalDate.setDate(historicalDate.getDate() - dayCount);
   
   return { currentDate, historicalDate };
 }

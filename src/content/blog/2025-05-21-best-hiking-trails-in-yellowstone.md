@@ -1,7 +1,7 @@
 ---
 title: "Top 5 Hiking Trails in Yellowstone National Park"
 description: "Discover the most scenic and rewarding hiking trails in Yellowstone National Park, from easy walks to challenging backcountry adventures."
-publishDate: 2025-04-21
+publishDate: 2025-05-21
 author: "Emily Johnson"
 image: "/images/blog/yellowstone-trails.jpg"
 tags: ["hiking", "Yellowstone", "trails", "outdoor activities"]

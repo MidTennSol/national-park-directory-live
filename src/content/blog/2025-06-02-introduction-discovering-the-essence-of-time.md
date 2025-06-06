@@ -1,6 +1,6 @@
 ---
 title: "Santa Fe National Historic Trail Spectacular: An Insider's Guide to an Epic Journey through Time and Trails"
-publishDate: 2025-05-30
+publishDate: 2025-06-02
 image: "https://upload.wikimedia.org/wikipedia/commons/1/13/Historic_route%2C_Santa_Fe_National_Historic_Trail_LOC_97682418.jpg"
 tags: ["Santa Fe National Historic Trail", "Colorado,Kansas,Missouri,New Mexico,Oklahoma", "National Parks", "Travel Guide", "Santa Fe", "Outdoor Recreation", "Family Travel", "Adventure"]
 description: "Explore Santa Fe National Historic Trail in Santa Fe, Colorado,Kansas,Missouri,New Mexico,Oklahoma with our comprehensive visitor guide featuring activities,..."

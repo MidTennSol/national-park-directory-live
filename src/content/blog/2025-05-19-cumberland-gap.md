@@ -1,7 +1,7 @@
 ---
 title: "How to Plan Your Visit to Cumberland Gap National Historical Park"
 description: "Explore the history, trails, and scenic beauty of Cumberland Gap National Historical Park across Kentucky, Tennessee, and Virginia."
-publishDate: 2025-04-23
+publishDate: 2025-05-19
 author: "The NPD Team"
 image: "/images/blog/cumberland-gap-overlook.jpg"
 tags: ["Cumberland Gap National Historical Park", "Kentucky", "Tennessee", "Virginia", "Hiking", "History", "Mountains"]

@@ -1,7 +1,7 @@
 ---
 title: "10 Best National Parks to Visit in Spring"
 description: "Discover the most spectacular national parks to explore during the spring season, from wildflower meadows to roaring waterfalls."
-publishDate: 2023-07-01
+publishDate: 2025-05-20
 author: "Sarah Johnson"
 image: "/images/blog/spring-parks.jpg"
 tags: ["seasonal guides", "travel tips", "spring"]

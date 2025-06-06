@@ -1,6 +1,6 @@
 ---
 title: "Into the Wild: Fredericksburg & Spotsylvania National Military Park, Fredericksburg, Virginia"
-publishDate: 2025-06-05
+publishDate: 2025-05-27
 image: "https://upload.wikimedia.org/wikipedia/commons/2/2e/Fredericksburg_Battlefield_-_Fredericksburg%2C_Virginia_-_8124587643.jpg"
 tags: ["#Fredericksburg&SpotsylvaniaNationalMilitaryPark #Fredericksburg #Virginia #HistoricalSite #CulturalHeritage #NatureTrail #EducationalActivities #Hiking&Biking"]
 description: "Explore the heart of Civil War history at Fredericksburg & Spotsylvania National Military Park in Fredericksburg, Virginia. A detailed guide for unforgettabl..."

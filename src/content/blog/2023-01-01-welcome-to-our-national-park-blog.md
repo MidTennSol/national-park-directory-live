@@ -1,7 +1,7 @@
 ---
 title: "Welcome to Our National Park Blog"
 description: "Introducing our new blog dedicated to exploring the wonders of America's national parks."
-publishDate: 2023-06-15
+publishDate: 2023-01-01
 author: "National Park Directory Team"
 image: "/images/blog/welcome-header.jpg"
 tags: ["announcements", "general"]
