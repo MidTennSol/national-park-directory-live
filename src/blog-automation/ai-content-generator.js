@@ -340,12 +340,12 @@ function parseAIResponse(aiResponse, park, options) {
     for (let i = 0; i < sections.length; i++) {
       const section = sections[i].trim();
       
-      if (section.startsWith('TITLE:')) {
-        title = section.replace('TITLE:', '').trim();
-      } else if (section.startsWith('DESCRIPTION:')) {
-        description = section.replace('DESCRIPTION:', '').trim();
-      } else if (section.startsWith('EXCERPT:')) {
-        excerpt = section.replace('EXCERPT:', '').trim();
+      if (section.startsWith('TITLE:') || section.startsWith('**TITLE:**')) {
+        title = section.replace(/^\*\*TITLE:\*\*\s*/i, '').replace(/^TITLE:\s*/i, '').trim();
+      } else if (section.startsWith('DESCRIPTION:') || section.startsWith('**DESCRIPTION:**')) {
+        description = section.replace(/^\*\*DESCRIPTION:\*\*\s*/i, '').replace(/^DESCRIPTION:\s*/i, '').trim();
+      } else if (section.startsWith('EXCERPT:') || section.startsWith('**EXCERPT:**')) {
+        excerpt = section.replace(/^\*\*EXCERPT:\*\*\s*/i, '').replace(/^EXCERPT:\s*/i, '').trim();
       } else if (section.startsWith('CONTENT:')) {
         contentStarted = true;
         continue;
@@ -433,9 +433,9 @@ function parseAIResponse(aiResponse, park, options) {
     }
     
     return {
-      title: title.replace(/['"*]/g, '').trim(), // Clean quotes and asterisks
-      description: description.replace(/['"*]/g, '').trim(),
-      excerpt: excerpt.replace(/['"*]/g, '').trim(),
+      title: title.replace(/['"*]/g, '').replace(/^(Title|TITLE):\s*/i, '').trim(), // Clean quotes, asterisks, and title prefixes
+      description: description.replace(/['"*]/g, '').replace(/^(Description|DESCRIPTION):\s*/i, '').trim(),
+      excerpt: excerpt.replace(/['"*]/g, '').replace(/^(Excerpt|EXCERPT):\s*/i, '').trim(),
       content: content,
       tags: tags,
       wordCount: wordCount,
