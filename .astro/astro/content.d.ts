@@ -141,6 +141,13 @@ declare module 'astro:content' {
 
 	type ContentEntryMap = {
 		"blog": {
+"2025-06-01-introduction-stepping-back-in-time.md": {
+	id: "2025-06-01-introduction-stepping-back-in-time.md";
+  slug: "2025-06-01-introduction-stepping-back-in-time";
+  body: string;
+  collection: "blog";
+  data: InferEntrySchema<"blog">
+} & { render(): Render[".md"] };
 "2025-06-03-boston-national-historical-park-unveiled-boston-massachusettss-natural-wonder.md": {
 	id: "2025-06-03-boston-national-historical-park-unveiled-boston-massachusettss-natural-wonder.md";
   slug: "2025-06-03-boston-national-historical-park-unveiled-boston-massachusettss-natural-wonder";
@@ -193,6 +200,13 @@ declare module 'astro:content' {
 "2025-06-05-waco-mammoth-national-monument-mastery-waco-texas-insiders-guide.md": {
 	id: "2025-06-05-waco-mammoth-national-monument-mastery-waco-texas-insiders-guide.md";
   slug: "2025-06-05-waco-mammoth-national-monument-mastery-waco-texas-insiders-guide";
+  body: string;
+  collection: "blog";
+  data: InferEntrySchema<"blog">
+} & { render(): Render[".md"] };
+"2025-06-07-introduction-the-heartbeat-of-desert-majesty.md": {
+	id: "2025-06-07-introduction-the-heartbeat-of-desert-majesty.md";
+  slug: "2025-06-07-introduction-the-heartbeat-of-desert-majesty";
   body: string;
   collection: "blog";
   data: InferEntrySchema<"blog">
