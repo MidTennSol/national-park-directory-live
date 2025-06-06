@@ -423,6 +423,8 @@ function parseAIResponse(aiResponse, park, options) {
       .replace(/^Title:.*$/gmi, '') // Remove unformatted title lines (case insensitive)
       .replace(/^Description:.*$/gmi, '') // Remove unformatted description lines  
       .replace(/^Excerpt:.*$/gmi, '') // Remove unformatted excerpt lines
+      .replace(/^\*\*Meta Description:\*\*.*$/gmi, '') // Remove meta description lines
+      .replace(/^Meta Description:.*$/gmi, '') // Remove unformatted meta description lines
       .replace(/\n\n\n+/g, '\n\n') // Clean up multiple line breaks
       .trim();
     
