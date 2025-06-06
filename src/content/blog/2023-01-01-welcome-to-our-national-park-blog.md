@@ -7,6 +7,17 @@ image: "/images/blog/welcome-header.jpg"
 tags: ["announcements", "general"]
 featured: true
 draft: false
+faqs:
+  - question: "What kind of content will the National Park Directory blog feature?"
+    answer: "The blog will include park spotlights, seasonal guides, wildlife watching tips, conservation updates, and real visitor stories to help readers explore and appreciate America's national parks."
+  - question: "How often will new blog posts be published?"
+    answer: "While the exact schedule isn't specified, the blog aims to provide regular updates. Subscribing ensures you won't miss new posts."
+  - question: "Can I contribute my own national park experiences to the blog?"
+    answer: "Yes! The team encourages readers to share their park stories, photos, and suggestions in the comments or via social media."
+  - question: "How can I stay updated on new blog posts and features?"
+    answer: "You can subscribe to blog updates and follow the National Park Directory on social media platforms like Facebook, Instagram, Twitter, YouTube, and Pinterest."
+  - question: "What is the main goal of this blog?"
+    answer: "The blog aims to connect more people with the beauty and importance of national parks, fostering appreciation and advocacy for their preservation."
 ---
 
 # Welcome to Our National Park Blog

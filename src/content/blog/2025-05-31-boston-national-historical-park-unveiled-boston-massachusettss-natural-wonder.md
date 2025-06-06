@@ -16,6 +16,17 @@ generatedBy: "AI"
 model: "gpt-4"
 generatedAt: "2025-06-05T22:37:03.002Z"
 topic: "complete visitor guide"
+faqs:
+  - question: "Do I need to pay to visit Boston National Historical Park?"
+    answer: "Most sites within Boston National Historical Park are free, including the Freedom Trail, Faneuil Hall, and most visitor centers. However, some sites like the Old South Meeting House, Old State House, and Paul Revere House charge admission fees ($6-12 for adults). The USS Constitution is free to tour."
+  - question: "How long does it take to walk the Freedom Trail?"
+    answer: "The complete 2.5-mile Freedom Trail takes about 2-4 hours to walk, depending on how much time you spend at each of the 16 historic sites. Many visitors choose to break it into sections over multiple days or focus on specific areas of interest. Guided tours typically last 90 minutes to 2 hours."
+  - question: "What are the must-see sites in Boston National Historical Park?"
+    answer: "Top highlights include the USS Constitution ('Old Ironsides'), Paul Revere House, Faneuil Hall, Old North Church, and Boston Common. The Freedom Trail connects all major sites, making it easy to visit multiple locations. Each site offers unique insights into Revolutionary War history."
+  - question: "Are guided tours available for Boston National Historical Park?"
+    answer: "Yes! The National Park Service offers free guided tours of various sites, typically during summer months. Private tour companies also provide paid walking tours, trolley tours, and themed experiences. Check the visitor center for current tour schedules and availability."
+  - question: "Is Boston National Historical Park suitable for families with children?"
+    answer: "Absolutely! The park offers junior ranger programs, interactive exhibits, and family-friendly tours. The Freedom Trail is easily walkable for children, and many sites feature engaging displays about colonial life and the Revolutionary War. Boston Common provides space for kids to run and play."
 ---
 
 ## Introduction: Birthplace of Liberty

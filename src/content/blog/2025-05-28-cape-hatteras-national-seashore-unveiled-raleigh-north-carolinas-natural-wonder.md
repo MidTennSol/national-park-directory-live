@@ -16,6 +16,17 @@ generatedBy: "AI"
 model: "gpt-4"
 generatedAt: "2025-06-05T22:45:47.203Z"
 topic: "complete visitor guide"
+faqs:
+  - question: "Do I need to pay entrance fees for Cape Hatteras National Seashore?"
+    answer: "No entrance fees are required for Cape Hatteras National Seashore. However, there may be fees for climbing Cape Hatteras Lighthouse ($10 for adults, children under 12 free), camping, and certain guided tours. Most beaches, trails, and visitor centers are free to access."
+  - question: "What is the best time to visit Cape Hatteras National Seashore?"
+    answer: "Late spring through early fall (May-October) offers the warmest weather for beach activities and swimming. Fall (September-November) provides excellent weather with fewer crowds. Winter can be beautiful for wildlife watching and solitude, though some facilities may have limited hours."
+  - question: "Can I climb the Cape Hatteras Lighthouse?"
+    answer: "Yes! The lighthouse is open for climbing seasonally, typically from mid-April through mid-October. Visitors can climb the 248 steps to enjoy panoramic views from America's tallest lighthouse. Tickets are required and can be purchased at the visitor center or online."
+  - question: "Are pets allowed at Cape Hatteras National Seashore?"
+    answer: "Pets are welcome on leashes in most areas of the seashore, including beaches and trails. However, pets are not allowed in visitor centers, on ferries to Portsmouth Island, or inside the lighthouse. Always clean up after your pet and be mindful of nesting shorebirds during breeding season."
+  - question: "What wildlife can I expect to see at Cape Hatteras?"
+    answer: "Cape Hatteras is renowned for its diverse wildlife including over 400 bird species, wild horses on Shackleford Banks, loggerhead sea turtles (nesting season May-August), dolphins, and seasonal whale migrations. The area is particularly famous among birdwatchers for its spectacular fall migration."
 ---
 
 ## Introduction: A Peek into Paradise 

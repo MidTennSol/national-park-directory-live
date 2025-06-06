@@ -16,6 +16,21 @@ generatedBy: "AI"
 model: "gpt-4"
 generatedAt: "2025-06-06T01:04:14.279Z"
 topic: "complete visitor guide"
+faqs:
+  - question: "What are the entrance fees for Yellowstone National Park?"
+    answer: "Entrance fees apply unless you have a National Park Annual Pass. A 7-day vehicle pass costs $35, while the Yellowstone Annual Pass is $70. The America the Beautiful Annual Pass ($80) provides access to all national parks and is the best value if you plan to visit multiple parks."
+  - question: "Which entrance should I use and how do I get around the park?"
+    answer: "Yellowstone has five entrances across three states. The North Entrance (Gardiner, MT) is open year-round, while others may have seasonal closures. Personal vehicles or rental cars offer the most flexibility to navigate this massive park. Complimentary shuttles are available in certain areas, but having your own transportation is recommended."
+  - question: "When is the best time to visit Yellowstone?"
+    answer: "The park is accessible year-round, but peak season is summer (July-August) with the warmest weather and full road access. Spring (April-May) and fall (September-October) offer fewer crowds and excellent wildlife viewing. Winter provides unique experiences like snow sports, but many roads close. Always check current conditions before visiting."
+  - question: "Do I need reservations for lodging and camping?"
+    answer: "Yes, absolutely! Yellowstone lodging and camping reservations are essential and often book up months in advance, especially for summer visits. The park offers various accommodation options from historic lodges to campgrounds. Book as early as possible through the official park concession website."
+  - question: "What should I know about elevation and physical demands?"
+    answer: "Yellowstone's elevation can pose challenges to some visitors, especially seniors. The park ranges from 5,000 to over 11,000 feet in elevation. Take time to acclimatize, go at a gentle pace, and choose appropriate trails for your fitness level. ADA accessible facilities are available in selected areas."
+  - question: "What are the must-see attractions for first-time visitors?"
+    answer: "Don't miss iconic attractions like Old Faithful Geyser and Mammoth Hot Springs for an introduction to Yellowstone's geothermal grandeur. Lamar Valley offers the best wildlife viewing at dawn and dusk. The Grand Prismatic Spring showcases incredible colors, and Mount Washburn provides panoramic views after a challenging 3-4 hour hike."
+  - question: "Where can I see wildlife and what precautions should I take?"
+    answer: "Lamar Valley is considered America's Serengeti, with bison herds, wolves, elk, and bears. Visit during dawn and dusk for best sightings. Maintain safe distances: 100 yards from bears and wolves, 25 yards from other wildlife. Never feed animals, store food properly, and drive slowly to avoid wildlife collisions."
 ---
 
 ## Explorer's Dream: Yellowstone Epiphany

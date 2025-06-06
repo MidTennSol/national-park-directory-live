@@ -73,6 +73,15 @@ function generateFrontmatter(blogContent, park, options = {}) {
   // Clean and format tags
   const tags = blogContent.tags.map(tag => `"${tag.trim()}"`).join(', ');
   
+  // Format FAQs if they exist
+  let faqsSection = '';
+  if (blogContent.faqs && blogContent.faqs.length > 0) {
+    const faqsFormatted = blogContent.faqs.map(faq => 
+      `  - question: "${faq.question.replace(/"/g, '\\"')}"\n    answer: "${faq.answer.replace(/"/g, '\\"')}"`
+    ).join('\n');
+    faqsSection = `faqs:\n${faqsFormatted}\n`;
+  }
+  
   return `title: "${blogContent.title}"
 publishDate: ${dateString}
 image: "${featuredImage}"
@@ -89,7 +98,8 @@ features: [${park.features.map(f => `"${f.trim()}"`).join(', ')}]
 generatedBy: "${blogContent.generatedBy}"
 model: "${blogContent.model}"
 generatedAt: "${blogContent.generatedAt}"
-topic: "${blogContent.topic}"`;
+topic: "${blogContent.topic}"
+${faqsSection}`;
 }
 
 /**

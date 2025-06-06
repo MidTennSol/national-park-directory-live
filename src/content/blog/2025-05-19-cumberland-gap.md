@@ -7,6 +7,19 @@ image: "/images/blog/cumberland-gap-overlook.jpg"
 tags: ["Cumberland Gap National Historical Park", "Kentucky", "Tennessee", "Virginia", "Hiking", "History", "Mountains"]
 featured: false
 draft: false
+faqs:
+  - question: "What are the operating hours and entrance fees for Cumberland Gap National Historical Park?"
+    answer: "The park is open 24 hours year-round, but the visitor center operates from 9:00 AM to 5:00 PM daily. Entrance to the park is free. The visitor center is closed on Thanksgiving Day, Christmas Day, and New Year's Day."
+  - question: "How long are the hiking trails at Cumberland Gap?"
+    answer: "Trails range from easy 0.5-mile walks to challenging 8-mile hikes. Popular options include the Gap Cave Tour (guided, 1 hour), Tri-State Peak Trail (2.4 miles), and the Daniel Boone Trail (4.5 miles). Choose based on your fitness level and time available."
+  - question: "Can I take the Gap Cave tour year-round?"
+    answer: "Gap Cave tours are seasonal, typically offered from April through October, weather permitting. Tours require advance reservations and have limited capacity. The cave maintains a constant 58°F temperature, so bring a light jacket even in summer."
+  - question: "Is Cumberland Gap suitable for families with young children?"
+    answer: "Yes! The visitor center offers family-friendly exhibits and short, easy trails like the Wilderness Road Trail. The Gap Cave tour is suitable for children 6 and older. Picnic areas and restrooms are available throughout the park."
+  - question: "What historical significance does Cumberland Gap have?"
+    answer: "Cumberland Gap was the main gateway through the Appalachian Mountains for westward expansion. Daniel Boone blazed the Wilderness Road through the gap in 1775, and over 300,000 pioneers passed through between 1775-1810. It's often called 'The Doorway to the West.'"
+  - question: "What should I bring for my visit to Cumberland Gap?"
+    answer: "Bring comfortable hiking shoes, water, weather-appropriate clothing, and a camera. For cave tours, bring a light jacket. Insect repellent is recommended during warmer months. The visitor center has restrooms and a gift shop."
 ---
 
 # How to Plan Your Visit to Cumberland Gap National Historical Park

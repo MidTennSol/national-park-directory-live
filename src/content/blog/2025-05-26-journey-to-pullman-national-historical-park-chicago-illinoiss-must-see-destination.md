@@ -16,6 +16,17 @@ generatedBy: "AI"
 model: "gpt-4"
 generatedAt: "2025-06-05T22:36:40.223Z"
 topic: "complete visitor guide"
+faqs:
+  - question: "What are the operating hours and entrance fees for Pullman National Historical Park?"
+    answer: "The park is open year-round with no entrance fee. The visitor center is typically open Wednesday through Sunday from 9:00 AM to 5:00 PM, but hours may vary seasonally. Free guided tours are offered on weekends, and self-guided tours are available anytime during operating hours."
+  - question: "What makes Pullman National Historical Park historically significant?"
+    answer: "Pullman represents America's first model industrial town, built in the 1880s by railroad car magnate George Pullman. It showcases the intersection of labor history, industrial innovation, and urban planning. The park preserves the story of the famous 1894 Pullman Strike and the birth of Labor Day."
+  - question: "Can I take guided tours of Pullman National Historical Park?"
+    answer: "Yes! Free guided tours are offered on weekends, typically at 1:30 PM and 3:30 PM. These 90-minute walking tours explore the historic district and include interior visits to restored buildings. Reservations are recommended, especially during peak visiting seasons."
+  - question: "Is Pullman National Historical Park suitable for families with children?"
+    answer: "Absolutely! The park offers junior ranger programs and family-friendly exhibits. The flat, walkable historic district is accessible for children, and the visitor center features interactive displays about industrial history and workers' lives that engage younger visitors."
+  - question: "How do I get to Pullman National Historical Park from downtown Chicago?"
+    answer: "The park is easily accessible by public transportation. Take the Metra Electric Line to the Pullman station (111th Street), which is just a short walk from the visitor center. By car, take I-94 to the 111th Street exit. Free parking is available at the visitor center."
 ---
 
 ## Introduction: Embarking on History

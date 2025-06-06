@@ -16,6 +16,21 @@ generatedBy: "AI"
 model: "gpt-4"
 generatedAt: "2025-06-05T11:56:43.422Z"
 topic: "complete visitor guide"
+faqs:
+  - question: "What are the operating hours and admission fees for Waco Mammoth National Monument?"
+    answer: "Waco Mammoth National Monument is open Wednesday through Sunday from 9:00 AM to 5:00 PM, with the last guided tour beginning at 4:00 PM. The monument is closed on Mondays and Tuesdays, as well as major holidays. Admission is completely free, making it accessible for all families."
+  - question: "How long should I plan for my visit to see everything?"
+    answer: "Plan to spend 2-3 hours total for a complete experience. This includes a 45-minute guided tour, time to explore the Interactive Discovery Center, and walking the nature trails through the Bosque River bottomland."
+  - question: "Are guided tours required or can I explore on my own?"
+    answer: "While guided tours are not required, they are highly recommended and included with free admission. The expert-led tours provide fascinating insights into excavation techniques and paleontological methods that significantly enhance your experience. You can also explore the Interactive Discovery Center and nature trails on your own."
+  - question: "Is the monument accessible for visitors with mobility needs?"
+    answer: "Yes, the facilities are fully accessible. The monument features paved pathways throughout and wheelchair-accessible viewing areas in the climate-controlled Dig Shelter where the main excavation site is located."
+  - question: "What should I bring for my visit?"
+    answer: "Bring comfortable walking shoes, water (especially in summer), sunscreen, and a camera. The site has limited shade in some areas. Food service is not available on-site, so consider bringing snacks for children. Binoculars can enhance your nature trail experience."
+  - question: "What's the best time of year to visit?"
+    answer: "The best times to visit are during spring (March-May) and fall (September-November) when temperatures are mild and comfortable for outdoor exploration. Summer visits require preparation for Texas heat, while winter visits may have occasional cold fronts affecting outdoor portions."
+  - question: "Can I see actual mammoth fossils being excavated?"
+    answer: "Yes! The main attraction is the Dig Shelter, a climate-controlled facility housing the primary excavation site where you can witness ongoing paleontological work. Researchers carefully expose mammoth bones using both traditional tools and cutting-edge technology, and you'll see the actual fossils of the 67,000-year-old nursery herd."
 ---
 
 ## Introduction: Mammoths Among Us

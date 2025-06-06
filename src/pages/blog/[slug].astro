@@ -3,6 +3,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import { getCollection } from 'astro:content';
 import { formatDate } from '../../utils/dateUtils';
 import type { CollectionEntry } from 'astro:content';
+import FAQ from '../../components/FAQ.astro';
 
 // Generate static paths for all blog posts
 export async function getStaticPaths() {
@@ -167,6 +168,13 @@ const mainNavItems = [
     <div class="blog-content max-w-3xl mx-auto">
       <Content />
     </div>
+
+    <!-- FAQ Section -->
+    {entry.data.faqs && entry.data.faqs.length > 0 && (
+      <div class="max-w-3xl mx-auto">
+        <FAQ faqs={entry.data.faqs} />
+      </div>
+    )}
 
     <!-- Article Footer -->
     <footer class="max-w-3xl mx-auto mt-12 pt-8 border-t border-gray-200">

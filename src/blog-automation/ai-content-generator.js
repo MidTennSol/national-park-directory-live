@@ -301,6 +301,20 @@ Write 150+ words:
 - Final mention of ${park.city}, ${park.state}
 - Inspiring closing thought
 
+**FAQS:** Generate 5-7 frequently asked questions with detailed answers based on the content above. Format as:
+FAQ: Question text here?
+ANSWER: Detailed answer here.
+
+Focus on the most practical visitor questions like:
+- Operating hours and admission fees
+- How long to plan for a visit
+- What to bring/pack
+- Best time to visit
+- Accessibility information
+- Parking and transportation
+- Safety considerations
+- Reservation requirements
+
 **TAGS:** 8 relevant tags including ${park.name}, ${park.state}, activities
 
 CRITICAL REQUIREMENTS:
@@ -323,6 +337,44 @@ WRITE EXACTLY ${targetWordCount}+ WORDS. This is NON-NEGOTIABLE.`;
 }
 
 /**
+ * Parse FAQ content from AI response
+ */
+function parseFAQContent(faqContent) {
+  const faqs = [];
+  
+  try {
+    // Split by FAQ: or similar patterns
+    const faqSections = faqContent.split(/(?:^|\n)(?:FAQ:|Q:|Question:)/i);
+    
+    for (let i = 1; i < faqSections.length; i++) { // Skip first empty section
+      const section = faqSections[i].trim();
+      
+      // Look for ANSWER: pattern to separate question and answer
+      const answerMatch = section.match(/^(.*?)\s*(?:ANSWER:|A:|Answer:)\s*(.*?)$/is);
+      
+      if (answerMatch) {
+        const question = answerMatch[1].trim().replace(/\?$/, '') + '?'; // Ensure question ends with ?
+        const answer = answerMatch[2].trim();
+        
+        if (question.length > 10 && answer.length > 20) { // Basic validation
+          faqs.push({
+            question: question,
+            answer: answer
+          });
+        }
+      }
+    }
+    
+    console.log(`✅ Parsed ${faqs.length} FAQs from AI response`);
+    return faqs;
+    
+  } catch (error) {
+    console.error('⚠️ Error parsing FAQ content:', error);
+    return [];
+  }
+}
+
+/**
  * Parse AI response into structured blog content
  */
 function parseAIResponse(aiResponse, park, options) {
@@ -335,6 +387,7 @@ function parseAIResponse(aiResponse, park, options) {
     let excerpt = '';
     let content = '';
     let tags = [];
+    let faqs = [];
     
     let contentStarted = false;
     
@@ -350,6 +403,10 @@ function parseAIResponse(aiResponse, park, options) {
       } else if (section.startsWith('CONTENT:')) {
         contentStarted = true;
         continue;
+      } else if (section.startsWith('FAQS:') || section.startsWith('**FAQS:**')) {
+        // Extract FAQ content
+        const faqContent = section.replace(/^\*\*FAQS:\*\*\s*/i, '').replace(/^FAQS:\s*/i, '').trim();
+        faqs = parseFAQContent(faqContent);
       } else if (section.startsWith('TAGS:')) {
         const tagString = section.replace('TAGS:', '').trim();
         tags = tagString.split(',').map(tag => tag.trim()).slice(0, 8);
@@ -425,6 +482,14 @@ function parseAIResponse(aiResponse, park, options) {
       .replace(/^\*\*EXCERPT:\*\*.*$/gm, '') // Remove excerpt lines
       .replace(/^\*\*CONTENT:\*\*.*$/gm, '') // Remove content labels
       .replace(/^\*\*TAGS:\*\*.*$/gm, '') // Remove tags lines
+      .replace(/^\*\*FAQS:\*\*.*$/gm, '') // Remove FAQ section headers
+      .replace(/^FAQS:.*$/gm, '') // Remove unformatted FAQ headers
+      .replace(/^FAQ:.*$/gm, '') // Remove individual FAQ lines
+      .replace(/^ANSWER:.*$/gm, '') // Remove answer lines
+      .replace(/^Q:.*$/gm, '') // Remove Q: lines
+      .replace(/^A:.*$/gm, '') // Remove A: lines
+      .replace(/^Question:.*$/gm, '') // Remove Question: lines
+      .replace(/^Answer:.*$/gm, '') // Remove Answer: lines
       .replace(/^TITLE:.*$/gm, '') // Remove unformatted title lines
       .replace(/^DESCRIPTION:.*$/gm, '') // Remove unformatted description lines
       .replace(/^EXCERPT:.*$/gm, '') // Remove unformatted excerpt lines
@@ -459,6 +524,7 @@ function parseAIResponse(aiResponse, park, options) {
       excerpt: excerpt.replace(/['"*]/g, '').replace(/^(Excerpt|EXCERPT):\s*/i, '').trim(),
       content: content,
       tags: tags,
+      faqs: faqs,
       wordCount: wordCount,
       topic: options.topic || 'visitor-guide',
       generatedBy: 'AI',

@@ -7,6 +7,21 @@ image: "/images/blog/wildlife-photography.jpg"
 tags: ["photography", "wildlife", "tips"]
 featured: false
 draft: false
+faqs:
+  - question: "What camera equipment do I need for wildlife photography in national parks?"
+    answer: "A telephoto lens (at least 300mm, preferably 400-600mm) is essential for maintaining safe distances from wildlife. A sturdy tripod, extra batteries, and memory cards are crucial. Consider a camera with good low-light performance for dawn/dusk shooting when animals are most active."
+  - question: "How close can I get to wildlife for photography while staying safe?"
+    answer: "Maintain at least 100 yards from bears and wolves, 25 yards from elk, bison, and moose. Use your telephoto lens to 'get closer' optically rather than physically. If an animal changes its behavior because of your presence, you're too close and should back away immediately."
+  - question: "When is the best time for wildlife photography in national parks?"
+    answer: "The golden hours of early morning (30 minutes before sunrise to 2 hours after) and late afternoon (2 hours before sunset to 30 minutes after) offer the best lighting and highest wildlife activity. Many animals are more active during cooler parts of the day."
+  - question: "Do I need special permits for wildlife photography in national parks?"
+    answer: "General wildlife photography doesn't require permits, but commercial photography, large equipment setups, or any activity that might disturb wildlife may require special permits. Always check with the specific park's regulations before your visit."
+  - question: "What ethical guidelines should I follow when photographing wildlife?"
+    answer: "Never bait, call, or harass animals for photos. Don't use flash photography around wildlife. Respect nesting areas and sensitive habitats. The welfare of the animal always comes before getting the shot. Follow Leave No Trace principles and park regulations."
+  - question: "How do I handle challenging lighting conditions in wildlife photography?"
+    answer: "Shoot in RAW format for maximum editing flexibility. Use exposure compensation to avoid blown highlights on bright fur or feathers. Consider graduated neutral density filters for high-contrast scenes. Embrace backlighting for dramatic silhouettes and rim lighting effects."
+  - question: "What should I do if I encounter dangerous wildlife while photographing?"
+    answer: "Stay calm and don't run. Back away slowly while avoiding direct eye contact. Make yourself appear larger if facing a bear. Always carry bear spray in bear country and know how to use it. Your safety is more important than any photograph."
 ---
 
 # Wildlife Photography Tips for National Park Visitors

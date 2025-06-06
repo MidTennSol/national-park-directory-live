@@ -7,6 +7,21 @@ image: "/images/blog/wildlife-watching.jpg"
 tags: ["wildlife", "animals", "nature", "photography"]
 featured: true
 draft: false
+faqs:
+  - question: "What are the safe distance requirements for wildlife viewing?"
+    answer: "Always maintain at least 100 yards (91 meters) from bears and wolves, and at least 25 yards (23 meters) from all other wildlife including elk, bison, and moose. Never approach wildlife—use binoculars or telephoto lenses instead. These distances are for your safety and the animals' well-being."
+  - question: "When is the best time of day to see wildlife?"
+    answer: "Most animals are most active at dawn and dusk—periods photographers call 'the golden hours.' Plan your wildlife excursions for early morning or late afternoon for the best viewing opportunities and optimal lighting for photography."
+  - question: "What equipment do I need for wildlife watching?"
+    answer: "Essential gear includes binoculars (8x42 or 10x42 recommended), a spotting scope for distant viewing, field guides for identification, a camera with telephoto lens, and comfortable weather-appropriate clothing in neutral colors. A folding stool can be helpful for extended viewing sessions."
+  - question: "Is it safe to feed wildlife or try to attract them for photos?"
+    answer: "Never feed wildlife—it's dangerous for both you and the animals, and it's illegal in national parks. Don't bait, call, or otherwise lure animals. Avoid using flash photography around wildlife and never put yourself or animals at risk for a photo. Keep wildlife wild by maintaining proper distances."
+  - question: "Which national parks offer the best wildlife viewing opportunities?"
+    answer: "Yellowstone's Lamar Valley is considered America's Serengeti for large mammals like wolves, bison, and bears. Everglades excels for alligators and birds, Grand Teton for moose and elk, Olympic for Roosevelt elk and marine mammals, and Denali for grizzlies, wolves, and caribou."
+  - question: "How can I increase my chances of spotting animals?"
+    answer: "Learn to recognize animal tracks, scat, and signs like rubbed trees or wallows. Be patient and quiet—find a promising spot and wait. Join ranger-led wildlife programs for expert guidance. Visit during optimal times and seasons when animals are most active."
+  - question: "What should I do if I encounter an injured animal?"
+    answer: "Never approach injured wildlife. Report injured animals to park rangers immediately rather than trying to help them yourself. Keep your distance and let trained professionals handle the situation. This protects both you and the animal."
 ---
 
 # Wildlife Watching Guide: Best National Parks for Animal Encounters

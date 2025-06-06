@@ -7,6 +7,21 @@ image: "/images/blog/yellowstone-trails.jpg"
 tags: ["hiking", "Yellowstone", "trails", "outdoor activities"]
 featured: false
 draft: false
+faqs:
+  - question: "Do I need permits for hiking in Yellowstone National Park?"
+    answer: "Day hiking does not require permits, but overnight backcountry camping requires advance permits. Permits can be obtained through the park's reservation system starting April 1st for the following year. Some popular backcountry sites book up quickly, so early planning is essential."
+  - question: "What are the difficulty levels of Yellowstone's main hiking trails?"
+    answer: "Yellowstone offers trails for all abilities. Easy trails include boardwalks around geysers (under 1 mile). Moderate trails like Mount Washburn are 3-6 miles with elevation gain. Strenuous trails like Avalanche Peak involve steep climbs over 8 miles. Always check current trail conditions before hiking."
+  - question: "When is the best time for hiking in Yellowstone?"
+    answer: "The prime hiking season is July through September when most high-elevation trails are snow-free. June can have lingering snow on higher trails. Late September and October offer fewer crowds but unpredictable weather. Always check trail conditions as mountain weather can change rapidly."
+  - question: "What safety precautions should I take while hiking in Yellowstone?"
+    answer: "Carry bear spray and know how to use it. Hike in groups and make noise to avoid surprising wildlife. Stay on designated trails, carry the 10 essentials including extra water and layers. Weather can change rapidly, so be prepared for temperature swings and afternoon thunderstorms."
+  - question: "How do I handle wildlife encounters while hiking?"
+    answer: "Maintain distance: 100 yards from bears and wolves, 25 yards from other wildlife. If you encounter a bear, don't run - back away slowly while speaking calmly. Make yourself appear large. For elk and bison during rutting season, give extra wide berth as they can be aggressive."
+  - question: "What should I pack for a day hike in Yellowstone?"
+    answer: "Essential items include bear spray, plenty of water (1 liter per 2 hours), weather layers, rain gear, first aid kit, headlamp, whistle, map and compass. Pack extra food, sunscreen, and insect repellent. Trekking poles are helpful for steep or uneven terrain."
+  - question: "Are there guided hiking options available in Yellowstone?"
+    answer: "Yes, the park offers ranger-led hikes during summer months covering various themes like wildlife, geology, and history. Private guiding companies also operate in the area with permits. Check the park's website for current guided programs and schedules."
 ---
 
 # Top 5 Hiking Trails in Yellowstone National Park
