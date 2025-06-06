@@ -417,6 +417,12 @@ function parseAIResponse(aiResponse, park, options) {
       .replace(/^EXCERPT:.*$/gm, '') // Remove unformatted excerpt lines
       .replace(/^CONTENT:.*$/gm, '') // Remove unformatted content labels
       .replace(/^TAGS:.*$/gm, '') // Remove unformatted tags lines
+      .replace(/^\*\*Title:\*\*.*$/gmi, '') // Remove formatted title lines (case insensitive)
+      .replace(/^\*\*Description:\*\*.*$/gmi, '') // Remove formatted description lines
+      .replace(/^\*\*Excerpt:\*\*.*$/gmi, '') // Remove formatted excerpt lines
+      .replace(/^Title:.*$/gmi, '') // Remove unformatted title lines (case insensitive)
+      .replace(/^Description:.*$/gmi, '') // Remove unformatted description lines  
+      .replace(/^Excerpt:.*$/gmi, '') // Remove unformatted excerpt lines
       .replace(/\n\n\n+/g, '\n\n') // Clean up multiple line breaks
       .trim();
     
