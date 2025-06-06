@@ -141,131 +141,145 @@ declare module 'astro:content' {
 
 	type ContentEntryMap = {
 		"blog": {
+"2025-05-30-introduction-discovering-the-essence-of-time.md": {
+	id: "2025-05-30-introduction-discovering-the-essence-of-time.md";
+  slug: "2025-05-30-introduction-discovering-the-essence-of-time";
+  body: string;
+  collection: "blog";
+  data: InferEntrySchema<"blog">
+} & { render(): Render[".md"] };
 "2025-05-31-introduction-saguaros-sanctuary.md": {
 	id: "2025-05-31-introduction-saguaros-sanctuary.md";
   slug: "2025-05-31-introduction-saguaros-sanctuary";
   body: string;
   collection: "blog";
-  data: any
+  data: InferEntrySchema<"blog">
 } & { render(): Render[".md"] };
 "2025-06-01-introduction-stepping-back-in-time.md": {
 	id: "2025-06-01-introduction-stepping-back-in-time.md";
   slug: "2025-06-01-introduction-stepping-back-in-time";
   body: string;
   collection: "blog";
-  data: any
+  data: InferEntrySchema<"blog">
 } & { render(): Render[".md"] };
 "2025-06-03-boston-national-historical-park-unveiled-boston-massachusettss-natural-wonder.md": {
 	id: "2025-06-03-boston-national-historical-park-unveiled-boston-massachusettss-natural-wonder.md";
   slug: "2025-06-03-boston-national-historical-park-unveiled-boston-massachusettss-natural-wonder";
   body: string;
   collection: "blog";
-  data: any
+  data: InferEntrySchema<"blog">
 } & { render(): Render[".md"] };
 "2025-06-03-journey-to-yorktown-battlefield-part-of-colonial-national-historical-park-williamsburg-virginias-must-see-destination.md": {
 	id: "2025-06-03-journey-to-yorktown-battlefield-part-of-colonial-national-historical-park-williamsburg-virginias-must-see-destination.md";
   slug: "2025-06-03-journey-to-yorktown-battlefield-part-of-colonial-national-historical-park-williamsburg-virginias-must-see-destination";
   body: string;
   collection: "blog";
-  data: any
+  data: InferEntrySchema<"blog">
 } & { render(): Render[".md"] };
 "2025-06-03-puukohol-heiau-unveiled-kailua-kona-hawaiis-cultural-masterpiece.md": {
 	id: "2025-06-03-puukohol-heiau-unveiled-kailua-kona-hawaiis-cultural-masterpiece.md";
   slug: "2025-06-03-puukohol-heiau-unveiled-kailua-kona-hawaiis-cultural-masterpiece";
   body: string;
   collection: "blog";
-  data: any
+  data: InferEntrySchema<"blog">
 } & { render(): Render[".md"] };
 "2025-06-05-cape-hatteras-national-seashore-unveiled-raleigh-north-carolinas-natural-wonder.md": {
 	id: "2025-06-05-cape-hatteras-national-seashore-unveiled-raleigh-north-carolinas-natural-wonder.md";
   slug: "2025-06-05-cape-hatteras-national-seashore-unveiled-raleigh-north-carolinas-natural-wonder";
   body: string;
   collection: "blog";
-  data: any
+  data: InferEntrySchema<"blog">
 } & { render(): Render[".md"] };
 "2025-06-05-into-the-wild-fredericksburg-spotsylvania-national-military-park-fredericksburg-virginia.md": {
 	id: "2025-06-05-into-the-wild-fredericksburg-spotsylvania-national-military-park-fredericksburg-virginia.md";
   slug: "2025-06-05-into-the-wild-fredericksburg-spotsylvania-national-military-park-fredericksburg-virginia";
   body: string;
   collection: "blog";
-  data: any
+  data: InferEntrySchema<"blog">
 } & { render(): Render[".md"] };
 "2025-06-05-journey-to-pullman-national-historical-park-chicago-illinoiss-must-see-destination.md": {
 	id: "2025-06-05-journey-to-pullman-national-historical-park-chicago-illinoiss-must-see-destination.md";
   slug: "2025-06-05-journey-to-pullman-national-historical-park-chicago-illinoiss-must-see-destination";
   body: string;
   collection: "blog";
-  data: any
+  data: InferEntrySchema<"blog">
 } & { render(): Render[".md"] };
 "2025-06-05-prince-william-forest-park-unveiled-washington-dc-virginias-natural-wonder.md": {
 	id: "2025-06-05-prince-william-forest-park-unveiled-washington-dc-virginias-natural-wonder.md";
   slug: "2025-06-05-prince-william-forest-park-unveiled-washington-dc-virginias-natural-wonder";
   body: string;
   collection: "blog";
-  data: any
+  data: InferEntrySchema<"blog">
 } & { render(): Render[".md"] };
 "2025-06-05-waco-mammoth-national-monument-mastery-waco-texas-insiders-guide.md": {
 	id: "2025-06-05-waco-mammoth-national-monument-mastery-waco-texas-insiders-guide.md";
   slug: "2025-06-05-waco-mammoth-national-monument-mastery-waco-texas-insiders-guide";
   body: string;
   collection: "blog";
-  data: any
+  data: InferEntrySchema<"blog">
 } & { render(): Render[".md"] };
 "2025-06-07-introduction-the-heartbeat-of-desert-majesty.md": {
 	id: "2025-06-07-introduction-the-heartbeat-of-desert-majesty.md";
   slug: "2025-06-07-introduction-the-heartbeat-of-desert-majesty";
   body: string;
   collection: "blog";
-  data: any
+  data: InferEntrySchema<"blog">
 } & { render(): Render[".md"] };
 "2025-06-08-introduction-gateway-to-natures-marvels.md": {
 	id: "2025-06-08-introduction-gateway-to-natures-marvels.md";
   slug: "2025-06-08-introduction-gateway-to-natures-marvels";
   body: string;
   collection: "blog";
-  data: any
+  data: InferEntrySchema<"blog">
+} & { render(): Render[".md"] };
+"2025-06-09-introduction-portraits-of-a-desert-oasis.md": {
+	id: "2025-06-09-introduction-portraits-of-a-desert-oasis.md";
+  slug: "2025-06-09-introduction-portraits-of-a-desert-oasis";
+  body: string;
+  collection: "blog";
+  data: InferEntrySchema<"blog">
 } & { render(): Render[".md"] };
 "best-hiking-trails-in-yellowstone.md": {
 	id: "best-hiking-trails-in-yellowstone.md";
   slug: "best-hiking-trails-in-yellowstone";
   body: string;
   collection: "blog";
-  data: any
+  data: InferEntrySchema<"blog">
 } & { render(): Render[".md"] };
 "best-national-parks-to-visit-in-spring.md": {
 	id: "best-national-parks-to-visit-in-spring.md";
   slug: "best-national-parks-to-visit-in-spring";
   body: string;
   collection: "blog";
-  data: any
+  data: InferEntrySchema<"blog">
 } & { render(): Render[".md"] };
 "cumberland-gap.md": {
 	id: "cumberland-gap.md";
   slug: "cumberland-gap";
   body: string;
   collection: "blog";
-  data: any
+  data: InferEntrySchema<"blog">
 } & { render(): Render[".md"] };
 "welcome-to-our-national-park-blog.md": {
 	id: "welcome-to-our-national-park-blog.md";
   slug: "welcome-to-our-national-park-blog";
   body: string;
   collection: "blog";
-  data: any
+  data: InferEntrySchema<"blog">
 } & { render(): Render[".md"] };
 "wildlife-photography-tips-national-parks.md": {
 	id: "wildlife-photography-tips-national-parks.md";
   slug: "wildlife-photography-tips-national-parks";
   body: string;
   collection: "blog";
-  data: any
+  data: InferEntrySchema<"blog">
 } & { render(): Render[".md"] };
 "wildlife-watching-guide-national-parks.md": {
 	id: "wildlife-watching-guide-national-parks.md";
   slug: "wildlife-watching-guide-national-parks";
   body: string;
   collection: "blog";
-  data: any
+  data: InferEntrySchema<"blog">
 } & { render(): Render[".md"] };
 };
 
@@ -277,5 +291,5 @@ declare module 'astro:content' {
 
 	type AnyEntryMap = ContentEntryMap & DataEntryMap;
 
-	export type ContentConfig = never;
+	export type ContentConfig = typeof import("./../../src/content/config.js");
 }
