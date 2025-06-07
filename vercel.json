@@ -3,24 +3,9 @@
   "buildCommand": "npm run build",
   "outputDirectory": "dist",
   "installCommand": "npm install",
-  "devCommand": "npm run dev",
   "env": {
     "AIRTABLE_API_KEY": "@airtable_api_key",
     "AIRTABLE_BASE_ID": "@airtable_base_id",
-    "PUBLIC_GOOGLE_MAPS_API_KEY": "@public_google_maps_api_key",
-    "NODE_VERSION": "20"
-  },
-  "build": {
-    "env": {
-      "AIRTABLE_API_KEY": "@airtable_api_key",
-      "AIRTABLE_BASE_ID": "@airtable_base_id",
-      "PUBLIC_GOOGLE_MAPS_API_KEY": "@public_google_maps_api_key",
-      "NODE_VERSION": "20"
-    }
-  },
-  "functions": {
-    "src/pages/api/**/*.ts": {
-      "runtime": "edge"
-    }
+    "PUBLIC_GOOGLE_MAPS_API_KEY": "@public_google_maps_api_key"
   }
 } 
