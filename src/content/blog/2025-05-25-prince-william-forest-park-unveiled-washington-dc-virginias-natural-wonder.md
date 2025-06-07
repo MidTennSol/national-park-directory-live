@@ -12,9 +12,7 @@ state: "Virginia"
 city: "Triangle"
 activities: ["Arts", "Culture & History", "Biking", "Camping", "Educational Activities", "Fishing & Hunting", "Games & Recreation", "Guided & Self-Guided Tours", "Hiking & Trekking", "Wildlife Viewing"]
 features: ["Science", "Innovation & Industry", "Art", "Music & Literature", "Wildlife & Conservation", "Transportation", "U.S. Wars & Conflicts", "Cultural Heritage & Society", "Natural Features & Ecosystems"]
-generatedBy: "AI"
-model: "gpt-4"
-generatedAt: "2025-06-05T03:02:09.600Z"
+
 topic: "complete visitor guide"
 faqs:
   - question: "What are the operating hours and entrance fees for Prince William Forest Park?"

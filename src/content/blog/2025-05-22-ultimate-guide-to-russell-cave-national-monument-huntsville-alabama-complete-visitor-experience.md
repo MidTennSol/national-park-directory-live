@@ -12,9 +12,7 @@ state: "Alabama"
 city: "Huntsville"
 activities: ["Arts", "Culture & History", "Educational Activities", "Guided & Self-Guided Tours", "Hiking & Trekking", "Wildlife Viewing"]
 features: ["Cultural Heritage & Society", "Science", "Innovation & Industry", "Wildlife & Conservation"]
-generatedBy: "AI"
-model: "gpt-4"
-generatedAt: "2025-06-06T01:03:41.617Z"
+
 topic: "complete visitor guide"
 faqs:
   - question: "What are the operating hours and admission fees for Russell Cave National Monument?"

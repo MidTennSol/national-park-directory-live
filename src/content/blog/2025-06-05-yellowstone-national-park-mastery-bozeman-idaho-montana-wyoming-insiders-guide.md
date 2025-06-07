@@ -12,10 +12,6 @@ state: "Idaho,Montana,Wyoming"
 city: "Bozeman"
 activities: ["Arts", "Culture & History", "Astronomy & Stargazing", "Biking", "Camping", "Educational Activities", "Fishing & Hunting", "Guided & Self-Guided Tours", "Hiking & Trekking", "Motorized Recreation", "Snow Activities", "Water Activities", "Wildlife Viewing"]
 features: ["Astronomy", "Military & Weapons", "Landforms & Geology", "Water & Coastal Geography", "Science", "Innovation & Industry", "Art", "Music & Literature", "Wildlife & Conservation", "Fire & Disaster", "Transportation", "U.S. Wars & Conflicts", "People & Identity", "Cultural Heritage & Society", "Natural Features & Ecosystems"]
-generatedBy: "AI"
-model: "gpt-4"
-generatedAt: "2025-06-06T01:04:14.279Z"
-topic: "complete visitor guide"
 faqs:
   - question: "What are the entrance fees for Yellowstone National Park?"
     answer: "Entrance fees apply unless you have a National Park Annual Pass. A 7-day vehicle pass costs $35, while the Yellowstone Annual Pass is $70. The America the Beautiful Annual Pass ($80) provides access to all national parks and is the best value if you plan to visit multiple parks."

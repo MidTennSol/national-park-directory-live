@@ -12,9 +12,7 @@ state: "New Mexico"
 city: "Albuquerque"
 activities: ["Arts", "Culture & History", "Astronomy & Stargazing", "Camping", "Educational Activities", "Guided & Self-Guided Tours", "Hiking & Trekking", "Wildlife Viewing"]
 features: ["Astronomy", "Military & Weapons", "Landforms & Geology", "Science", "Innovation & Industry", "Wildlife & Conservation", "Art", "Music & Literature", "Transportation", "People & Identity", "Cultural Heritage & Society", "Natural Features & Ecosystems"]
-generatedBy: "AI"
-model: "gpt-4"
-generatedAt: "2025-06-06T00:49:36.229Z"
+
 topic: "complete visitor guide"
 ---
 

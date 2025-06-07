@@ -12,9 +12,7 @@ state: "Texas"
 city: "Waco"
 activities: ["Educational Activities", "Guided & Self-Guided Tours"]
 features: ["Wildlife & Conservation"]
-generatedBy: "AI"
-model: "gpt-4"
-generatedAt: "2025-06-05T11:56:43.422Z"
+
 topic: "complete visitor guide"
 faqs:
   - question: "What are the operating hours and admission fees for Waco Mammoth National Monument?"

@@ -12,10 +12,6 @@ state: "New York"
 city: "Buffalo"
 activities: ["Arts", "Culture & History", "Educational Activities", "Guided & Self-Guided Tours"]
 features: ["Military & Weapons", "Art", "Music & Literature", "Fire & Disaster", "Transportation", "U.S. Wars & Conflicts", "People & Identity", "Cultural Heritage & Society"]
-generatedBy: "AI"
-model: "gpt-4"
-generatedAt: "2025-06-06T07:12:16.341Z"
-topic: "complete visitor guide"
 faqs:
   - question: "What are the operating hours and admission fees?"
     answer: "The site operates Tuesday-Saturday from 9 AM-5 PM (final entry latest by 3 PM). Regular adult tickets cost $10, seniors/students can enter for $7, and children under five enjoy free entry."

@@ -12,9 +12,7 @@ state: "North Carolina"
 city: "Raleigh"
 activities: ["Arts", "Culture & History", "Astronomy & Stargazing", "Camping", "Educational Activities", "Fishing & Hunting", "Hiking & Trekking", "Motorized Recreation", "Water Activities", "Wildlife Viewing"]
 features: ["Astronomy", "Piracy", "Military & Weapons", "Maritime & Aviation", "Water & Coastal Geography", "Science", "Innovation & Industry", "Wildlife & Conservation", "Transportation", "U.S. Wars & Conflicts", "Cultural Heritage & Society", "Natural Features & Ecosystems"]
-generatedBy: "AI"
-model: "gpt-4"
-generatedAt: "2025-06-05T22:45:47.203Z"
+
 topic: "complete visitor guide"
 faqs:
   - question: "Do I need to pay entrance fees for Cape Hatteras National Seashore?"

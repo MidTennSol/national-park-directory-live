@@ -12,9 +12,7 @@ state: "Arizona"
 city: "Tucson"
 activities: ["Arts", "Culture & History", "Astronomy & Stargazing", "Biking", "Camping", "Educational Activities", "Guided & Self-Guided Tours", "Hiking & Trekking", "Motorized Recreation"]
 features: ["Astronomy", "Science", "Innovation & Industry", "Wildlife & Conservation", "Fire & Disaster", "Cultural Heritage & Society", "Natural Features & Ecosystems"]
-generatedBy: "AI"
-model: "gpt-4"
-generatedAt: "2025-06-06T00:34:03.981Z"
+
 topic: "complete visitor guide"
 faqs:
   - question: "What are the entrance fees and operating hours for Saguaro National Park?"

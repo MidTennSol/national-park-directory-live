@@ -12,9 +12,7 @@ state: "Virginia"
 city: "Williamsburg"
 activities: ["Arts", "Culture & History", "Biking", "Educational Activities", "Guided & Self-Guided Tours", "Hiking & Trekking", "Wildlife Viewing"]
 features: ["Astronomy", "Military & Weapons", "Wildlife & Conservation", "Art", "Music & Literature", "People & Identity", "U.S. Wars & Conflicts", "Cultural Heritage & Society", "Natural Features & Ecosystems"]
-generatedBy: "AI"
-model: "gpt-4"
-generatedAt: "2025-06-05T22:46:13.517Z"
+
 topic: "complete visitor guide"
 ---
 

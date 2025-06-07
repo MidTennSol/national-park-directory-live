@@ -12,9 +12,7 @@ state: "Hawaii"
 city: "Kailua-Kona"
 activities: ["Arts", "Culture & History", "Camping", "Educational Activities", "Fishing & Hunting", "Guided & Self-Guided Tours", "Hiking & Trekking", "Wildlife Viewing"]
 features: ["Astronomy", "Military & Weapons", "Water & Coastal Geography", "Science", "Innovation & Industry", "Art", "Music & Literature", "Wildlife & Conservation", "Transportation", "U.S. Wars & Conflicts", "People & Identity", "Cultural Heritage & Society", "Natural Features & Ecosystems"]
-generatedBy: "AI"
-model: "gpt-4"
-generatedAt: "2025-06-05T22:58:07.528Z"
+
 topic: "complete visitor guide"
 ---
 

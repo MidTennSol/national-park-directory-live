@@ -12,10 +12,6 @@ state: "Virginia"
 city: "Fredericksburg"
 activities: ["Arts", "Culture & History", "Biking", "Educational Activities", "Guided & Self-Guided Tours", "Hiking & Trekking"]
 features: ["Military & Weapons", "Science", "Innovation & Industry", "Art", "Music & Literature", "Wildlife & Conservation", "Health", "U.S. Wars & Conflicts", "People & Identity", "Cultural Heritage & Society"]
-generatedBy: "AI"
-model: "gpt-4"
-generatedAt: "2025-06-05T22:57:40.217Z"
-topic: "complete visitor guide"
 ---
 
 ## Introduction: Echoes of the Past

@@ -12,9 +12,7 @@ state: "Illinois"
 city: "Chicago"
 activities: ["Arts", "Culture & History", "Guided & Self-Guided Tours"]
 features: ["Military & Weapons", "Science", "Innovation & Industry", "Art", "Music & Literature", "Transportation", "U.S. Wars & Conflicts", "Cultural Heritage & Society"]
-generatedBy: "AI"
-model: "gpt-4"
-generatedAt: "2025-06-05T22:36:40.223Z"
+
 topic: "complete visitor guide"
 faqs:
   - question: "What are the operating hours and entrance fees for Pullman National Historical Park?"

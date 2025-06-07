@@ -12,9 +12,7 @@ state: "Colorado,Kansas,Missouri,New Mexico,Oklahoma"
 city: "Santa Fe"
 activities: ["Arts", "Culture & History", "Educational Activities", "Guided & Self-Guided Tours", "Hiking & Trekking", "Motorized Recreation"]
 features: ["Military & Weapons", "Science", "Innovation & Industry", "Art", "Music & Literature", "Fire & Disaster", "Transportation", "U.S. Wars & Conflicts", "Cultural Heritage & Society", "Natural Features & Ecosystems"]
-generatedBy: "AI"
-model: "gpt-4"
-generatedAt: "2025-06-06T00:40:36.483Z"
+
 topic: "complete visitor guide"
 ---
 

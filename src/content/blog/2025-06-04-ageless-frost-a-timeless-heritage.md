@@ -12,9 +12,7 @@ state: "Alaska"
 city: "Anchorage"
 activities: ["Aerial Activities", "Arts", "Culture & History", "Astronomy & Stargazing", "Camping", "Climbing & Caving", "Educational Activities", "Fishing & Hunting", "Guided & Self-Guided Tours", "Hiking & Trekking", "Snow Activities", "Water Activities", "Wildlife Viewing"]
 features: ["Astronomy", "Military & Weapons", "Landforms & Geology", "Maritime & Aviation", "Water & Coastal Geography", "Science", "Innovation & Industry", "Wildlife & Conservation", "Art", "Music & Literature", "Transportation", "U.S. Wars & Conflicts", "Cultural Heritage & Society", "Natural Features & Ecosystems"]
-generatedBy: "AI"
-model: "gpt-4"
-generatedAt: "2025-06-06T01:01:54.464Z"
+
 topic: "complete visitor guide"
 ---
 

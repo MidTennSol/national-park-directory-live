@@ -12,9 +12,7 @@ state: "Massachusetts"
 city: "Boston"
 activities: ["Arts", "Culture & History", "Educational Activities", "Fishing & Hunting", "Guided & Self-Guided Tours"]
 features: ["Military & Weapons", "Maritime & Aviation", "People & Identity", "U.S. Wars & Conflicts", "Cultural Heritage & Society", "Natural Features & Ecosystems"]
-generatedBy: "AI"
-model: "gpt-4"
-generatedAt: "2025-06-05T22:37:03.002Z"
+
 topic: "complete visitor guide"
 faqs:
   - question: "Do I need to pay to visit Boston National Historical Park?"

@@ -12,10 +12,6 @@ state: "Pennsylvania"
 city: "Scranton"
 activities: ["Arts", "Culture & History", "Educational Activities", "Guided & Self-Guided Tours"]
 features: ["Transportation", "Science", "Innovation & Industry", "Art", "Music & Literature"]
-generatedBy: "AI"
-model: "gpt-4"
-generatedAt: "2025-06-06T07:12:59.839Z"
-topic: "complete visitor guide"
 faqs:
   - question: "What are the hours for Steamtown?"
     answer: "Steamtown National Historic Site is open Wednesday through Sunday from 10 am to 4 pm."

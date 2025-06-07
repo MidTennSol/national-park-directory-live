@@ -12,9 +12,7 @@ state: "New Jersey"
 city: "Philadelphia"
 activities: []
 features: []
-generatedBy: "AI"
-model: "gpt-4"
-generatedAt: "2025-06-06T01:01:27.056Z"
+
 topic: "complete visitor guide"
 ---
 
