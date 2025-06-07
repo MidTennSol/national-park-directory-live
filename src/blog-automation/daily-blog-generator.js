@@ -62,9 +62,9 @@ function calculateDatesForCampaignDay(dayCount) {
   // Current date: Use today's actual date
   const currentDate = new Date();
   
-  // Historical date: Work backwards from May 14 (start after our renamed posts)
-  // This way dayCount=1 gives us May 13, dayCount=2 gives us May 12, etc.
-  const historicalDate = new Date(2025, 4, 14); // Month is 0-indexed, so 4 = May
+  // Historical date: Work backwards from May 11 (our oldest existing post)
+  // This way dayCount=1 gives us May 10, dayCount=2 gives us May 9, etc.
+  const historicalDate = new Date(2025, 4, 11); // Month is 0-indexed, so 4 = May
   historicalDate.setDate(historicalDate.getDate() - dayCount);
   
   return { currentDate, historicalDate };
