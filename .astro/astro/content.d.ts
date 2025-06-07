@@ -141,23 +141,23 @@ declare module 'astro:content' {
 
 	type ContentEntryMap = {
 		"blog": {
-"2023-01-01-welcome-to-our-national-park-blog.md": {
-	id: "2023-01-01-welcome-to-our-national-park-blog.md";
-  slug: "2023-01-01-welcome-to-our-national-park-blog";
+"2025-05-11-wildlife-watching-guide-national-parks.md": {
+	id: "2025-05-11-wildlife-watching-guide-national-parks.md";
+  slug: "2025-05-11-wildlife-watching-guide-national-parks";
   body: string;
   collection: "blog";
   data: InferEntrySchema<"blog">
 } & { render(): Render[".md"] };
-"2023-01-02-wildlife-photography-tips-national-parks.md": {
-	id: "2023-01-02-wildlife-photography-tips-national-parks.md";
-  slug: "2023-01-02-wildlife-photography-tips-national-parks";
+"2025-05-12-wildlife-photography-tips-national-parks.md": {
+	id: "2025-05-12-wildlife-photography-tips-national-parks.md";
+  slug: "2025-05-12-wildlife-photography-tips-national-parks";
   body: string;
   collection: "blog";
   data: InferEntrySchema<"blog">
 } & { render(): Render[".md"] };
-"2023-01-03-wildlife-watching-guide-national-parks.md": {
-	id: "2023-01-03-wildlife-watching-guide-national-parks.md";
-  slug: "2023-01-03-wildlife-watching-guide-national-parks";
+"2025-05-13-welcome-to-our-national-park-blog.md": {
+	id: "2025-05-13-welcome-to-our-national-park-blog.md";
+  slug: "2025-05-13-welcome-to-our-national-park-blog";
   body: string;
   collection: "blog";
   data: InferEntrySchema<"blog">
