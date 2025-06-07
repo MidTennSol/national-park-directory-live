@@ -80,8 +80,16 @@ const { images, parkName } = Astro.props;
 
 <script is:inline>
   function initImageGallery() {
-    console.log('🖼️ ImageGallery v2.0 - Initializing image gallery...');
+    console.log('🖼️ ImageGallery v4.0 - Initializing image gallery...');
     console.log('🔍 Current time:', new Date().toISOString());
+    
+    // First check if gallery exists
+    const galleryContainer = document.querySelector('.image-gallery');
+    if (!galleryContainer) {
+      console.log('❌ No image gallery container found');
+      return;
+    }
+    console.log('✅ Found gallery container:', galleryContainer);
     
     // Gallery state
     let currentImageIndex = 0;
