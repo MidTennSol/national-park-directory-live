@@ -232,7 +232,7 @@ YOU MUST WRITE EXACTLY LIKE THAT EXAMPLE:
 
 WRITE THESE EXACT SECTIONS:
 
-**TITLE:** Create a compelling SEO title like "Ultimate Guide to [Park Name]: [City], [State] Complete Visitor Experience" or "[Park Name] Mastery: [City], [State] Insider's Guide" (DO NOT START WITH "Introduction")
+**TITLE:** Create a compelling SEO title that avoids formulaic patterns. Examples: "[Park Name] Discovery: [City], [State] Adventure Guide" or "Exploring [Park Name]: [City], [State] Hidden Treasures" or "[Park Name] Unveiled: [City], [State] Natural Wonder" (DO NOT use "Complete Visitor Experience" or "Ultimate Guide")
 
 **DESCRIPTION:** Meta description (150-160 characters) with park name and location
 
@@ -257,7 +257,7 @@ Write 400+ words covering:
 - Interesting facts visitors don't know
 - Multiple detailed paragraphs
 
-## Activities & Attractions: [Creative Name]
+## Adventures & Experiences: [Creative Name based on park features]
 Write 450+ words covering:
 - 8-12 specific activities with detailed descriptions
 - Trail names, distances, difficulty levels
@@ -552,6 +552,15 @@ function parseAIResponse(aiResponse, park, options) {
       .replace(/^\*\*Meta Description:\*\*.*$/gmi, '') // Remove meta description lines
       .replace(/^Meta Description:.*$/gmi, '') // Remove unformatted meta description lines
       .replace(/\n\n\n+/g, '\n\n') // Clean up multiple line breaks
+      .trim();
+
+    // Clean up standalone FAQ headers with no content
+    content = content
+      .replace(/^FAQs?\s*:?\s*$/gm, '') // Remove standalone FAQ headers
+      .replace(/^\*\*FAQs?\*\*\s*:?\s*$/gm, '') // Remove formatted FAQ headers  
+      .replace(/^##\s*FAQs?\s*$/gm, '') // Remove markdown FAQ headers
+      .replace(/^###\s*FAQs?\s*$/gm, '') // Remove h3 FAQ headers
+      .replace(/\n\n\n+/g, '\n\n') // Clean up resulting multiple line breaks
       .trim();
     
     // Validate content length
