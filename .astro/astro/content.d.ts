@@ -162,6 +162,13 @@ declare module 'astro:content' {
   collection: "blog";
   data: InferEntrySchema<"blog">
 } & { render(): Render[".md"] };
+"2025-05-18-reliving-the-golden-age-railroads-backbone.md": {
+	id: "2025-05-18-reliving-the-golden-age-railroads-backbone.md";
+  slug: "2025-05-18-reliving-the-golden-age-railroads-backbone";
+  body: string;
+  collection: "blog";
+  data: InferEntrySchema<"blog">
+} & { render(): Render[".md"] };
 "2025-05-19-cumberland-gap.md": {
 	id: "2025-05-19-cumberland-gap.md";
   slug: "2025-05-19-cumberland-gap";
@@ -284,6 +291,13 @@ declare module 'astro:content' {
 "2025-06-05-yellowstone-national-park-mastery-bozeman-idaho-montana-wyoming-insiders-guide.md": {
 	id: "2025-06-05-yellowstone-national-park-mastery-bozeman-idaho-montana-wyoming-insiders-guide.md";
   slug: "2025-06-05-yellowstone-national-park-mastery-bozeman-idaho-montana-wyoming-insiders-guide";
+  body: string;
+  collection: "blog";
+  data: InferEntrySchema<"blog">
+} & { render(): Render[".md"] };
+"2025-06-06-the-presidents-palette-vibrant-history.md": {
+	id: "2025-06-06-the-presidents-palette-vibrant-history.md";
+  slug: "2025-06-06-the-presidents-palette-vibrant-history";
   body: string;
   collection: "blog";
   data: InferEntrySchema<"blog">

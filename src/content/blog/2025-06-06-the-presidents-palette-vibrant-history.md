@@ -1,6 +1,6 @@
 ---
 title: "The Presidents Palette: Vibrant History"
-publishDate: 2025-06-05
+publishDate: 2025-06-06
 image: "https://upload.wikimedia.org/wikipedia/commons/e/ef/Theodore_Roosevelt_Monument%2C_with_inaugural_site_in_the_background.jpg"
 tags: ["Theodore Roosevelt Inaugural National Historic Site", "New York", "National Parks", "Travel Guide", "Buffalo", "Outdoor Recreation", "Family Travel", "Adventure"]
 description: "Explore Theodore Roosevelt Inaugural National Historic Site in Buffalo, New York with our comprehensive visitor guide featuring activities, tips, and local i..."

@@ -1,6 +1,6 @@
 ---
 title: "Reliving The Golden Age: Railroads Backbone"
-publishDate: 2025-05-19
+publishDate: 2025-05-18
 image: "https://upload.wikimedia.org/wikipedia/commons/8/8e/Steamtown_Roundhouse.jpg"
 tags: ["Steamtown National Historic Site", "Pennsylvania", "Railroads", "History", "Activities"]
 description: "Explore Steamtown National Historic Site in Scranton, Pennsylvania with our comprehensive visitor guide featuring activities, tips, and local insights."
