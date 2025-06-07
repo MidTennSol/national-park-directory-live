@@ -78,23 +78,39 @@ const { images, parkName } = Astro.props;
   </div>
 </div>
 
-<script>
-  document.addEventListener('DOMContentLoaded', function() {
+<script is:inline>
+  function initImageGallery() {
+    console.log('Initializing image gallery...');
+    
     // Gallery state
     let currentImageIndex = 0;
     let galleryImages = [];
 
     // Initialize gallery
     function initializeGallery() {
+      console.log('Setting up gallery...');
       const galleryItems = document.querySelectorAll('.gallery-item img');
+      console.log('Found gallery items:', galleryItems.length);
+      
       galleryImages = Array.from(galleryItems).map((img) => ({
         src: img.src,
         alt: img.alt
       }));
+      console.log('Gallery images prepared:', galleryImages.length);
 
       // Add click listeners to gallery items
-      document.querySelectorAll('.gallery-item').forEach((item, index) => {
-        item.addEventListener('click', () => openLightbox(index));
+      const galleryContainers = document.querySelectorAll('.gallery-item');
+      console.log('Found gallery containers:', galleryContainers.length);
+      
+      galleryContainers.forEach((item, index) => {
+        console.log('Adding click listener to item', index);
+        item.addEventListener('click', function(e) {
+          console.log('Gallery item clicked:', index);
+          e.preventDefault();
+          e.stopPropagation();
+          openLightbox(index);
+        });
+        item.style.cursor = 'pointer';
       });
 
       // Add click listeners to lightbox controls
@@ -102,18 +118,38 @@ const { images, parkName } = Astro.props;
       const prevBtn = document.getElementById('lightbox-prev');
       const nextBtn = document.getElementById('lightbox-next');
 
-      if (closeBtn) closeBtn.addEventListener('click', closeLightbox);
-      if (prevBtn) prevBtn.addEventListener('click', previousImage);
-      if (nextBtn) nextBtn.addEventListener('click', nextImage);
+      if (closeBtn) {
+        closeBtn.addEventListener('click', closeLightbox);
+        console.log('Close button listener added');
+      }
+      if (prevBtn) {
+        prevBtn.addEventListener('click', previousImage);
+        console.log('Previous button listener added');
+      }
+      if (nextBtn) {
+        nextBtn.addEventListener('click', nextImage);
+        console.log('Next button listener added');
+      }
     }
 
     function openLightbox(index) {
-      if (galleryImages.length === 0) initializeGallery();
+      console.log('Opening lightbox for image:', index);
+      if (galleryImages.length === 0) {
+        console.log('No gallery images, initializing...');
+        initializeGallery();
+      }
       
       currentImageIndex = index;
       const lightbox = document.getElementById('lightbox');
       const lightboxImage = document.getElementById('lightbox-image');
       const counter = document.getElementById('lightbox-counter');
+      
+      console.log('Lightbox elements:', {
+        lightbox: !!lightbox,
+        lightboxImage: !!lightboxImage,
+        counter: !!counter,
+        hasImage: !!galleryImages[index]
+      });
       
       if (lightbox && lightboxImage && counter && galleryImages[index]) {
         lightboxImage.src = galleryImages[index].src;
@@ -121,10 +157,14 @@ const { images, parkName } = Astro.props;
         counter.textContent = `${index + 1} / ${galleryImages.length}`;
         lightbox.classList.remove('hidden');
         document.body.style.overflow = 'hidden';
+        console.log('Lightbox opened successfully');
+      } else {
+        console.error('Failed to open lightbox - missing elements or image');
       }
     }
 
     function closeLightbox() {
+      console.log('Closing lightbox');
       const lightbox = document.getElementById('lightbox');
       if (lightbox) {
         lightbox.classList.add('hidden');
@@ -172,7 +212,14 @@ const { images, parkName } = Astro.props;
 
     // Initialize the gallery
     initializeGallery();
-  });
+  }
+
+  // Run when DOM is ready
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initImageGallery);
+  } else {
+    initImageGallery();
+  }
 </script>
 
 <style>
