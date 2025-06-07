@@ -1,7 +1,7 @@
 ---
 title: "Wildlife Photography Tips for National Park Visitors"
 description: "Master the art of wildlife photography in national parks with these essential tips and ethical guidelines for capturing memorable images."
-publishDate: 2023-01-02
+publishDate: 2025-05-12
 author: "Michael Chen"
 image: "/images/blog/wildlife-photography.jpg"
 tags: ["photography", "wildlife", "tips"]

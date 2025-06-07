@@ -54,18 +54,17 @@ async function incrementCampaignCounter() {
 }
 
 /**
- * Calculate current and historical dates based on campaign day
- * Fixed logic: Current date progresses forward, historical date progresses backward
+ * Calculate current and historical dates dynamically
+ * Current date: Use today's actual date
+ * Historical date: Work backwards from oldest existing blog post
  */
 function calculateDatesForCampaignDay(dayCount) {
-  // Current date: Today's actual date (progresses forward each day)
-  // Day 1: June 6, Day 2: June 7, Day 3: June 8, etc.
-  const currentDate = new Date('2025-06-06'); // Fixed start date for current posts
-  currentDate.setDate(currentDate.getDate() + dayCount);
+  // Current date: Use today's actual date
+  const currentDate = new Date();
   
-  // Historical date: Starts at May 18, goes backward each day
-  // Day 1: May 18, Day 2: May 17, Day 3: May 16, etc.
-  const historicalDate = new Date('2025-05-18'); // Fixed start date for historical posts
+  // Historical date: Work backwards from May 14 (start after our renamed posts)
+  // This way dayCount=1 gives us May 13, dayCount=2 gives us May 12, etc.
+  const historicalDate = new Date(2025, 4, 14); // Month is 0-indexed, so 4 = May
   historicalDate.setDate(historicalDate.getDate() - dayCount);
   
   return { currentDate, historicalDate };
