@@ -80,7 +80,8 @@ const { images, parkName } = Astro.props;
 
 <script is:inline>
   function initImageGallery() {
-    console.log('Initializing image gallery...');
+    console.log('🖼️ ImageGallery v2.0 - Initializing image gallery...');
+    console.log('🔍 Current time:', new Date().toISOString());
     
     // Gallery state
     let currentImageIndex = 0;
@@ -214,10 +215,15 @@ const { images, parkName } = Astro.props;
     initializeGallery();
   }
 
+  // Add visible indicator that script loaded
+  console.log('🚀 ImageGallery script loaded successfully!');
+  
   // Run when DOM is ready
   if (document.readyState === 'loading') {
+    console.log('⏳ DOM still loading, adding DOMContentLoaded listener');
     document.addEventListener('DOMContentLoaded', initImageGallery);
   } else {
+    console.log('✅ DOM already ready, initializing immediately');
     initImageGallery();
   }
 </script>
