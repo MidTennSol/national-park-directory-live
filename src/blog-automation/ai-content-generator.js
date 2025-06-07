@@ -301,19 +301,24 @@ Write 150+ words:
 - Final mention of ${park.city}, ${park.state}
 - Inspiring closing thought
 
-**FAQS:** Generate 5-7 frequently asked questions with detailed answers based on the content above. Format as:
-FAQ: Question text here?
-ANSWER: Detailed answer here.
+**FAQS:** Generate 5-7 frequently asked questions with detailed answers based on the content above. Format EXACTLY as:
 
-Focus on the most practical visitor questions like:
-- Operating hours and admission fees
-- How long to plan for a visit
-- What to bring/pack
-- Best time to visit
-- Accessibility information
-- Parking and transportation
-- Safety considerations
-- Reservation requirements
+FAQ: What are the operating hours and admission fees for ${park.name}?
+ANSWER: [Your detailed answer here based on the content above]
+
+FAQ: How long should I plan for a visit to ${park.name}?
+ANSWER: [Your detailed answer here based on the content above]
+
+FAQ: What should I bring when visiting ${park.name}?
+ANSWER: [Your detailed answer here based on the content above]
+
+FAQ: What is the best time to visit ${park.name}?
+ANSWER: [Your detailed answer here based on the content above]
+
+FAQ: Is ${park.name} accessible for visitors with mobility needs?
+ANSWER: [Your detailed answer here based on the content above]
+
+YOU MUST include these exact FAQs with detailed answers. Do not skip this section.
 
 **TAGS:** 8 relevant tags including ${park.name}, ${park.state}, activities
 
@@ -343,33 +348,58 @@ function parseFAQContent(faqContent) {
   const faqs = [];
   
   try {
-    // Split by FAQ: or similar patterns
+    console.log('🔍 Raw FAQ content received:', faqContent.substring(0, 200) + '...');
+    
+    // Split by FAQ: or similar patterns  
     const faqSections = faqContent.split(/(?:^|\n)(?:FAQ:|Q:|Question:)/i);
+    
+    console.log(`📝 Found ${faqSections.length - 1} potential FAQ sections`);
     
     for (let i = 1; i < faqSections.length; i++) { // Skip first empty section
       const section = faqSections[i].trim();
+      console.log(`   Processing section ${i}: ${section.substring(0, 100)}...`);
       
       // Look for ANSWER: pattern to separate question and answer
       const answerMatch = section.match(/^(.*?)\s*(?:ANSWER:|A:|Answer:)\s*(.*?)$/is);
       
       if (answerMatch) {
-        const question = answerMatch[1].trim().replace(/\?$/, '') + '?'; // Ensure question ends with ?
+        let question = answerMatch[1].trim();
         const answer = answerMatch[2].trim();
         
-        if (question.length > 10 && answer.length > 20) { // Basic validation
+        // Clean up question - remove any remaining formatting
+        question = question.replace(/^\*\*|\*\*$/g, '').trim();
+        if (!question.endsWith('?')) {
+          question += '?';
+        }
+        
+        // Clean up answer - remove formatting and section breaks
+        const cleanAnswer = answer
+          .replace(/^\*\*|\*\*$/g, '')
+          .replace(/^TAGS:.*$/gm, '')
+          .replace(/\n\n\n+/g, '\n\n')
+          .trim()
+          .split('\n\n')[0]; // Take only the first paragraph to avoid pulling in other sections
+        
+        if (question.length > 10 && cleanAnswer.length > 20) { // Basic validation
           faqs.push({
             question: question,
-            answer: answer
+            answer: cleanAnswer
           });
+          console.log(`   ✅ Added FAQ: ${question.substring(0, 50)}...`);
+        } else {
+          console.log(`   ⚠️ Skipped short FAQ: Q=${question.length} chars, A=${cleanAnswer.length} chars`);
         }
+      } else {
+        console.log(`   ⚠️ No ANSWER: pattern found in section ${i}`);
       }
     }
     
-    console.log(`✅ Parsed ${faqs.length} FAQs from AI response`);
+    console.log(`✅ Successfully parsed ${faqs.length} FAQs from AI response`);
     return faqs;
     
   } catch (error) {
     console.error('⚠️ Error parsing FAQ content:', error);
+    console.error('FAQ content that failed:', faqContent);
     return [];
   }
 }
@@ -403,10 +433,28 @@ function parseAIResponse(aiResponse, park, options) {
       } else if (section.startsWith('CONTENT:')) {
         contentStarted = true;
         continue;
-      } else if (section.startsWith('FAQS:') || section.startsWith('**FAQS:**')) {
-        // Extract FAQ content
-        const faqContent = section.replace(/^\*\*FAQS:\*\*\s*/i, '').replace(/^FAQS:\s*/i, '').trim();
-        faqs = parseFAQContent(faqContent);
+      } else if (section.toLowerCase().includes('faq') && (section.startsWith('FAQS:') || section.startsWith('**FAQS:**') || section.match(/^\*\*FAQ/i))) {
+        // Extract FAQ content - be more flexible with FAQ section detection
+        let faqContent = section.replace(/^\*\*FAQS?:\*\*\s*/i, '').replace(/^FAQS?:\s*/i, '').trim();
+        
+        // If the FAQ section doesn't have content, look for it in subsequent sections
+        if (faqContent.length < 50) {
+          console.log('⚠️ FAQ section appears empty, searching for FAQ content in remaining sections...');
+          for (let j = i + 1; j < sections.length; j++) {
+            const nextSection = sections[j].trim();
+            if (nextSection.toLowerCase().includes('faq:') || nextSection.toLowerCase().includes('question:')) {
+              faqContent += '\n\n' + nextSection;
+            } else if (nextSection.startsWith('TAGS:')) {
+              break; // Stop at tags section
+            }
+          }
+        }
+        
+        if (faqContent.length > 20) {
+          faqs = parseFAQContent(faqContent);
+        } else {
+          console.log('⚠️ FAQ content still appears empty after extended search');
+        }
       } else if (section.startsWith('TAGS:')) {
         const tagString = section.replace('TAGS:', '').trim();
         tags = tagString.split(',').map(tag => tag.trim()).slice(0, 8);
