@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { fetchNationalParks, fetchNationalParkBySlug } from '../../utils/airtable.js';
+import ImageGallery from '../../components/ImageGallery.astro';
 
 // Define Park type
 interface Park {
@@ -445,31 +446,11 @@ const jsonLd = JSON.stringify({
           </section>
         )}
         
-        {/* Photo Gallery - Moved down here */}
+        {/* Photo Gallery with Lightbox */}
         {parkImages.length > 1 && (
           <section class="bg-white rounded-lg shadow-md p-6 mb-8">
             <h2 class="text-2xl font-bold text-gray-900 mb-4">Gallery</h2>
-            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-              {parkImages.slice(0, 8).map((img: string, index: number) => (
-                <div class="aspect-square overflow-hidden rounded-lg relative bg-green-50">
-                  <!-- Placeholder icon -->
-                  <div class="absolute inset-0 flex items-center justify-center">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="h-10 w-10 text-green-200 fill-current">
-                      <path d="M19 19H5V5h14v14zM5 3c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2H5zm4 5h6v6H9V8z"/>
-                    </svg>
-                  </div>
-                  
-                  <img 
-                    src={img} 
-                    alt={`${park.name} - Image ${index + 1}`} 
-                    class="gallery-image w-full h-full object-cover hover:scale-105 transition-transform duration-300 relative z-10"
-                    loading="lazy"
-                    onload="this.classList.add('image-loaded'); this.parentElement.querySelector('div').classList.add('hidden');"
-                    onerror="if (!this.src.includes('park-placeholder.svg')) { this.src='/images/park-placeholder.svg'; this.classList.add('fallback-applied'); }"
-                  />
-                </div>
-              ))}
-            </div>
+            <ImageGallery images={parkImages} parkName={park.name} />
           </section>
         )}
       </div>
