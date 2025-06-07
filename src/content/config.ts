@@ -16,6 +16,14 @@ const blogCollection = defineCollection({
       question: z.string(),
       answer: z.string(),
     })).optional(),
+    // Additional fields used in blog posts
+    park: z.string().optional(),
+    state: z.string().optional(),
+    city: z.string().optional(),
+    category: z.string().optional(),
+    excerpt: z.string().optional(),
+    activities: z.array(z.string()).optional(),
+    features: z.array(z.string()).optional(),
   }),
 });
 

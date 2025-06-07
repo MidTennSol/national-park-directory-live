@@ -5,6 +5,21 @@ import { formatDate } from '../../utils/dateUtils';
 import type { CollectionEntry } from 'astro:content';
 import FAQ from '../../components/FAQ.astro';
 
+// Function to convert park name to slug (matching the Airtable logic)
+function parkNameToSlug(parkName: string): string {
+  return parkName
+    .toLowerCase()
+    .replace(/[^a-z0-9\s-]/g, '') // Remove special chars
+    .replace(/\s+/g, '-')         // Replace spaces with hyphens
+    .replace(/-+/g, '-')          // Replace multiple hyphens with single hyphen
+    .trim();
+}
+
+// Function to clean tag text
+function cleanTag(tag: string): string {
+  return tag.replace(/[#"]/g, '').replace(/\{/g, '').replace(/\}/g, '');
+}
+
 // Generate static paths for all blog posts
 export async function getStaticPaths() {
   const blogEntries = await getCollection('blog', ({ data }) => !data.draft);
@@ -18,6 +33,13 @@ export async function getStaticPaths() {
 // Get the blog post for this page
 const { entry } = Astro.props;
 const { Content } = await entry.render();
+
+// Generate park link if park field exists
+let parkLink = '';
+if (entry.data.park) {
+  const parkSlug = parkNameToSlug(entry.data.park);
+  parkLink = `/parks/${parkSlug}`;
+}
 
 // Get related posts (posts with matching tags, excluding current post)
 const allPosts = await getCollection('blog', ({ data }) => !data.draft);
@@ -125,7 +147,7 @@ const mainNavItems = [
       <div class="flex flex-wrap items-center text-gray-600 text-sm mb-6 space-x-4">
         <time datetime={typeof entry.data.publishDate === 'string' ? entry.data.publishDate : entry.data.publishDate.toISOString()} class="flex items-center">
           <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 002 2z" />
           </svg>
           {formatDate(entry.data.publishDate)}
         </time>
@@ -137,13 +159,31 @@ const mainNavItems = [
         </span>
       </div>
 
+      <!-- Tags Section -->
       <div class="flex flex-wrap gap-2 mb-6">
         {entry.data.tags.map((tag: string) => (
           <span class="inline-block bg-green-100 text-green-800 text-xs px-3 py-1 rounded-full font-medium">
-            {tag.replace(/[#"]/g, '')}
+            {cleanTag(tag)}
           </span>
         ))}
       </div>
+
+      <!-- Park Link Section -->
+      {entry.data.park && parkLink && (
+        <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
+          <div class="flex items-center">
+            <svg class="w-5 h-5 text-blue-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+            </svg>
+            <span class="text-blue-800 font-medium">Featured Park:</span>
+          </div>
+          <p class="mt-2 text-blue-700">
+            Learn more about <a href={parkLink} class="text-blue-800 font-semibold hover:text-blue-900 underline">{entry.data.park}</a> 
+            on our dedicated park page with detailed visitor information, directions, and activities.
+          </p>
+        </div>
+      )}
       
       {entry.data.image && (
         <div class="mb-8">
