@@ -162,6 +162,20 @@ declare module 'astro:content' {
   collection: "blog";
   data: InferEntrySchema<"blog">
 } & { render(): Render[".md"] };
+"2025-05-16-ultimate-guide-to-city-of-rocks-national-reserve-boise-idaho-complete-visitor-experience.md": {
+	id: "2025-05-16-ultimate-guide-to-city-of-rocks-national-reserve-boise-idaho-complete-visitor-experience.md";
+  slug: "2025-05-16-ultimate-guide-to-city-of-rocks-national-reserve-boise-idaho-complete-visitor-experience";
+  body: string;
+  collection: "blog";
+  data: InferEntrySchema<"blog">
+} & { render(): Render[".md"] };
+"2025-05-17-windswept-wonders-the-heritage-trail.md": {
+	id: "2025-05-17-windswept-wonders-the-heritage-trail.md";
+  slug: "2025-05-17-windswept-wonders-the-heritage-trail";
+  body: string;
+  collection: "blog";
+  data: InferEntrySchema<"blog">
+} & { render(): Render[".md"] };
 "2025-05-18-reliving-the-golden-age-railroads-backbone.md": {
 	id: "2025-05-18-reliving-the-golden-age-railroads-backbone.md";
   slug: "2025-05-18-reliving-the-golden-age-railroads-backbone";
@@ -298,6 +312,20 @@ declare module 'astro:content' {
 "2025-06-06-the-presidents-palette-vibrant-history.md": {
 	id: "2025-06-06-the-presidents-palette-vibrant-history.md";
   slug: "2025-06-06-the-presidents-palette-vibrant-history";
+  body: string;
+  collection: "blog";
+  data: InferEntrySchema<"blog">
+} & { render(): Render[".md"] };
+"2025-06-07-echoes-from-the-past-untold-stories.md": {
+	id: "2025-06-07-echoes-from-the-past-untold-stories.md";
+  slug: "2025-06-07-echoes-from-the-past-untold-stories";
+  body: string;
+  collection: "blog";
+  data: InferEntrySchema<"blog">
+} & { render(): Render[".md"] };
+"2025-06-08-ultimate-guide-to-obed-wild-scenic-river-knoxville-tennessee-complete-visitor-experience.md": {
+	id: "2025-06-08-ultimate-guide-to-obed-wild-scenic-river-knoxville-tennessee-complete-visitor-experience.md";
+  slug: "2025-06-08-ultimate-guide-to-obed-wild-scenic-river-knoxville-tennessee-complete-visitor-experience";
   body: string;
   collection: "blog";
   data: InferEntrySchema<"blog">
