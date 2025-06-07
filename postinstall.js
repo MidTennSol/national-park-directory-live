@@ -15,9 +15,9 @@ try {
     let rollupModule;
     
     if (platform === 'linux') {
-      if (process.env.NETLIFY) {
-        // Force the GNU version on Netlify
-        console.log('Running on Netlify, using GNU version');
+      if (process.env.NETLIFY || process.env.VERCEL) {
+        // Force the GNU version on Netlify/Vercel
+        console.log('Running on cloud platform (Netlify/Vercel), using GNU version');
         rollupModule = '@rollup/rollup-linux-x64-gnu';
       } else {
         // Try to detect libc version
