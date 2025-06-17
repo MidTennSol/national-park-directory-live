@@ -139,6 +139,11 @@ jobs:
           echo "❌ Dual blog generation failed"
           exit 1
         fi
+
+    - name: List blog directory after generation
+      run: |
+        echo "📂 Listing contents of src/content/blog/ after generation:"
+        ls -l src/content/blog/
     
     - name: Check for changes
       id: check_changes
