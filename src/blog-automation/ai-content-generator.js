@@ -465,9 +465,8 @@ function parseAIResponse(aiResponse, park, options) {
     }
     
     // Fallback extraction if structured format wasn't perfectly followed
-    if (!title || !content) {
+    if (!title || title.toLowerCase() === 'content' || title.toLowerCase() === 'content:') {
       console.log('⚠️ AI response format not perfect, applying fallback parsing...');
-      
       // Try to extract title from headers (but skip section headers like "Introduction:", "Discover", etc.)
       const lines = aiResponse.split('\n');
       for (const line of lines) {
@@ -482,27 +481,17 @@ function parseAIResponse(aiResponse, park, options) {
               !headerText.toLowerCase().startsWith('beyond ') && 
               !headerText.toLowerCase().startsWith('final ') &&
               !headerText.toLowerCase().includes('heritage:') &&
-              !headerText.toLowerCase().includes('background:')) {
+              !headerText.toLowerCase().includes('background:') &&
+              headerText.toLowerCase() !== 'content' &&
+              headerText.toLowerCase() !== 'content:') {
             title = headerText;
             break;
           }
         }
       }
-      
-      // Use full response as content if no CONTENT: section found
-      if (!content) {
-        content = aiResponse;
-      }
-      
-      // Generate fallbacks
-      if (!title) {
+      // Use park name and location as fallback if still missing or invalid
+      if (!title || title.toLowerCase() === 'content' || title.toLowerCase() === 'content:') {
         title = `Ultimate Guide to ${park.name}: ${park.city}, ${park.state} Complete Visitor Experience`;
-      }
-      if (!description) {
-        description = `Explore ${park.name} in ${park.city}, ${park.state} with our comprehensive visitor guide featuring activities, tips, and local insights.`;
-      }
-      if (!excerpt) {
-        excerpt = `Discover everything you need to know about visiting ${park.name} in ${park.city}, ${park.state}.`;
       }
     }
     

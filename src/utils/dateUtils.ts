@@ -3,8 +3,12 @@
  * @param date The date to format
  * @returns Formatted date string (e.g., "June 15, 2023")
  */
-export function formatDate(date: Date): string {
-  return new Date(date).toLocaleDateString('en-US', {
+export function formatDate(date: Date | string): string {
+  // If the date is a string in YYYY-MM-DD, append 'T12:00:00' to avoid UTC offset issues
+  let d = typeof date === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(date)
+    ? new Date(date + 'T12:00:00')
+    : new Date(date);
+  return d.toLocaleDateString('en-US', {
     year: 'numeric',
     month: 'long',
     day: 'numeric'

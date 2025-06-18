@@ -12,9 +12,12 @@ const allBlogPosts = await getCollection('blog', ({ data }) => {
 });
 
 // Sort by publish date (newest first)
-const sortedPosts = allBlogPosts.sort((a: CollectionEntry<'blog'>, b: CollectionEntry<'blog'>) => 
-  b.data.publishDate.valueOf() - a.data.publishDate.valueOf()
-);
+const sortedPosts = allBlogPosts.sort((a: CollectionEntry<'blog'>, b: CollectionEntry<'blog'>) => {
+  // Always use the raw publishDate from frontmatter for sorting
+  const aDate = typeof a.data.publishDate === 'string' ? new Date(a.data.publishDate + 'T12:00:00') : new Date(a.data.publishDate);
+  const bDate = typeof b.data.publishDate === 'string' ? new Date(b.data.publishDate + 'T12:00:00') : new Date(b.data.publishDate);
+  return bDate.getTime() - aDate.getTime();
+});
 
 // Get the 2 newest posts as featured posts
 const featuredPosts = sortedPosts.slice(0, 2);
