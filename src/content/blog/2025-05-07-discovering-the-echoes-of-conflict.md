@@ -1,6 +1,6 @@
 ---
 title: "Discovering the Echoes of Conflict"
-publishDate: 2025-04-26
+publishDate: 2025-05-07
 image: "https://upload.wikimedia.org/wikipedia/commons/2/2b/%22The_Dictator%22.JPG"
 tags: ["Petersburg National Battlefield", "Virginia", "National Parks", "Travel Guide", "Richmond", "Outdoor Recreation", "Family Travel", "Adventure"]
 description: ""

@@ -141,6 +141,13 @@ declare module 'astro:content' {
 
 	type ContentEntryMap = {
 		"blog": {
+"2025-05-07-discovering-the-echoes-of-conflict.md": {
+	id: "2025-05-07-discovering-the-echoes-of-conflict.md";
+  slug: "2025-05-07-discovering-the-echoes-of-conflict";
+  body: string;
+  collection: "blog";
+  data: InferEntrySchema<"blog">
+} & { render(): Render[".md"] };
 "2025-05-08-tonto-national-monument-mastery-phoenix-arizonas-ancient-echoes.md": {
 	id: "2025-05-08-tonto-national-monument-mastery-phoenix-arizonas-ancient-echoes.md";
   slug: "2025-05-08-tonto-national-monument-mastery-phoenix-arizonas-ancient-echoes";
@@ -382,6 +389,13 @@ declare module 'astro:content' {
 "2025-06-11-a-walk-through-history-pea-ridge-uncovered.md": {
 	id: "2025-06-11-a-walk-through-history-pea-ridge-uncovered.md";
   slug: "2025-06-11-a-walk-through-history-pea-ridge-uncovered";
+  body: string;
+  collection: "blog";
+  data: InferEntrySchema<"blog">
+} & { render(): Render[".md"] };
+"2025-06-12-harmony-in-the-heartland-a-jazz-aficionados-guide-to-new-orleans-jazz-national-historical-park-louisiana.md": {
+	id: "2025-06-12-harmony-in-the-heartland-a-jazz-aficionados-guide-to-new-orleans-jazz-national-historical-park-louisiana.md";
+  slug: "2025-06-12-harmony-in-the-heartland-a-jazz-aficionados-guide-to-new-orleans-jazz-national-historical-park-louisiana";
   body: string;
   collection: "blog";
   data: InferEntrySchema<"blog">
