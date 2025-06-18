@@ -124,33 +124,26 @@ jobs:
       run: |
         echo "📝 Generating dual blog posts (current + historical)..."
         echo "🔄 Using dual generation mode for maximum content velocity"
-        
         # Run the dual blog generation
         if [ -n "$PARK_ID" ]; then
           echo "⚠️ Manual park selection not supported in dual mode"
           echo "🎲 Proceeding with automatic dual park selection"
         fi
-        
-        echo "🚀 Starting dual blog generation..."
-        node src/blog-automation/daily-blog-generator.js --topic="${TOPIC:-complete visitor guide}"
-        
-        # Check if blog generation was successful
-        if [ $? -eq 0 ]; then
-          echo "✅ Dual blog posts generated successfully"
-        else
-          echo "❌ Dual blog generation failed"
-          exit 1
-        fi
+        echo "🚀 Running daily-blog-generator.js"
+        node src/blog-automation/daily-blog-generator.js
 
-    - name: List blog directory after generation
+    - name: Show current working directory
+      run: pwd
+
+    - name: Show untracked files before git add
       run: |
-        echo "📂 Listing contents of src/content/blog/ after generation:"
-        ls -l src/content/blog/
-    
+        echo "🔍 Untracked files:"
+        git status --untracked-files=all
+
     - name: Check for changes
       id: check_changes
       run: |
-        git add .
+        git add src/content/blog/
         if git diff --cached --quiet; then
           echo "📭 No new blog posts generated (no parks available or other issue)"
           echo "has_changes=false" >> $GITHUB_OUTPUT
@@ -163,8 +156,6 @@ jobs:
           if [ -n "$NEW_FILES" ]; then
             echo "blog_files=$NEW_FILES" >> $GITHUB_OUTPUT
             echo "file_count=$FILE_COUNT" >> $GITHUB_OUTPUT
-            echo "📝 Generated files: $NEW_FILES"
-            echo "📊 Total files: $FILE_COUNT"
           fi
         fi
 
