@@ -141,6 +141,13 @@ declare module 'astro:content' {
 
 	type ContentEntryMap = {
 		"blog": {
+"2025-05-06-discovering-the-dream.md": {
+	id: "2025-05-06-discovering-the-dream.md";
+  slug: "2025-05-06-discovering-the-dream";
+  body: string;
+  collection: "blog";
+  data: InferEntrySchema<"blog">
+} & { render(): Render[".md"] };
 "2025-05-07-discovering-the-echoes-of-conflict.md": {
 	id: "2025-05-07-discovering-the-echoes-of-conflict.md";
   slug: "2025-05-07-discovering-the-echoes-of-conflict";
@@ -396,6 +403,13 @@ declare module 'astro:content' {
 "2025-06-12-harmony-in-the-heartland-a-jazz-aficionados-guide-to-new-orleans-jazz-national-historical-park-louisiana.md": {
 	id: "2025-06-12-harmony-in-the-heartland-a-jazz-aficionados-guide-to-new-orleans-jazz-national-historical-park-louisiana.md";
   slug: "2025-06-12-harmony-in-the-heartland-a-jazz-aficionados-guide-to-new-orleans-jazz-national-historical-park-louisiana";
+  body: string;
+  collection: "blog";
+  data: InferEntrySchema<"blog">
+} & { render(): Render[".md"] };
+"2025-06-13-minuteman-missile-mystique-a-deep-dive-into-rapid-city-south-dakotas-cold-war-relic.md": {
+	id: "2025-06-13-minuteman-missile-mystique-a-deep-dive-into-rapid-city-south-dakotas-cold-war-relic.md";
+  slug: "2025-06-13-minuteman-missile-mystique-a-deep-dive-into-rapid-city-south-dakotas-cold-war-relic";
   body: string;
   collection: "blog";
   data: InferEntrySchema<"blog">
