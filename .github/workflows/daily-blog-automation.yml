@@ -1,5 +1,7 @@
 name: Daily Blog Post Generation
 
+# Force update
+
 on:
   # Run daily at 7:00 AM UTC (3:00 AM EST / 2:00 AM CDT)
   schedule:
@@ -253,5 +255,8 @@ jobs:
         echo "📊 Generated ${{ steps.check_changes.outputs.file_count }} new blog post(s)"
         echo "🔄 Vercel deployment will start automatically"
         echo "⏰ Next run scheduled for tomorrow at 7:00 AM UTC" 
+<<<<<<< HEAD
 
 # Force update for debug step
+=======
+>>>>>>> 686d5883b49520409903106283c98f2b3e22e36a

@@ -141,6 +141,13 @@ declare module 'astro:content' {
 
 	type ContentEntryMap = {
 		"blog": {
+"2025-05-11-unmasking-ocmulgee-mounds-an-epic-journey-to-macon-georgias-prehistoric-marvel.md": {
+	id: "2025-05-11-unmasking-ocmulgee-mounds-an-epic-journey-to-macon-georgias-prehistoric-marvel.md";
+  slug: "2025-05-11-unmasking-ocmulgee-mounds-an-epic-journey-to-macon-georgias-prehistoric-marvel";
+  body: string;
+  collection: "blog";
+  data: InferEntrySchema<"blog">
+} & { render(): Render[".md"] };
 "2025-05-11-wildlife-watching-guide-national-parks.md": {
 	id: "2025-05-11-wildlife-watching-guide-national-parks.md";
   slug: "2025-05-11-wildlife-watching-guide-national-parks";
@@ -333,6 +340,20 @@ declare module 'astro:content' {
 "2025-06-07-echoes-from-the-past-untold-stories.md": {
 	id: "2025-06-07-echoes-from-the-past-untold-stories.md";
   slug: "2025-06-07-echoes-from-the-past-untold-stories";
+  body: string;
+  collection: "blog";
+  data: InferEntrySchema<"blog">
+} & { render(): Render[".md"] };
+"2025-06-08-embracing-wilderness-at-its-best.md": {
+	id: "2025-06-08-embracing-wilderness-at-its-best.md";
+  slug: "2025-06-08-embracing-wilderness-at-its-best";
+  body: string;
+  collection: "blog";
+  data: InferEntrySchema<"blog">
+} & { render(): Render[".md"] };
+"2025-06-09-fort-matanzas-national-monument-unleashed-st-augustine-floridas-historic-retinue.md": {
+	id: "2025-06-09-fort-matanzas-national-monument-unleashed-st-augustine-floridas-historic-retinue.md";
+  slug: "2025-06-09-fort-matanzas-national-monument-unleashed-st-augustine-floridas-historic-retinue";
   body: string;
   collection: "blog";
   data: InferEntrySchema<"blog">
