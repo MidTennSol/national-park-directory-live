@@ -141,9 +141,16 @@ declare module 'astro:content' {
 
 	type ContentEntryMap = {
 		"blog": {
-"2025-04-26-in-the-footsteps-of-an-artistic-pioneer-exploring-thomas-cole-national-historic-site.md": {
-	id: "2025-04-26-in-the-footsteps-of-an-artistic-pioneer-exploring-thomas-cole-national-historic-site.md";
-  slug: "2025-04-26-in-the-footsteps-of-an-artistic-pioneer-exploring-thomas-cole-national-historic-site";
+"2025-05-02-in-the-footsteps-of-an-artistic-pioneer-exploring-thomas-cole-national-historic-site.md": {
+	id: "2025-05-02-in-the-footsteps-of-an-artistic-pioneer-exploring-thomas-cole-national-historic-site.md";
+  slug: "2025-05-02-in-the-footsteps-of-an-artistic-pioneer-exploring-thomas-cole-national-historic-site";
+  body: string;
+  collection: "blog";
+  data: any
+} & { render(): Render[".md"] };
+"2025-05-03-unraveling-the-everglades-elegance.md": {
+	id: "2025-05-03-unraveling-the-everglades-elegance.md";
+  slug: "2025-05-03-unraveling-the-everglades-elegance";
   body: string;
   collection: "blog";
   data: any
@@ -452,6 +459,13 @@ declare module 'astro:content' {
 "2025-06-16-discovering-the-intertwined-nodes-of-history.md": {
 	id: "2025-06-16-discovering-the-intertwined-nodes-of-history.md";
   slug: "2025-06-16-discovering-the-intertwined-nodes-of-history";
+  body: string;
+  collection: "blog";
+  data: any
+} & { render(): Render[".md"] };
+"2025-06-17-first-ladies-national-historic-site-explored-a-canton-ohio-cultural-gem.md": {
+	id: "2025-06-17-first-ladies-national-historic-site-explored-a-canton-ohio-cultural-gem.md";
+  slug: "2025-06-17-first-ladies-national-historic-site-explored-a-canton-ohio-cultural-gem";
   body: string;
   collection: "blog";
   data: any
