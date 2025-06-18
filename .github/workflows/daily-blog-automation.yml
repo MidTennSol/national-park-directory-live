@@ -155,11 +155,9 @@ jobs:
         else
           echo "📄 New blog posts detected"
           echo "has_changes=true" >> $GITHUB_OUTPUT
-          
           # Get the names of generated blog files
           NEW_FILES=$(git diff --cached --name-only | grep "src/content/blog/" | tr '\n' ' ')
           FILE_COUNT=$(git diff --cached --name-only | grep "src/content/blog/" | wc -l)
-          
           if [ -n "$NEW_FILES" ]; then
             echo "blog_files=$NEW_FILES" >> $GITHUB_OUTPUT
             echo "file_count=$FILE_COUNT" >> $GITHUB_OUTPUT
@@ -167,7 +165,16 @@ jobs:
             echo "📊 Total files: $FILE_COUNT"
           fi
         fi
-    
+
+    - name: Show git status and staged files (always)
+      run: |
+        git status
+        git diff --cached --name-status
+
+    - name: Show staged files before commit
+      if: steps.check_changes.outputs.has_changes == 'true'
+      run: git diff --cached --name-status
+
     - name: Commit and push changes
       if: steps.check_changes.outputs.has_changes == 'true'
       run: |
@@ -246,3 +253,5 @@ jobs:
         echo "📊 Generated ${{ steps.check_changes.outputs.file_count }} new blog post(s)"
         echo "🔄 Vercel deployment will start automatically"
         echo "⏰ Next run scheduled for tomorrow at 7:00 AM UTC" 
+
+# Force update for debug step
