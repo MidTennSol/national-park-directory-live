@@ -1,5 +1,7 @@
 name: Daily Blog Post Generation
 
+# Force update
+
 on:
   # Run daily at 7:00 AM UTC (3:00 AM EST / 2:00 AM CDT)
   schedule:
