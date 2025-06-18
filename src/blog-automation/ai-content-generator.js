@@ -60,7 +60,7 @@ export async function generateBlogPost(park, options = {}) {
         }
       ],
       temperature: 0.9, // Higher creativity for more varied content
-      max_tokens: 6000,  // Reduced to fit within GPT-4's 8192 token limit (8192 - 1808 prompt tokens = ~6384 available)
+      max_tokens: 4000,  // Reduced to fit within GPT-4's 8192 token limit (8192 - prompt tokens = available)
       presence_penalty: 0.7, // Encourage more original ideas and topics
       frequency_penalty: 0.4  // Reduce repetitive language more aggressively
     });
