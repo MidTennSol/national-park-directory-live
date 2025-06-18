@@ -1,6 +1,6 @@
 ---
 title: "Majestic Thoroughfare Revealed: Baltimore-Washington Parkway, Marylands Paved Pearl"
-publishDate: 2025-05-08
+publishDate: 2025-05-09
 image: "https://upload.wikimedia.org/wikipedia/commons/2/29/Scenic_Entry_to_the_Nation%27s_Capital.jpg"
 tags: ["Baltimore-Washington Parkway", "Maryland", "National Parks", "Travel Guide", "Baltimore", "Outdoor Recreation", "Family Travel", "Adventure"]
 description: "Unearth the secrets of Baltimore-Washington Parkway, the asphalt artery pumping life between Baltimore, MD and Washington, D.C., in this comprehensive guide."

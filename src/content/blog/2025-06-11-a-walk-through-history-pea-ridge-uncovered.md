@@ -1,6 +1,6 @@
 ---
 title: "A Walk Through History: Pea Ridge Uncovered"
-publishDate: 2025-06-18
+publishDate: 2025-06-11
 image: "https://upload.wikimedia.org/wikipedia/commons/8/81/Elkhorn_Tavern_Confederate_Approach.jpg"
 tags: ["Pea Ridge National Military Park", "Arkansas", "National Parks", "Travel Guide", "Bentonville", "Outdoor Recreation", "Family Travel", "Adventure"]
 description: ""

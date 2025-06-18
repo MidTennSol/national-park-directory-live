@@ -141,9 +141,16 @@ declare module 'astro:content' {
 
 	type ContentEntryMap = {
 		"blog": {
-"2025-05-08-majestic-thoroughfare-revealed-baltimore-washington-parkway-marylands-paved-pearl.md": {
-	id: "2025-05-08-majestic-thoroughfare-revealed-baltimore-washington-parkway-marylands-paved-pearl.md";
-  slug: "2025-05-08-majestic-thoroughfare-revealed-baltimore-washington-parkway-marylands-paved-pearl";
+"2025-05-08-tonto-national-monument-mastery-phoenix-arizonas-ancient-echoes.md": {
+	id: "2025-05-08-tonto-national-monument-mastery-phoenix-arizonas-ancient-echoes.md";
+  slug: "2025-05-08-tonto-national-monument-mastery-phoenix-arizonas-ancient-echoes";
+  body: string;
+  collection: "blog";
+  data: InferEntrySchema<"blog">
+} & { render(): Render[".md"] };
+"2025-05-09-majestic-thoroughfare-revealed-baltimore-washington-parkway-marylands-paved-pearl.md": {
+	id: "2025-05-09-majestic-thoroughfare-revealed-baltimore-washington-parkway-marylands-paved-pearl.md";
+  slug: "2025-05-09-majestic-thoroughfare-revealed-baltimore-washington-parkway-marylands-paved-pearl";
   body: string;
   collection: "blog";
   data: InferEntrySchema<"blog">
@@ -368,6 +375,13 @@ declare module 'astro:content' {
 "2025-06-10-content.md": {
 	id: "2025-06-10-content.md";
   slug: "2025-06-10-content";
+  body: string;
+  collection: "blog";
+  data: InferEntrySchema<"blog">
+} & { render(): Render[".md"] };
+"2025-06-11-a-walk-through-history-pea-ridge-uncovered.md": {
+	id: "2025-06-11-a-walk-through-history-pea-ridge-uncovered.md";
+  slug: "2025-06-11-a-walk-through-history-pea-ridge-uncovered";
   body: string;
   collection: "blog";
   data: InferEntrySchema<"blog">
