@@ -1,6 +1,6 @@
 ---
 title: "In the Footsteps of an Artistic Pioneer: Exploring Thomas Cole National Historic Site"
-publishDate: 2025-04-26
+publishDate: 2025-05-03
 image: "https://upload.wikimedia.org/wikipedia/commons/8/89/Catskill_Mountains_view_from_Thomas_Cole_porch.jpg"
 tags: ["Thomas Cole National Historic Site", "New York", "National Parks", "Travel Guide", "Albany", "Outdoor Recreation", "Family Travel", "Adventure"]
 description: "Experience the birthplace of American art at the Thomas Cole National Historic Site - a tribute to Americas first landscapist and founder of the Hudson Rive..."
