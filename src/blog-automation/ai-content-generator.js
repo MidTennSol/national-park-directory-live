@@ -310,26 +310,29 @@ function parseAIResponse(aiResponse, park, options) {
     // Clean up content
     content = content.trim();
     
-    // Remove FAQ Q&A pairs and FAQ headers from main content
-    content = content
-      // Remove FAQ section headers
-      .replace(/^FAQs?\s*:?.*$/gim, '')
-      .replace(/^\*\*FAQs?\*\*\s*:?.*$/gim, '')
-      .replace(/^##\s*FAQs?\s*$/gim, '')
-      .replace(/^###\s*FAQs?\s*$/gim, '')
-      // Remove Q&A pairs
-      .replace(/^\d+\.\s*\*\*(.*?)\*\*.*$/gim, '') // Numbered bold Qs
-      .replace(/^Q:.*$/gim, '')
-      .replace(/^A:.*$/gim, '')
-      .replace(/^Question:.*$/gim, '')
-      .replace(/^Answer:.*$/gim, '')
-      // Remove any remaining FAQ lines
-      .replace(/\*\*Q:.*\*\*/gim, '')
-      .replace(/\*\*A:.*\*\*/gim, '')
-      // Remove extra blank lines
-      .replace(/\n{3,}/g, '\n\n');
-    // Aggressively remove any 'Content:' header
-    content = content.replace(/^\s*Content:?\s*$/gim, '');
+    // Aggressively remove any 'CONTENT' header in any form
+    content = content.replace(/^\s*(\*\*|#*)?\s*CONTENT:?\s*(\*\*|#*)?\s*$/gim, '');
+
+    // Find the end of the 'Conclusion' section and strip everything after it (except tags)
+    const conclusionMatch = content.match(/(## \*\*Conclusion\*\*.*?)(\n|$)/i);
+    if (conclusionMatch) {
+      const conclusionIndex = content.indexOf(conclusionMatch[0]);
+      // Find the end of the conclusion section (next header or end of content)
+      const afterConclusion = content.slice(conclusionIndex + conclusionMatch[0].length);
+      const nextHeaderIdx = afterConclusion.search(/^## /m);
+      let endIdx = content.length;
+      if (nextHeaderIdx !== -1) {
+        endIdx = conclusionIndex + conclusionMatch[0].length + nextHeaderIdx;
+      }
+      content = content.slice(0, endIdx).trim();
+    }
+
+    // Remove any remaining Q&A pairs or 'Q:' lines after conclusion
+    content = content.replace(/\n\d+\.\s*Q:.*$/gim, '')
+                     .replace(/\nQ:.*$/gim, '')
+                     .replace(/\nA:.*$/gim, '')
+                     .replace(/\nQuestion:.*$/gim, '')
+                     .replace(/\nAnswer:.*$/gim, '');
     
     // Validate content length
     const wordCount = content.split(' ').length;
