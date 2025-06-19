@@ -117,22 +117,26 @@ function buildSystemPrompt() {
 function buildBlogPrompt(park, options = {}) {
   const topic = options.topic || 'complete visitor guide';
   const targetWordCount = Math.floor(Math.random() * 300) + 1100;
-  return `Write a ${targetWordCount}+ word blog post about ${park.name} in ${park.city}, ${park.state}. Include:
-- A compelling title
-- A meta description (150-160 characters)
-- A 1-2 sentence excerpt
-- Main content with:
-  * Introduction
-  * Historical/cultural/geological background
-  * Activities guide
-  * Visitor information
-  * Tips for different visitors
-  * Regional context
-  * Conclusion
-- 5 FAQs with detailed answers
-- 8 relevant tags
+  return `Write a ${targetWordCount}+ word blog post about ${park.name} in ${park.city}, ${park.state}.
 
-IMPORTANT: The main body of the post MUST be under a section labeled 'CONTENT:' (all caps, on its own line). If you do not include a CONTENT: section, the post will be rejected. Do NOT put FAQs or tags inside the CONTENT section.\n\nUse vivid, specific details and organize each section with multiple paragraphs. Do not use placeholders. Make the post practical and authoritative.`;
+Requirements:
+- The main blog title must be a single Markdown H1 (#) and must be unique, creative, and engaging. Do NOT use generic patterns like 'Ultimate Guide to...'.
+- The meta description (150-160 characters) and excerpt (1-2 sentences) must be included.
+- The main content must be organized into the following sections, each with a Markdown H2 (##) header and bolded section name (e.g., ## **Introduction**):
+  * Introduction
+  * Historical/Cultural/Geological Background
+  * Activities Guide
+  * Visitor Information
+  * Tips for Different Visitors
+  * Regional Context
+  * Conclusion
+- Do NOT use plain text section headers with colons (e.g., 'Introduction:').
+- At the end, include a section labeled 'FAQs' with 5 detailed Q&A pairs, but do NOT include the FAQs in the main content body.
+- After FAQs, include a section labeled 'Tags' with 8 relevant tags.
+
+IMPORTANT: The main body of the post MUST be under a section labeled 'CONTENT:' (all caps, on its own line). If you do not include a CONTENT: section, the post will be rejected. Do NOT put FAQs or tags inside the CONTENT section.
+
+Use vivid, specific details and organize each section with multiple paragraphs. Do not use placeholders. Make the post practical and authoritative.`;
 }
 
 /**
@@ -338,16 +342,16 @@ function parseAIResponse(aiResponse, park, options) {
       .trim();
 
     // Clean up standalone FAQ headers with no content
-content = content
-  .replace(/^FAQs?\s*:?\s*$/gm, '') // Remove standalone FAQ headers
-  .replace(/^\*\*FAQs?\*\*\s*:?\s*$/gm, '') // Remove formatted FAQ headers  
-  .replace(/^##\s*FAQs?\s*$/gm, '') // Remove markdown FAQ headers
-  .replace(/^###\s*FAQs?\s*$/gm, '') // Remove h3 FAQ headers
-  .replace(/\n\n\s*FAQs?\s*:?\s*$/gm, '') // Remove FAQ headers at end preceded by double newline
-  .replace(/\n\s*FAQs?\s*:\s*\n/gm, '\n') // Remove FAQ headers between newlines
-  .replace(/\n\s*FAQs?\s*:\s*$/gm, '') // Remove FAQ headers at very end of content
-  .replace(/\n\n\n+/g, '\n\n') // Clean up resulting multiple line breaks
-  .trim();
+    content = content
+      .replace(/^FAQs?\s*:?\s*$/gm, '') // Remove standalone FAQ headers
+      .replace(/^\*\*FAQs?\*\*\s*:?\s*$/gm, '') // Remove formatted FAQ headers  
+      .replace(/^##\s*FAQs?\s*$/gm, '') // Remove markdown FAQ headers
+      .replace(/^###\s*FAQs?\s*$/gm, '') // Remove h3 FAQ headers
+      .replace(/\n\n\s*FAQs?\s*:?\s*$/gm, '') // Remove FAQ headers at end preceded by double newline
+      .replace(/\n\s*FAQs?\s*:\s*\n/gm, '\n') // Remove FAQ headers between newlines
+      .replace(/\n\s*FAQs?\s*:\s*$/gm, '') // Remove FAQ headers at very end of content
+      .replace(/\n\n\n+/g, '\n\n') // Clean up resulting multiple line breaks
+      .trim();
     
     // Validate content length
     const wordCount = content.split(' ').length;
@@ -413,6 +417,23 @@ content = content
     // Add extra logging if content is still missing or very short
     if (!content || content.split(' ').length < 100) {
       console.log('❌ Main content is missing or extremely short after all extraction attempts.');
+    }
+    
+    // Convert any plain section headings (e.g., 'Introduction:') to Markdown headers (e.g., '## **Introduction**').
+    content = content.replace(/^Introduction:.*$/gm, '## **Introduction**');
+    content = content.replace(/^Historical\/Cultural\/Geological Background:.*$/gm, '## **Historical/Cultural/Geological Background**');
+    content = content.replace(/^Activities Guide:.*$/gm, '## **Activities Guide**');
+    content = content.replace(/^Visitor Information:.*$/gm, '## **Visitor Information**');
+    content = content.replace(/^Tips for Different Visitors:.*$/gm, '## **Tips for Different Visitors**');
+    content = content.replace(/^Regional Context:.*$/gm, '## **Regional Context**');
+    content = content.replace(/^Conclusion:.*$/gm, '## **Conclusion**');
+    
+    // If the title is generic, prepend a random adjective or phrase for uniqueness.
+    if (/^ultimate guide to/i.test(title)) {
+      const adjectives = ['The Ultimate', 'The Complete', 'The Best', 'The Perfect', 'The Essential'];
+      const randomAdjective = adjectives[Math.floor(Math.random() * adjectives.length)];
+      title = `${randomAdjective} Guide to ${park.name}: ${park.city}, ${park.state} Complete Visitor Experience`;
+      console.log('⚠️ Generic title detected. Updated to:', title);
     }
     
     return {
