@@ -1,6 +1,6 @@
 ---
 title: "Echoes of the Past: A Journey Through Petroglyph National Monument"
-publishDate: 2025-06-19
+publishDate: 2025-06-18
 image: "https://upload.wikimedia.org/wikipedia/commons/b/bd/Petroglyph_National_Monument_New_Mexico.jpg"
 tags: ["Petroglyph National Monument", "New Mexico", "National Parks", "Travel Guide", "Albuquerque", "Outdoor Recreation", "Family Travel", "Adventure"]
 description: ""

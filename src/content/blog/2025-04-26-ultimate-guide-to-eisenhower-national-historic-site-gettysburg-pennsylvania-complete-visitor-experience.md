@@ -1,6 +1,6 @@
 ---
 title: "Ultimate Guide to Eisenhower National Historic Site: Gettysburg, Pennsylvania Complete Visitor Experience"
-publishDate: 2025-06-18
+publishDate: 2025-04-26
 image: "https://upload.wikimedia.org/wikipedia/commons/7/7f/HABS_Eisenhower_Farm.jpg"
 tags: ["Eisenhower National Historic Site", "Pennsylvania", "National Parks", "Travel Guide", "Gettysburg", "Outdoor Recreation", "Family Travel", "Adventure"]
 description: ""

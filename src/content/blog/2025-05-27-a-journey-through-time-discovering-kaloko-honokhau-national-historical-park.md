@@ -1,6 +1,6 @@
 ---
 title: "A Journey Through Time: Discovering Kaloko-Honokōhau National Historical Park"
-publishDate: 2025-06-19
+publishDate: 2025-05-27
 image: "https://upload.wikimedia.org/wikipedia/commons/3/36/Honokohau_Halau.jpg"
 tags: []
 description: ""

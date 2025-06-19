@@ -1,6 +1,6 @@
 ---
 title: "Embracing the Wilderness: A Journey Along North Country National Scenic Trail"
-publishDate: 2025-04-08
+publishDate: 2025-04-17
 image: "https://upload.wikimedia.org/wikipedia/commons/b/bc/NCT_Huron-Manistee_1.jpg"
 tags: ["North Country National Scenic Trail", "Michigan,Minnesota,North Dakota,New York,Ohio,Pennsylvania,Vermont,Wisconsin", "National Parks", "Travel Guide", "Minneapolis", "Outdoor Recreation", "Family Travel", "Adventure"]
 description: ""

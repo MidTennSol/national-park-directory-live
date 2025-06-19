@@ -1,6 +1,6 @@
 ---
 title: "Ultimate Guide to Reconstruction Era National Historical Park: Beaufort, South Carolina Complete Visitor Experience"
-publishDate: 2025-04-26
+publishDate: 2025-04-30
 image: "https://upload.wikimedia.org/wikipedia/commons/9/9a/REER-Final-Proclamation-Map-Overview-Map.jpg"
 tags: ["Reconstruction Era National Historical Park", "South Carolina", "National Parks", "Travel Guide", "Beaufort", "Outdoor Recreation", "Family Travel", "Adventure"]
 description: ""

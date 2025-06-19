@@ -1,6 +1,6 @@
 ---
 title: "A Voyage Into History: Unraveling the Mysteries of Hamilton Grange National Memorial"
-publishDate: 2025-06-19
+publishDate: 2025-04-24
 image: "https://upload.wikimedia.org/wikipedia/commons/b/ba/Hamilton_Grange_late_2010_morn_jeh.jpg"
 tags: ["Hamilton Grange National Memorial", "New York", "National Parks", "Travel Guide", "New York City", "Outdoor Recreation", "Family Travel", "Adventure"]
 description: ""

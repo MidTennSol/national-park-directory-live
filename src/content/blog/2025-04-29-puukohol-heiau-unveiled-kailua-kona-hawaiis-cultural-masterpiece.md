@@ -1,6 +1,6 @@
 ---
 title: "Puukohol Heiau Unveiled: Kailua-Kona, Hawaii's Cultural Masterpiece"
-publishDate: 2025-05-29
+publishDate: 2025-04-29
 image: "https://upload.wikimedia.org/wikipedia/commons/e/e1/Pu%27ukohol%C4%81_Heiau_National_Historic_Site2.jpg"
 tags: ["#PuʻukoholāHeiau #KailuaKona #HawaiiAdventure #CulturalHeritage #NatureLover #IslandIntricacies #AlohaSpirit #HistoricalSite"]
 description: "Explore the cultural heartland of Hawaii at Puʻukoholā Heiau National Historic Site. Delve deep into history and discover stunning natural beauty in Kailua-K..."

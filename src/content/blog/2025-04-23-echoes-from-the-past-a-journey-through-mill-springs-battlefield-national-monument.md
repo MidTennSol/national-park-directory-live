@@ -1,6 +1,6 @@
 ---
 title: "Echoes from the Past: A Journey through Mill Springs Battlefield National Monument"
-publishDate: 2025-06-19
+publishDate: 2025-04-23
 image: "https://upload.wikimedia.org/wikipedia/commons/b/b3/Mill_Springs_Battlefield_Visitor_Center.JPG"
 tags: ["Mill Springs Battlefield National Monument", "Kentucky", "National Parks", "Travel Guide", "Lexington", "Outdoor Recreation", "Family Travel", "Adventure"]
 description: ""

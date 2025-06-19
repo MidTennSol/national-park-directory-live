@@ -1,6 +1,6 @@
 ---
 title: "Ultimate Guide to Capitol Hill Parks: Washington, District of Columbia Complete Visitor Experience"
-publishDate: 2025-06-19
+publishDate: 2025-05-28
 image: "https://upload.wikimedia.org/wikipedia/commons/7/7a/Emancipation_Memorial_%28df384e72-7cb4-4d39-be4e-1a0898f48157%29.jpg"
 tags: ["Capitol Hill Parks", "District of Columbia", "National Parks", "Travel Guide", "Washington", "Outdoor Recreation", "Family Travel", "Adventure"]
 description: ""

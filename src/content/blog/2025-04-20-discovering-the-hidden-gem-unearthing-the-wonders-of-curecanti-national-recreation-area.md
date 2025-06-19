@@ -1,6 +1,6 @@
 ---
 title: "Discovering the Hidden Gem: Unearthing the Wonders of Curecanti National Recreation Area"
-publishDate: 2025-04-05
+publishDate: 2025-04-20
 image: "https://upload.wikimedia.org/wikipedia/commons/4/4d/Dillonpin.JPG"
 tags: ["Curecanti National Recreation Area", "Colorado", "National Parks", "Travel Guide", "Gunnison", "Outdoor Recreation", "Family Travel", "Adventure"]
 description: ""

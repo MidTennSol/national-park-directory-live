@@ -1,6 +1,6 @@
 ---
 title: "Unveiling the Layers of Time: Fort Point National Historic Site"
-publishDate: 2025-04-06
+publishDate: 2025-04-19
 image: "https://upload.wikimedia.org/wikipedia/commons/e/ee/Fort_Point%2C_September_2019-8795.jpg"
 tags: ["Fort Point National Historic Site", "California", "National Parks", "Travel Guide", "San Francisco", "Outdoor Recreation", "Family Travel", "Adventure"]
 description: ""

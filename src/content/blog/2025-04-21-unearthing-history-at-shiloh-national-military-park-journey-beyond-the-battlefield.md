@@ -1,6 +1,6 @@
 ---
 title: "Unearthing History at Shiloh National Military Park: Journey Beyond the Battlefield"
-publishDate: 2025-04-04
+publishDate: 2025-04-21
 image: "https://upload.wikimedia.org/wikipedia/commons/4/49/Union_Cemetery%2C_Shiloh_National_Military_Park.JPG"
 tags: ["Shiloh National Military Park", "Tennessee,Mississippi", "National Parks", "Travel Guide", "Memphis", "Outdoor Recreation", "Family Travel", "Adventure"]
 description: ""

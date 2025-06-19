@@ -1,6 +1,6 @@
 ---
 title: "Embracing the Wilderness: A Deep Dive into Noatak National Preserve, Alaska"
-publishDate: 2025-04-10
+publishDate: 2025-05-01
 image: "https://upload.wikimedia.org/wikipedia/commons/2/26/High_Alpine_Tundra_Noatak_National_Preserve.jpg"
 tags: []
 description: ""
