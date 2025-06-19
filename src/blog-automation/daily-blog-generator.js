@@ -12,6 +12,7 @@ import { getNextParkForBlog, markParkAsBlogged, getBlogStats } from './airtable-
 import { generateCompleteBlogPost } from './blog-orchestrator.js';
 import fs from 'fs/promises';
 import path from 'path';
+import { listBlogFiles } from './file-generator.js';
 
 // Campaign configuration - using a counter system for reliable progression
 const CAMPAIGN_START_DATE = '2025-06-05'; // Reference date for calculating dates
@@ -54,19 +55,45 @@ async function incrementCampaignCounter() {
 }
 
 /**
+ * Helper to extract date from blog filename (YYYY-MM-DD-...)
+ */
+function extractDateFromFilename(filename) {
+  const match = filename.match(/^(\d{4}-\d{2}-\d{2})-/);
+  if (match) {
+    return new Date(match[1]);
+  }
+  return null;
+}
+
+/**
+ * Dynamically determine the oldest blog post date from existing files
+ */
+async function getOldestBlogDate() {
+  const files = await listBlogFiles();
+  let oldest = null;
+  for (const file of files) {
+    const date = extractDateFromFilename(file);
+    if (date && (!oldest || date < oldest)) {
+      oldest = date;
+    }
+  }
+  return oldest || new Date(); // fallback to today if no files
+}
+
+/**
  * Calculate current and historical dates dynamically
  * Current date: Use today's actual date
  * Historical date: Work backwards from oldest existing blog post
  */
-function calculateDatesForCampaignDay(dayCount) {
+async function calculateDatesForCampaignDay(dayCount) {
   // Current date: Use today's actual date
   const currentDate = new Date();
-  
-  // Historical date: Work backwards from May 11 (our oldest existing post)
-  // This way dayCount=1 gives us May 10, dayCount=2 gives us May 9, etc.
-  const historicalDate = new Date(2025, 4, 11); // Month is 0-indexed, so 4 = May
+
+  // Historical date: Work backwards from the actual oldest blog post
+  const oldestBlogDate = await getOldestBlogDate();
+  const historicalDate = new Date(oldestBlogDate);
   historicalDate.setDate(historicalDate.getDate() - dayCount);
-  
+
   return { currentDate, historicalDate };
 }
 
@@ -78,7 +105,7 @@ async function generateDualBlogPosts() {
   console.log('============================================================');
   
   const dayCount = await getCampaignCounter();
-  const { currentDate, historicalDate } = calculateDatesForCampaignDay(dayCount);
+  const { currentDate, historicalDate } = await calculateDatesForCampaignDay(dayCount);
   
   console.log(`📅 Campaign Day: ${dayCount + 1}`);
   console.log(`📅 Current Date Post: ${currentDate.toDateString()}`);

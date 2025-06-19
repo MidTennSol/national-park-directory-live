@@ -82,11 +82,18 @@ export async function generateBlogPost(park, options = {}) {
       console.log(`⚠️ Warning: Content is only ${wordCount} words (minimum 1000 expected)`);
     }
     
-    if (wordCount < 800) {
+    // Always print current working directory and raw AI response for debugging
+    console.log(`🗂️ Current working directory: ${process.cwd()}`);
+    console.log('📝 Raw AI response from OpenAI:');
+    console.log(generatedContent);
+    // Always attempt to write debug file
+    try {
       const fs = await import('fs/promises');
       const debugFile = `debug-short-ai-response-${park.name.replace(/[^a-z0-9]/gi, '_').toLowerCase()}.txt`;
       await fs.writeFile(debugFile, generatedContent, 'utf-8');
-      console.log(`⚠️ Saved short AI response for debugging: ${debugFile}`);
+      console.log(`⚠️ Saved AI response for debugging: ${debugFile}`);
+    } catch (err) {
+      console.error('❌ Failed to write debug file:', err);
     }
     
     return structuredContent;
@@ -124,7 +131,8 @@ function buildBlogPrompt(park, options = {}) {
   * Conclusion
 - 5 FAQs with detailed answers
 - 8 relevant tags
-Use vivid, specific details and organize each section with multiple paragraphs. Do not use placeholders. Make the post practical and authoritative.`;
+
+IMPORTANT: The main body of the post MUST be under a section labeled 'CONTENT:' (all caps, on its own line). If you do not include a CONTENT: section, the post will be rejected. Do NOT put FAQs or tags inside the CONTENT section.\n\nUse vivid, specific details and organize each section with multiple paragraphs. Do not use placeholders. Make the post practical and authoritative.`;
 }
 
 /**
@@ -378,6 +386,33 @@ function parseAIResponse(aiResponse, park, options) {
           answer: `Many areas of ${park.name} are accessible to visitors with mobility needs, including paved trails and accessible facilities. Contact the park directly for specific accessibility information and current conditions.`
         }
       ];
+    }
+    
+    if (!content || content.trim().length < 100) {
+      console.log('⚠️ No main content found using CONTENT: marker. Attempting fallback extraction...');
+      // Try to extract everything between EXCERPT and FAQS/TAGS
+      const excerptIdx = aiResponse.search(/EXCERPT:|\*\*EXCERPT:\*\*/i);
+      let startIdx = -1;
+      if (excerptIdx !== -1) {
+        // Find the end of the excerpt line
+        startIdx = aiResponse.indexOf('\n', excerptIdx);
+      }
+      let endIdx = aiResponse.length;
+      const faqIdx = aiResponse.search(/FAQS?:|\*\*FAQS?:\*\*/i);
+      const tagsIdx = aiResponse.search(/TAGS:|\*\*TAGS:\*\*/i);
+      if (faqIdx !== -1 && faqIdx < endIdx) endIdx = faqIdx;
+      if (tagsIdx !== -1 && tagsIdx < endIdx) endIdx = tagsIdx;
+      if (startIdx !== -1 && endIdx > startIdx) {
+        content = aiResponse.substring(startIdx, endIdx).trim();
+        console.log('⚠️ Fallback content extraction result:', content.substring(0, 200));
+      } else {
+        console.log('❌ Fallback extraction failed. No main content found.');
+      }
+    }
+    
+    // Add extra logging if content is still missing or very short
+    if (!content || content.split(' ').length < 100) {
+      console.log('❌ Main content is missing or extremely short after all extraction attempts.');
     }
     
     return {
