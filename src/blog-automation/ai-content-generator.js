@@ -321,27 +321,46 @@ function parseAIResponse(aiResponse, park, options) {
       content = match[1] + match[2];
     }
 
-    // Aggressively remove all FAQ Q&A pairs and headers from the main content
+    // Defensive hybrid extraction of main content
+    let contentStart = aiResponse.search(/^CONTENT:|\*\*CONTENT:\*\*/im);
+    let contentEnd = aiResponse.search(/^FAQS?:|\*\*FAQS?:\*\*|^TAGS:|\*\*TAGS:\*\*/im);
+    if (contentStart !== -1) {
+      // Find the end of the CONTENT section
+      if (contentEnd !== -1 && contentEnd > contentStart) {
+        content = aiResponse.substring(contentStart, contentEnd).replace(/^CONTENT:|\*\*CONTENT:\*\*/im, '').trim();
+      } else {
+        content = aiResponse.substring(contentStart).replace(/^CONTENT:|\*\*CONTENT:\*\*/im, '').trim();
+      }
+    } else {
+      // Fallback: extract between EXCERPT and FAQ/Tags
+      let excerptIdx = aiResponse.search(/^EXCERPT:|\*\*EXCERPT:\*\*/im);
+      if (excerptIdx !== -1) {
+        let afterExcerpt = aiResponse.indexOf('\n', excerptIdx);
+        if (afterExcerpt !== -1) {
+          if (contentEnd !== -1 && contentEnd > afterExcerpt) {
+            content = aiResponse.substring(afterExcerpt, contentEnd).trim();
+          } else {
+            content = aiResponse.substring(afterExcerpt).trim();
+          }
+        }
+      }
+    }
+    // Only remove lines that are clearly FAQ Q&A pairs or headers
     content = content
-      // Remove FAQ section headers
       .replace(/^\s*(\*\*|#*)?\s*FAQs?:?\s*(\*\*|#*)?\s*$/gim, '')
       .replace(/^\s*(\*\*|#*)?\s*FAQ:?\s*(\*\*|#*)?\s*$/gim, '')
-      // Remove Q&A pairs (numbered, bolded, or plain)
       .replace(/^\s*Q\d*[:\.]?\s*(\*\*|#*)?.*$/gim, '')
       .replace(/^\s*A\d*[:\.]?\s*(\*\*|#*)?.*$/gim, '')
       .replace(/^\s*Q[:\.]?\s*(\*\*|#*)?.*$/gim, '')
       .replace(/^\s*A[:\.]?\s*(\*\*|#*)?.*$/gim, '')
       .replace(/^\s*Question[:\.]?\s*(\*\*|#*)?.*$/gim, '')
       .replace(/^\s*Answer[:\.]?\s*(\*\*|#*)?.*$/gim, '')
-      // Remove any remaining bolded or numbered Q&A pairs
       .replace(/^\d+\.\s*Q[:\.]?\s*(\*\*|#*)?.*$/gim, '')
       .replace(/^\d+\.\s*A[:\.]?\s*(\*\*|#*)?.*$/gim, '')
-      // Remove extra blank lines
       .replace(/\n{3,}/g, '\n\n');
-
     // Fallback: If the parser would remove all content, log a warning and keep the original content for debugging
     if (!content || content.trim().length < 50) {
-      console.warn('⚠️ Parser removed all content. Keeping original content for debugging.');
+      console.warn('⚠️ Defensive parser removed all content. Keeping original content for debugging.');
       content = aiResponse;
     }
     
