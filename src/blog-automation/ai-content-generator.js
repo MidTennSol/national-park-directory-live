@@ -313,26 +313,37 @@ function parseAIResponse(aiResponse, park, options) {
     // Aggressively remove any 'CONTENT' header in any form
     content = content.replace(/^\s*(\*\*|#*)?\s*CONTENT:?\s*(\*\*|#*)?\s*$/gim, '');
 
-    // Find the end of the 'Conclusion' section and strip everything after it (except tags)
-    const conclusionMatch = content.match(/(## \*\*Conclusion\*\*.*?)(\n|$)/i);
-    if (conclusionMatch) {
-      const conclusionIndex = content.indexOf(conclusionMatch[0]);
-      // Find the end of the conclusion section (next header or end of content)
-      const afterConclusion = content.slice(conclusionIndex + conclusionMatch[0].length);
-      const nextHeaderIdx = afterConclusion.search(/^## /m);
-      let endIdx = content.length;
-      if (nextHeaderIdx !== -1) {
-        endIdx = conclusionIndex + conclusionMatch[0].length + nextHeaderIdx;
-      }
-      content = content.slice(0, endIdx).trim();
+    // Extract everything up to and including the 'Conclusion' section, strip everything after
+    const conclusionRegex = /((?:.|\n)*?)(^#+\s*(\*\*)?Conclusion(\*\*)?.*?(?:\n|$)(?:.|\n)*?)(?=^#+|$)/gim;
+    let match = conclusionRegex.exec(content);
+    if (match) {
+      // Keep everything up to and including the conclusion section
+      content = match[1] + match[2];
     }
 
-    // Remove any remaining Q&A pairs or 'Q:' lines after conclusion
-    content = content.replace(/\n\d+\.\s*Q:.*$/gim, '')
-                     .replace(/\nQ:.*$/gim, '')
-                     .replace(/\nA:.*$/gim, '')
-                     .replace(/\nQuestion:.*$/gim, '')
-                     .replace(/\nAnswer:.*$/gim, '');
+    // Aggressively remove all FAQ Q&A pairs and headers from the main content
+    content = content
+      // Remove FAQ section headers
+      .replace(/^\s*(\*\*|#*)?\s*FAQs?:?\s*(\*\*|#*)?\s*$/gim, '')
+      .replace(/^\s*(\*\*|#*)?\s*FAQ:?\s*(\*\*|#*)?\s*$/gim, '')
+      // Remove Q&A pairs (numbered, bolded, or plain)
+      .replace(/^\s*Q\d*[:\.]?\s*(\*\*|#*)?.*$/gim, '')
+      .replace(/^\s*A\d*[:\.]?\s*(\*\*|#*)?.*$/gim, '')
+      .replace(/^\s*Q[:\.]?\s*(\*\*|#*)?.*$/gim, '')
+      .replace(/^\s*A[:\.]?\s*(\*\*|#*)?.*$/gim, '')
+      .replace(/^\s*Question[:\.]?\s*(\*\*|#*)?.*$/gim, '')
+      .replace(/^\s*Answer[:\.]?\s*(\*\*|#*)?.*$/gim, '')
+      // Remove any remaining bolded or numbered Q&A pairs
+      .replace(/^\d+\.\s*Q[:\.]?\s*(\*\*|#*)?.*$/gim, '')
+      .replace(/^\d+\.\s*A[:\.]?\s*(\*\*|#*)?.*$/gim, '')
+      // Remove extra blank lines
+      .replace(/\n{3,}/g, '\n\n');
+
+    // Fallback: If the parser would remove all content, log a warning and keep the original content for debugging
+    if (!content || content.trim().length < 50) {
+      console.warn('⚠️ Parser removed all content. Keeping original content for debugging.');
+      content = aiResponse;
+    }
     
     // Validate content length
     const wordCount = content.split(' ').length;
