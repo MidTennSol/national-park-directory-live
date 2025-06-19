@@ -108,7 +108,7 @@ export async function generateBlogPost(park, options = {}) {
  * Build system prompt for consistent, high-quality content generation
  */
 function buildSystemPrompt() {
-  return `You are a professional travel writer. Write comprehensive, detailed, and engaging blog posts about national parks. Each post must be at least 1200 words, well-structured, and provide practical, park-specific information. Use vivid language, include specific details, and organize the post into clear sections. Always include a section with 5 detailed FAQs at the end.`;
+  return `You are a professional travel writer and Markdown expert. Write comprehensive, detailed, and engaging blog posts about national parks. Each post must be at least 1200 words, well-structured, and provide practical, park-specific information. Use vivid language, include specific details, and organize the post into clear sections. Always include a section with 5 detailed FAQs at the end. Use Markdown formatting: the main blog title must be a single H1 (#), and all major sections must use H2 (##) or H3 (###) headers. Section titles should be bold or headers. Do NOT use generic titles like 'Ultimate Guide to...'. Titles must be unique, creative, and engaging.`;
 }
 
 /**
@@ -117,9 +117,11 @@ function buildSystemPrompt() {
 function buildBlogPrompt(park, options = {}) {
   const topic = options.topic || 'complete visitor guide';
   const targetWordCount = Math.floor(Math.random() * 300) + 1100;
-  return `Write a ${targetWordCount}+ word blog post about ${park.name} in ${park.city}, ${park.state}. Include:
-- A compelling title
-- A meta description (150-160 characters)
+  return `Write a ${targetWordCount}+ word blog post about ${park.name} in ${park.city}, ${park.state}.
+
+Requirements:
+- The main blog title must be a single Markdown H1 (#) and must be unique, creative, and engaging. Do NOT use generic patterns like 'Ultimate Guide to...'.
+- The meta description (150-160 characters)
 - A 1-2 sentence excerpt
 - Main content with:
   * Introduction
@@ -129,10 +131,13 @@ function buildBlogPrompt(park, options = {}) {
   * Tips for different visitors
   * Regional context
   * Conclusion
+- All major sections must use Markdown H2 (##) or H3 (###) headers, and section titles should be bold or headers.
 - 5 FAQs with detailed answers
 - 8 relevant tags
 
-IMPORTANT: The main body of the post MUST be under a section labeled 'CONTENT:' (all caps, on its own line). If you do not include a CONTENT: section, the post will be rejected. Do NOT put FAQs or tags inside the CONTENT section.\n\nUse vivid, specific details and organize each section with multiple paragraphs. Do not use placeholders. Make the post practical and authoritative.`;
+IMPORTANT: The main body of the post MUST be under a section labeled 'CONTENT:' (all caps, on its own line). If you do not include a CONTENT: section, the post will be rejected. Do NOT put FAQs or tags inside the CONTENT section.
+
+Use vivid, specific details and organize each section with multiple paragraphs. Do not use placeholders. Make the post practical and authoritative. Use Markdown formatting throughout.`;
 }
 
 /**
@@ -212,18 +217,69 @@ function parseAIResponse(aiResponse, park, options) {
     let content = '';
     let tags = [];
     let faqs = [];
-    
     let contentStarted = false;
+    let foundMarkdownH1 = false;
     
+    // First, try to extract the first Markdown H1 as the title
+    const h1Match = aiResponse.match(/^# (.+)$/m);
+    if (h1Match) {
+      title = h1Match[1].trim();
+      foundMarkdownH1 = true;
+      console.log('✅ Extracted H1 as title:', title);
+    }
+    
+    // Fallback: use previous logic if no H1 found
+    if (!title) {
+      for (let i = 0; i < sections.length; i++) {
+        const section = sections[i].trim();
+        if (section.startsWith('TITLE:') || section.startsWith('**TITLE:**')) {
+          title = section.replace(/^[*]*TITLE:[*]*\s*/i, '').trim();
+        }
+      }
+    }
+    
+    // If still no title, fallback to header extraction logic
+    if (!title) {
+      const lines = aiResponse.split('\n');
+      for (const line of lines) {
+        if (line.startsWith('#') && !title) {
+          const headerText = line.replace(/#/g, '').trim();
+          if (!headerText.toLowerCase().startsWith('introduction:') &&
+              !headerText.toLowerCase().startsWith('discover ') &&
+              !headerText.toLowerCase().startsWith('activities ') &&
+              !headerText.toLowerCase().startsWith('visitor ') &&
+              !headerText.toLowerCase().startsWith('tips ') &&
+              !headerText.toLowerCase().startsWith('beyond ') &&
+              !headerText.toLowerCase().startsWith('final ') &&
+              !headerText.toLowerCase().includes('heritage:') &&
+              !headerText.toLowerCase().includes('background:') &&
+              headerText.toLowerCase() !== 'content' &&
+              headerText.toLowerCase() !== 'content:') {
+            title = headerText;
+            break;
+          }
+        }
+      }
+    }
+    
+    // If title is still missing, fallback to default
+    if (!title) {
+      title = `Visitor's Guide to ${park.name}, ${park.city}, ${park.state}`;
+      console.log('⚠️ Fallback to default title:', title);
+    }
+    
+    // Check for generic patterns
+    if (/^ultimate guide to/i.test(title) || /complete visitor experience$/i.test(title)) {
+      console.log('❌ Title is generic. AI did not follow prompt. Title:', title);
+    }
+    
+    // Extract description and excerpt as before
     for (let i = 0; i < sections.length; i++) {
       const section = sections[i].trim();
-      
-      if (section.startsWith('TITLE:') || section.startsWith('**TITLE:**')) {
-        title = section.replace(/^\*\*TITLE:\*\*\s*/i, '').replace(/^TITLE:\s*/i, '').trim();
-      } else if (section.startsWith('DESCRIPTION:') || section.startsWith('**DESCRIPTION:**')) {
-        description = section.replace(/^\*\*DESCRIPTION:\*\*\s*/i, '').replace(/^DESCRIPTION:\s*/i, '').trim();
+      if (section.startsWith('DESCRIPTION:') || section.startsWith('**DESCRIPTION:**')) {
+        description = section.replace(/^[*]*DESCRIPTION:[*]*\s*/i, '').trim();
       } else if (section.startsWith('EXCERPT:') || section.startsWith('**EXCERPT:**')) {
-        excerpt = section.replace(/^\*\*EXCERPT:\*\*\s*/i, '').replace(/^EXCERPT:\s*/i, '').trim();
+        excerpt = section.replace(/^[*]*EXCERPT:[*]*\s*/i, '').trim();
       } else if (section.startsWith('CONTENT:')) {
         contentStarted = true;
         continue;
@@ -258,55 +314,10 @@ function parseAIResponse(aiResponse, park, options) {
       }
     }
     
-    // Fallback extraction if structured format wasn't perfectly followed
-    if (!title || title.toLowerCase() === 'content' || title.toLowerCase() === 'content:') {
-      console.log('⚠️ AI response format not perfect, applying fallback parsing...');
-      // Try to extract title from headers (but skip section headers like "Introduction:", "Discover", etc.)
-      const lines = aiResponse.split('\n');
-      for (const line of lines) {
-        if (line.startsWith('#') && !title) {
-          const headerText = line.replace(/#/g, '').trim();
-          // Skip section headers - we want the main blog title, not section headers
-          if (!headerText.toLowerCase().startsWith('introduction:') && 
-              !headerText.toLowerCase().startsWith('discover ') && 
-              !headerText.toLowerCase().startsWith('activities ') && 
-              !headerText.toLowerCase().startsWith('visitor ') && 
-              !headerText.toLowerCase().startsWith('tips ') && 
-              !headerText.toLowerCase().startsWith('beyond ') && 
-              !headerText.toLowerCase().startsWith('final ') &&
-              !headerText.toLowerCase().includes('heritage:') &&
-              !headerText.toLowerCase().includes('background:') &&
-              headerText.toLowerCase() !== 'content' &&
-              headerText.toLowerCase() !== 'content:') {
-            title = headerText;
-            break;
-          }
-        }
-      }
-      // Use park name and location as fallback if still missing or invalid
-      if (!title || title.toLowerCase() === 'content' || title.toLowerCase() === 'content:') {
-        title = `Ultimate Guide to ${park.name}: ${park.city}, ${park.state} Complete Visitor Experience`;
-      }
-    }
+    // Remove literal 'CONTENT:' lines from content
+    content = content.replace(/^CONTENT:$/gmi, '').replace(/^CONTENT:$/g, '').trim();
     
-    // Ensure tags include essential elements
-    if (tags.length === 0) {
-      tags = [
-        park.name,
-        park.state,
-        'National Parks',
-        'Travel Guide',
-        park.city,
-        'Outdoor Recreation',
-        'Family Travel',
-        'Adventure'
-      ];
-    }
-    
-    // Clean up content
-    content = content.trim();
-    
-    // Remove any remaining formatting artifacts from content
+    // Ensure Markdown headers are preserved (do not strip #, ##, ###)
     content = content
       .replace(/^\*\*TITLE:\*\*.*$/gm, '') // Remove title lines
       .replace(/^\*\*DESCRIPTION:\*\*.*$/gm, '') // Remove description lines  
@@ -391,14 +402,14 @@ function parseAIResponse(aiResponse, park, options) {
     if (!content || content.trim().length < 100) {
       console.log('⚠️ No main content found using CONTENT: marker. Attempting fallback extraction...');
       // Try to extract everything between EXCERPT and FAQS/TAGS
-      const excerptIdx = aiResponse.search(/EXCERPT:|\*\*EXCERPT:\*\*/i);
+      const excerptIdx = aiResponse.search(/EXCERPT:|\*\*EXCERPT:\*/i);
       let startIdx = -1;
       if (excerptIdx !== -1) {
         // Find the end of the excerpt line
         startIdx = aiResponse.indexOf('\n', excerptIdx);
       }
       let endIdx = aiResponse.length;
-      const faqIdx = aiResponse.search(/FAQS?:|\*\*FAQS?:\*\*/i);
+      const faqIdx = aiResponse.search(/FAQS?:|\*\*FAQS?:\*/i);
       const tagsIdx = aiResponse.search(/TAGS:|\*\*TAGS:\*\*/i);
       if (faqIdx !== -1 && faqIdx < endIdx) endIdx = faqIdx;
       if (tagsIdx !== -1 && tagsIdx < endIdx) endIdx = tagsIdx;

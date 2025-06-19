@@ -25,29 +25,27 @@ async function getCampaignCounter() {
   try {
     const counterData = await fs.readFile(COUNTER_FILE, 'utf8');
     const data = JSON.parse(counterData);
-    return data.dayCount || 0;
+    return data;
   } catch (error) {
     // File doesn't exist, start at 0
-    return 0;
+    return { dayCount: 0, lastHistoricalDate: null };
   }
 }
 
 /**
  * Increment and save the campaign counter
  */
-async function incrementCampaignCounter() {
+async function incrementCampaignCounter(newHistoricalDate) {
   try {
-    let currentCount = await getCampaignCounter();
-    currentCount++;
-    
-    const data = {
-      dayCount: currentCount,
-      lastRun: new Date().toISOString(),
-      totalRuns: currentCount
-    };
-    
+    let data = await getCampaignCounter();
+    data.dayCount = (data.dayCount || 0) + 1;
+    data.lastRun = new Date().toISOString();
+    data.totalRuns = data.dayCount;
+    if (newHistoricalDate) {
+      data.lastHistoricalDate = newHistoricalDate.toISOString();
+    }
     await fs.writeFile(COUNTER_FILE, JSON.stringify(data, null, 2));
-    return currentCount;
+    return data.dayCount;
   } catch (error) {
     console.error('❌ Error updating campaign counter:', error);
     return 1; // Fallback to day 1
@@ -81,19 +79,32 @@ async function getOldestBlogDate() {
 }
 
 /**
+ * New function to get the next historical date
+ */
+async function getNextHistoricalDate() {
+  const counter = await getCampaignCounter();
+  if (counter.lastHistoricalDate) {
+    // Use the last used historical date and decrement by one day
+    const lastDate = new Date(counter.lastHistoricalDate);
+    lastDate.setDate(lastDate.getDate() - 1);
+    return lastDate;
+  } else {
+    // Use the oldest blog date minus one day
+    const oldestBlogDate = await getOldestBlogDate();
+    const nextDate = new Date(oldestBlogDate);
+    nextDate.setDate(nextDate.getDate() - 1);
+    return nextDate;
+  }
+}
+
+/**
  * Calculate current and historical dates dynamically
  * Current date: Use today's actual date
  * Historical date: Work backwards from oldest existing blog post
  */
-async function calculateDatesForCampaignDay(dayCount) {
-  // Current date: Use today's actual date
+async function calculateDatesForCampaignDay() {
   const currentDate = new Date();
-
-  // Historical date: Work backwards from the actual oldest blog post
-  const oldestBlogDate = await getOldestBlogDate();
-  const historicalDate = new Date(oldestBlogDate);
-  historicalDate.setDate(historicalDate.getDate() - dayCount);
-
+  const historicalDate = await getNextHistoricalDate();
   return { currentDate, historicalDate };
 }
 
@@ -104,10 +115,10 @@ async function generateDualBlogPosts() {
   console.log('🚀 Starting dual blog post generation...');
   console.log('============================================================');
   
-  const dayCount = await getCampaignCounter();
-  const { currentDate, historicalDate } = await calculateDatesForCampaignDay(dayCount);
+  const counter = await getCampaignCounter();
+  const { currentDate, historicalDate } = await calculateDatesForCampaignDay();
   
-  console.log(`📅 Campaign Day: ${dayCount + 1}`);
+  console.log(`📅 Campaign Day: ${(counter.dayCount || 0) + 1}`);
   console.log(`📅 Current Date Post: ${currentDate.toDateString()}`);
   console.log(`📅 Historical Date Post: ${historicalDate.toDateString()}`);
   console.log('');
@@ -194,6 +205,9 @@ async function generateDualBlogPosts() {
       console.log(`   ${index + 1}. ${result.type.toUpperCase()}: ${result.park.name} (${result.date.toDateString()})`);
     });
     
+    // After successful generation, update the counter with the new historical date
+    await incrementCampaignCounter(historicalDate);
+    
     return results;
     
   } catch (error) {
@@ -230,12 +244,6 @@ async function main() {
     
     // Generate dual blog posts
     const results = await generateDualBlogPosts();
-    
-    // Increment counter for next run (ensures progression)
-    const newDayCount = await incrementCampaignCounter();
-    console.log(`✅ Campaign counter incremented to: ${newDayCount}`);
-    console.log(`📅 Next run will be: Day ${newDayCount + 1}`);
-    console.log('');
     
     // Final stats
     const finalStats = await getBlogStats();
