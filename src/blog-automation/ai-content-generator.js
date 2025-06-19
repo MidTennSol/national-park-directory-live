@@ -310,48 +310,26 @@ function parseAIResponse(aiResponse, park, options) {
     // Clean up content
     content = content.trim();
     
-    // Remove any remaining formatting artifacts from content
+    // Remove FAQ Q&A pairs and FAQ headers from main content
     content = content
-      .replace(/^\*\*TITLE:\*\*.*$/gm, '') // Remove title lines
-      .replace(/^\*\*DESCRIPTION:\*\*.*$/gm, '') // Remove description lines  
-      .replace(/^\*\*EXCERPT:\*\*.*$/gm, '') // Remove excerpt lines
-      .replace(/^\*\*CONTENT:\*\*.*$/gm, '') // Remove content labels
-      .replace(/^\*\*TAGS:\*\*.*$/gm, '') // Remove tags lines
-      .replace(/^\*\*FAQS:\*\*.*$/gm, '') // Remove FAQ section headers
-      .replace(/^FAQS:.*$/gm, '') // Remove unformatted FAQ headers
-      .replace(/^FAQ:.*$/gm, '') // Remove individual FAQ lines
-      .replace(/^ANSWER:.*$/gm, '') // Remove answer lines
-      .replace(/^Q:.*$/gm, '') // Remove Q: lines
-      .replace(/^A:.*$/gm, '') // Remove A: lines
-      .replace(/^Question:.*$/gm, '') // Remove Question: lines
-      .replace(/^Answer:.*$/gm, '') // Remove Answer: lines
-      .replace(/^TITLE:.*$/gm, '') // Remove unformatted title lines
-      .replace(/^DESCRIPTION:.*$/gm, '') // Remove unformatted description lines
-      .replace(/^EXCERPT:.*$/gm, '') // Remove unformatted excerpt lines
-      .replace(/^CONTENT:.*$/gm, '') // Remove unformatted content labels
-      .replace(/^TAGS:.*$/gm, '') // Remove unformatted tags lines
-      .replace(/^\*\*Title:\*\*.*$/gmi, '') // Remove formatted title lines (case insensitive)
-      .replace(/^\*\*Description:\*\*.*$/gmi, '') // Remove formatted description lines
-      .replace(/^\*\*Excerpt:\*\*.*$/gmi, '') // Remove formatted excerpt lines
-      .replace(/^Title:.*$/gmi, '') // Remove unformatted title lines (case insensitive)
-      .replace(/^Description:.*$/gmi, '') // Remove unformatted description lines  
-      .replace(/^Excerpt:.*$/gmi, '') // Remove unformatted excerpt lines
-      .replace(/^\*\*Meta Description:\*\*.*$/gmi, '') // Remove meta description lines
-      .replace(/^Meta Description:.*$/gmi, '') // Remove unformatted meta description lines
-      .replace(/\n\n\n+/g, '\n\n') // Clean up multiple line breaks
-      .trim();
-
-    // Clean up standalone FAQ headers with no content
-    content = content
-      .replace(/^FAQs?\s*:?\s*$/gm, '') // Remove standalone FAQ headers
-      .replace(/^\*\*FAQs?\*\*\s*:?\s*$/gm, '') // Remove formatted FAQ headers  
-      .replace(/^##\s*FAQs?\s*$/gm, '') // Remove markdown FAQ headers
-      .replace(/^###\s*FAQs?\s*$/gm, '') // Remove h3 FAQ headers
-      .replace(/\n\n\s*FAQs?\s*:?\s*$/gm, '') // Remove FAQ headers at end preceded by double newline
-      .replace(/\n\s*FAQs?\s*:\s*\n/gm, '\n') // Remove FAQ headers between newlines
-      .replace(/\n\s*FAQs?\s*:\s*$/gm, '') // Remove FAQ headers at very end of content
-      .replace(/\n\n\n+/g, '\n\n') // Clean up resulting multiple line breaks
-      .trim();
+      // Remove FAQ section headers
+      .replace(/^FAQs?\s*:?.*$/gim, '')
+      .replace(/^\*\*FAQs?\*\*\s*:?.*$/gim, '')
+      .replace(/^##\s*FAQs?\s*$/gim, '')
+      .replace(/^###\s*FAQs?\s*$/gim, '')
+      // Remove Q&A pairs
+      .replace(/^\d+\.\s*\*\*(.*?)\*\*.*$/gim, '') // Numbered bold Qs
+      .replace(/^Q:.*$/gim, '')
+      .replace(/^A:.*$/gim, '')
+      .replace(/^Question:.*$/gim, '')
+      .replace(/^Answer:.*$/gim, '')
+      // Remove any remaining FAQ lines
+      .replace(/\*\*Q:.*\*\*/gim, '')
+      .replace(/\*\*A:.*\*\*/gim, '')
+      // Remove extra blank lines
+      .replace(/\n{3,}/g, '\n\n');
+    // Aggressively remove any 'Content:' header
+    content = content.replace(/^\s*Content:?\s*$/gim, '');
     
     // Validate content length
     const wordCount = content.split(' ').length;
