@@ -136,18 +136,18 @@ const debugInfo = {
       </div>
       {totalPages > 1 && (
         <nav class="flex justify-center mt-12" aria-label="Pagination">
-          <ul class="inline-flex -space-x-px">
-            {/* Previous button */}
-            {currentPage > 1 && (
-              <li>
-                <a
-                  href={currentPage === 2 ? "/blog/" : `/blog/page/${currentPage - 1}/`}
-                  class="px-4 py-2 border border-gray-300 bg-white text-gray-700 hover:bg-green-50 rounded-l-md"
-                >
-                  Previous
-                </a>
-              </li>
-            )}
+          <ul class="inline-flex -space-x-px items-center">
+            {/* Previous arrow */}
+            <li>
+              <a
+                href={currentPage === 2 ? "/blog/" : `/blog/page/${currentPage - 1}/`}
+                class={`px-3 py-2 border border-gray-300 bg-white ${currentPage === 1 ? 'text-gray-400 pointer-events-none opacity-50' : 'text-gray-700 hover:text-green-800'} rounded-l-md`}
+                aria-disabled={currentPage === 1}
+                tabindex={currentPage === 1 ? "-1" : "0"}
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" /></svg>
+              </a>
+            </li>
             {/* Page numbers */}
             {[...Array(totalPages)].map((_, i) => (
               <li>
@@ -160,17 +160,17 @@ const debugInfo = {
                 </a>
               </li>
             ))}
-            {/* Next button */}
-            {currentPage < totalPages && (
-              <li>
-                <a
-                  href={`/blog/page/${currentPage + 1}/`}
-                  class="px-4 py-2 border border-gray-300 bg-white text-gray-700 hover:bg-green-50 rounded-r-md"
-                >
-                  Next
-                </a>
-              </li>
-            )}
+            {/* Next arrow */}
+            <li>
+              <a
+                href={currentPage < totalPages ? `/blog/page/${currentPage + 1}/` : "#"}
+                class={`px-3 py-2 border border-gray-300 bg-white ${currentPage === totalPages ? 'text-gray-400 pointer-events-none opacity-50' : 'text-gray-700 hover:text-green-800'} rounded-r-md`}
+                aria-disabled={currentPage === totalPages}
+                tabindex={currentPage === totalPages ? "-1" : "0"}
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
+              </a>
+            </li>
           </ul>
         </nav>
       )}

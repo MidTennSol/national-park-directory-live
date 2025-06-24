@@ -162,19 +162,41 @@ const debugInfo = {
       </div>
       {totalPages > 1 && (
         <nav class="flex justify-center mt-12" aria-label="Pagination">
-          <ul class="inline-flex -space-x-px">
-            {/* No previous button on first page */}
+          <ul class="inline-flex -space-x-px items-center">
+            {/* Previous arrow */}
+            <li>
+              <a
+                href={"#"}
+                class={`px-3 py-2 border border-gray-300 bg-white text-gray-400 rounded-l-md ${0 === 0 ? 'pointer-events-none opacity-50' : 'hover:text-green-800'}`}
+                aria-disabled={true}
+                tabindex="-1"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" /></svg>
+              </a>
+            </li>
+            {/* Page numbers */}
             {[...Array(totalPages)].map((_, i) => (
               <li>
                 <a
                   href={i === 0 ? "/blog/" : `/blog/page/${i + 1}/`}
-                  class={`px-4 py-2 border border-gray-300 ${i === 0 ? 'bg-green-100 text-green-800 font-bold' : 'bg-white text-gray-700 hover:bg-green-50'} rounded-l-md`}
+                  class={`px-4 py-2 border border-gray-300 ${i === 0 ? 'bg-green-100 text-green-800 font-bold' : 'bg-white text-gray-700 hover:bg-green-50'}`}
                   aria-current={i === 0 ? 'page' : undefined}
                 >
                   {i + 1}
                 </a>
               </li>
             ))}
+            {/* Next arrow */}
+            <li>
+              <a
+                href={totalPages > 1 ? `/blog/page/2/` : "#"}
+                class={`px-3 py-2 border border-gray-300 bg-white text-gray-700 rounded-r-md ${totalPages === 1 ? 'pointer-events-none opacity-50' : 'hover:text-green-800'}`}
+                aria-disabled={totalPages === 1}
+                tabindex={totalPages === 1 ? "-1" : "0"}
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
+              </a>
+            </li>
           </ul>
         </nav>
       )}
