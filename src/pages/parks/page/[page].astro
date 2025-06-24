@@ -164,14 +164,19 @@ const pagination = getPagination(safePage, totalPages);
         <ul class="pagination flex items-center gap-1">
           {/* Previous arrow */}
           <li>
-            <a
-              href={safePage === 2 ? "/parks/" : `/parks/page/${safePage - 1}/`}
-              class={`pagination-arrow ${safePage === 1 ? 'pagination-disabled' : ''}`}
-              aria-disabled={safePage === 1}
-              tabindex={safePage === 1 ? "-1" : "0"}
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" /></svg>
-            </a>
+            {safePage > 1 ? (
+              <a
+                href={safePage === 2 ? "/parks/" : `/parks/page/${safePage - 1}/`}
+                class="pagination-arrow"
+                aria-label="Previous page"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" /></svg>
+              </a>
+            ) : (
+              <span class="pagination-arrow pagination-disabled" aria-disabled="true">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" /></svg>
+              </span>
+            )}
           </li>
           {/* Page numbers with ellipsis */}
           {pagination.map((item, idx) => (
@@ -181,8 +186,8 @@ const pagination = getPagination(safePage, totalPages);
               ) : (
                 <a
                   href={item === 1 ? "/parks/" : `/parks/page/${item}/`}
-                  class={`pagination-page ${(typeof item === 'number' && Number(item) === safePage) ? 'pagination-active' : ''}`}
-                  aria-current={typeof item === 'number' && Number(item) === safePage ? 'page' : undefined}
+                  class={`pagination-page ${item === safePage ? 'pagination-active' : ''}`}
+                  aria-current={item === safePage ? 'page' : undefined}
                 >
                   {item}
                 </a>
@@ -191,17 +196,87 @@ const pagination = getPagination(safePage, totalPages);
           ))}
           {/* Next arrow */}
           <li>
-            <a
-              href={safePage < totalPages ? `/parks/page/${safePage + 1}/` : "#"}
-              class={`pagination-arrow ${safePage === totalPages ? 'pagination-disabled' : ''}`}
-              aria-disabled={safePage === totalPages}
-              tabindex={safePage === totalPages ? "-1" : "0"}
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
-            </a>
+            {safePage < totalPages ? (
+              <a
+                href={`/parks/page/${safePage + 1}/`}
+                class="pagination-arrow"
+                aria-label="Next page"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
+              </a>
+            ) : (
+              <span class="pagination-arrow pagination-disabled" aria-disabled="true">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
+              </span>
+            )}
           </li>
         </ul>
       </nav>
     )}
   </div>
-</BaseLayout> 
+</BaseLayout>
+
+<style>
+.pagination {
+  justify-content: center;
+  align-items: center;
+  gap: 0.25rem;
+}
+.pagination-page {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border: 1px solid #d1d5db;
+  background: #fff;
+  color: #374151;
+  font-weight: 500;
+  border-radius: 0.25rem;
+  transition: background 0.2s, color 0.2s;
+}
+.pagination-page:hover {
+  background: #f0fdf4;
+  color: #166534;
+}
+.pagination-active {
+  background: #d1fae5;
+  color: #166534;
+  font-weight: 700;
+  border-color: #6ee7b7;
+}
+.pagination-arrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border: 1px solid #d1d5db;
+  background: #fff;
+  color: #374151;
+  border-radius: 0.5rem;
+  transition: background 0.2s, color 0.2s;
+}
+.pagination-arrow:hover:not(.pagination-disabled) {
+  background: #f0fdf4;
+  color: #166534;
+}
+.pagination-disabled {
+  pointer-events: none;
+  opacity: 0.4;
+  color: #9ca3af;
+  background: #f3f4f6;
+}
+.pagination-ellipsis {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  color: #9ca3af;
+  font-size: 1.5rem;
+  background: transparent;
+  border: none;
+  user-select: none;
+}
+</style> 
