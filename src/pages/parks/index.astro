@@ -75,6 +75,34 @@ const pagedParksByLetter = parksForPage.reduce<Record<string, Park[]>>((acc, par
 
 // Get sorted letters for the current page
 const pagedLetters = Object.keys(pagedParksByLetter).sort();
+
+// Helper to generate ellipsis pagination
+function getPagination(current: number, total: number) {
+  const delta = 2;
+  const range = [];
+  const rangeWithDots = [];
+  let l;
+
+  for (let i = 1; i <= total; i++) {
+    if (i === 1 || i === total || (i >= current - delta && i <= current + delta)) {
+      range.push(i);
+    }
+  }
+
+  for (let i of range) {
+    if (l) {
+      if (i - l === 2) {
+        rangeWithDots.push(l + 1);
+      } else if (i - l > 2) {
+        rangeWithDots.push('...');
+      }
+    }
+    rangeWithDots.push(i);
+    l = i;
+  }
+  return rangeWithDots;
+}
+const pagination = getPagination(currentPage, totalPages);
 ---
 
 <BaseLayout title="All National Parks - National Park Directory">
@@ -115,53 +143,123 @@ const pagedLetters = Object.keys(pagedParksByLetter).sort();
     
     <!-- Pagination -->
     {totalPages > 1 && (
-      <div class="mt-16 flex justify-center">
-        <div class="flex items-center gap-2">
-          <!-- Previous Page Button -->
-          {currentPage > 1 ? (
-            <a 
-              href={`/parks?page=${currentPage - 1}`} 
-              class="px-4 py-2 bg-green-100 text-green-800 rounded-md hover:bg-green-200 transition-colors"
-            >
-              &larr; Previous
-            </a>
-          ) : (
-            <span class="px-4 py-2 bg-gray-100 text-gray-400 rounded-md cursor-not-allowed">
-              &larr; Previous
-            </span>
-          )}
-          
-          <!-- Page Numbers -->
-          <div class="flex gap-2">
-            {Array.from({ length: totalPages }, (_, i) => i + 1).map(pageNum => (
-              <a 
-                href={`/parks?page=${pageNum}`}
-                class={`w-8 h-8 flex items-center justify-center rounded-md transition-colors ${
-                  pageNum === currentPage 
-                    ? 'bg-green-800 text-white' 
-                    : 'bg-green-100 text-green-800 hover:bg-green-200'
-                }`}
+      <nav class="flex justify-center mt-16" aria-label="Pagination">
+        <ul class="pagination flex items-center gap-1">
+          {/* Previous arrow */}
+          <li>
+            {currentPage > 1 ? (
+              <a
+                href={`/parks?page=${currentPage - 1}`}
+                class="pagination-arrow"
+                aria-label="Previous page"
               >
-                {pageNum}
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" /></svg>
               </a>
-            ))}
-          </div>
-          
-          <!-- Next Page Button -->
-          {currentPage < totalPages ? (
-            <a 
-              href={`/parks?page=${currentPage + 1}`} 
-              class="px-4 py-2 bg-green-100 text-green-800 rounded-md hover:bg-green-200 transition-colors"
-            >
-              Next &rarr;
-            </a>
-          ) : (
-            <span class="px-4 py-2 bg-gray-100 text-gray-400 rounded-md cursor-not-allowed">
-              Next &rarr;
-            </span>
-          )}
-        </div>
-      </div>
+            ) : (
+              <span class="pagination-arrow pagination-disabled" aria-disabled="true">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" /></svg>
+              </span>
+            )}
+          </li>
+          {/* Page numbers with ellipsis */}
+          {pagination.map((item, idx) => (
+            <li>
+              {item === '...' ? (
+                <span class="pagination-ellipsis">&hellip;</span>
+              ) : (
+                <a
+                  href={`/parks?page=${item}`}
+                  class={`pagination-page ${item === currentPage ? 'pagination-active' : ''}`}
+                  aria-current={item === currentPage ? 'page' : undefined}
+                >
+                  {item}
+                </a>
+              )}
+            </li>
+          ))}
+          {/* Next arrow */}
+          <li>
+            {currentPage < totalPages ? (
+              <a
+                href={`/parks?page=${currentPage + 1}`}
+                class="pagination-arrow"
+                aria-label="Next page"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
+              </a>
+            ) : (
+              <span class="pagination-arrow pagination-disabled" aria-disabled="true">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
+              </span>
+            )}
+          </li>
+        </ul>
+      </nav>
     )}
   </div>
-</BaseLayout> 
+</BaseLayout>
+
+<style>
+.pagination {
+  justify-content: center;
+  align-items: center;
+  gap: 0.25rem;
+}
+.pagination-page {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border: 1px solid #d1d5db;
+  background: #fff;
+  color: #374151;
+  font-weight: 500;
+  border-radius: 0.25rem;
+  transition: background 0.2s, color 0.2s;
+}
+.pagination-page:hover {
+  background: #f0fdf4;
+  color: #166534;
+}
+.pagination-active {
+  background: #d1fae5;
+  color: #166534;
+  font-weight: 700;
+  border-color: #6ee7b7;
+}
+.pagination-arrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border: 1px solid #d1d5db;
+  background: #fff;
+  color: #374151;
+  border-radius: 0.5rem;
+  transition: background 0.2s, color 0.2s;
+}
+.pagination-arrow:hover:not(.pagination-disabled) {
+  background: #f0fdf4;
+  color: #166534;
+}
+.pagination-disabled {
+  pointer-events: none;
+  opacity: 0.4;
+  color: #9ca3af;
+  background: #f3f4f6;
+}
+.pagination-ellipsis {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  color: #9ca3af;
+  font-size: 1.5rem;
+  background: transparent;
+  border: none;
+  user-select: none;
+}
+</style> 
