@@ -84,22 +84,28 @@ function getPagination(current: number, total: number) {
   const delta = 2;
   const range = [];
   const rangeWithDots = [];
-  let l;
-  for (let i = 1; i <= total; i++) {
-    if (i === 1 || i === total || (i >= current - delta && i <= current + delta)) {
-      range.push(i);
-    }
+  let left = Math.max(2, current - delta);
+  let right = Math.min(total - 1, current + delta);
+
+  // Always show first and last page
+  range.push(1);
+  for (let i = left; i <= right; i++) {
+    range.push(i);
   }
-  for (let i of range) {
-    if (l) {
-      if (i - l === 2) {
-        rangeWithDots.push(l + 1);
-      } else if (i - l > 2) {
+  if (total > 1) range.push(total);
+
+  // Insert ellipsis where needed
+  let prev = 0;
+  for (let i = 0; i < range.length; i++) {
+    if (range[i] - prev > 1) {
+      if (range[i] - prev === 2) {
+        rangeWithDots.push(prev + 1);
+      } else {
         rangeWithDots.push('...');
       }
     }
-    rangeWithDots.push(i);
-    l = i;
+    rangeWithDots.push(range[i]);
+    prev = range[i];
   }
   return rangeWithDots;
 }
