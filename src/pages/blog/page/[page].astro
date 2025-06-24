@@ -6,6 +6,18 @@ import type { CollectionEntry } from 'astro:content';
 import HeroSection from '../../../components/HeroSection.astro';
 import heroImages from '../../../config/heroImages.js';
 
+// Generate static paths for all paginated blog pages
+export async function getStaticPaths() {
+  const allBlogPosts = await getCollection('blog', ({ data }) => !data.draft);
+  const POSTS_PER_PAGE = 12;
+  const totalPosts = allBlogPosts.length - 2; // skip 2 featured
+  const totalPages = Math.ceil(totalPosts / POSTS_PER_PAGE);
+  // Start from page 2 (page 1 is /blog/)
+  return Array.from({ length: totalPages }, (_, i) => ({
+    params: { page: String(i + 1) },
+  }));
+}
+
 const { page } = Astro.params;
 const currentPage = parseInt(page ?? "1");
 
