@@ -149,7 +149,7 @@ const pagination = getPagination(currentPage, totalPages);
           <li>
             {currentPage > 1 ? (
               <a
-                href={`/parks?page=${currentPage - 1}`}
+                href={currentPage === 2 ? "/parks/" : `/parks/page/${currentPage - 1}/`}
                 class="pagination-arrow"
                 aria-label="Previous page"
               >
@@ -168,7 +168,7 @@ const pagination = getPagination(currentPage, totalPages);
                 <span class="pagination-ellipsis">&hellip;</span>
               ) : (
                 <a
-                  href={`/parks?page=${item}`}
+                  href={item === 1 ? "/parks/" : `/parks/page/${item}/`}
                   class={`pagination-page ${item === currentPage ? 'pagination-active' : ''}`}
                   aria-current={item === currentPage ? 'page' : undefined}
                 >
@@ -181,7 +181,7 @@ const pagination = getPagination(currentPage, totalPages);
           <li>
             {currentPage < totalPages ? (
               <a
-                href={`/parks?page=${currentPage + 1}`}
+                href={`/parks/page/${currentPage + 1}/`}
                 class="pagination-arrow"
                 aria-label="Next page"
               >
