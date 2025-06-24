@@ -171,8 +171,8 @@ const pagination = getPagination(safePage, totalPages);
               ) : (
                 <a
                   href={item === 1 ? "/parks/" : `/parks/page/${item}/`}
-                  class={`pagination-page ${item === safePage ? 'pagination-active' : ''}`}
-                  aria-current={item === safePage ? 'page' : undefined}
+                  class={`pagination-page ${(typeof item === 'number' && item === safePage) ? 'pagination-active' : ''}`}
+                  aria-current={typeof item === 'number' && item === safePage ? 'page' : undefined}
                 >
                   {item}
                 </a>
