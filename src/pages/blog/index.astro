@@ -41,6 +41,12 @@ const debugInfo = {
 ---
 
 <BaseLayout title="Blog - National Park Directory">
+  <head slot="head">
+    <link rel="canonical" href="/blog/" />
+    {totalPages > 1 && (
+      <link rel="next" href={`/blog/page/2/`} />
+    )}
+  </head>
   <HeroSection {...heroImages.blog} />
   <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
     <div class="text-center mb-16">
