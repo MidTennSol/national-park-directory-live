@@ -165,14 +165,9 @@ const debugInfo = {
           <ul class="pagination flex items-center gap-1">
             {/* Previous arrow */}
             <li>
-              <a
-                href={"#"}
-                class={`pagination-arrow ${0 === 0 ? 'pagination-disabled' : ''}`}
-                aria-disabled={true}
-                tabindex="-1"
-              >
+              <span class="pagination-arrow pagination-disabled" aria-disabled="true">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" /></svg>
-              </a>
+              </span>
             </li>
             {/* Page numbers */}
             {[...Array(totalPages)].map((_, i) => (
@@ -188,14 +183,20 @@ const debugInfo = {
             ))}
             {/* Next arrow */}
             <li>
-              <a
-                href={totalPages > 1 ? `/blog/page/2/` : "#"}
-                class={`px-3 py-2 border border-gray-300 bg-white text-gray-700 rounded-r-md ${totalPages === 1 ? 'pointer-events-none opacity-50' : 'hover:text-green-800'}`}
-                aria-disabled={totalPages === 1}
-                tabindex={totalPages === 1 ? "-1" : "0"}
-              >
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
-              </a>
+              {totalPages > 1 ? (
+                <a
+                  href={totalPages > 1 ? "/blog/page/2/" : "#"}
+                  class={`pagination-arrow${totalPages === 1 ? ' pagination-disabled' : ''}`}
+                  aria-disabled={totalPages === 1}
+                  tabindex={totalPages === 1 ? "-1" : "0"}
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
+                </a>
+              ) : (
+                <span class="pagination-arrow pagination-disabled" aria-disabled="true">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
+                </span>
+              )}
             </li>
           </ul>
         </nav>
