@@ -141,6 +141,10 @@ const pagination = getPagination(safePage, totalPages);
         ))}
       </div>
     </div>
+    <!-- TEMP DEBUG: Pagination array for troubleshooting -->
+    <div style="text-align:center; color:#888; font-size:12px; margin-bottom:8px;">
+      Pagination: {JSON.stringify(pagination)} | Current: {safePage} / {totalPages}
+    </div>
     <!-- Parks Listing -->
     <div class="space-y-16">
       {pagedLetters.map(letter => (
@@ -177,8 +181,8 @@ const pagination = getPagination(safePage, totalPages);
               ) : (
                 <a
                   href={item === 1 ? "/parks/" : `/parks/page/${item}/`}
-                  class={`pagination-page ${(typeof item === 'number' && item === safePage) ? 'pagination-active' : ''}`}
-                  aria-current={typeof item === 'number' && item === safePage ? 'page' : undefined}
+                  class={`pagination-page ${(typeof item === 'number' && Number(item) === safePage) ? 'pagination-active' : ''}`}
+                  aria-current={typeof item === 'number' && Number(item) === safePage ? 'page' : undefined}
                 >
                   {item}
                 </a>
