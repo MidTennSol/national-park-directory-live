@@ -162,12 +162,12 @@ const debugInfo = {
       </div>
       {totalPages > 1 && (
         <nav class="flex justify-center mt-12" aria-label="Pagination">
-          <ul class="inline-flex -space-x-px items-center">
+          <ul class="pagination flex items-center gap-1">
             {/* Previous arrow */}
             <li>
               <a
                 href={"#"}
-                class={`px-3 py-2 border border-gray-300 bg-white text-gray-400 rounded-l-md ${0 === 0 ? 'pointer-events-none opacity-50' : 'hover:text-green-800'}`}
+                class={`pagination-arrow ${0 === 0 ? 'pagination-disabled' : ''}`}
                 aria-disabled={true}
                 tabindex="-1"
               >

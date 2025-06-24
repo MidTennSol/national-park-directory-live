@@ -136,12 +136,12 @@ const debugInfo = {
       </div>
       {totalPages > 1 && (
         <nav class="flex justify-center mt-12" aria-label="Pagination">
-          <ul class="inline-flex -space-x-px items-center">
+          <ul class="pagination flex items-center gap-1">
             {/* Previous arrow */}
             <li>
               <a
                 href={currentPage === 2 ? "/blog/" : `/blog/page/${currentPage - 1}/`}
-                class={`px-3 py-2 border border-gray-300 bg-white ${currentPage === 1 ? 'text-gray-400 pointer-events-none opacity-50' : 'text-gray-700 hover:text-green-800'} rounded-l-md`}
+                class={`pagination-arrow ${currentPage === 1 ? 'pagination-disabled' : ''}`}
                 aria-disabled={currentPage === 1}
                 tabindex={currentPage === 1 ? "-1" : "0"}
               >
@@ -153,7 +153,7 @@ const debugInfo = {
               <li>
                 <a
                   href={i === 0 ? "/blog/" : `/blog/page/${i + 1}/`}
-                  class={`px-4 py-2 border border-gray-300 ${i + 1 === currentPage ? 'bg-green-100 text-green-800 font-bold' : 'bg-white text-gray-700 hover:bg-green-50'}`}
+                  class={`pagination-page ${i + 1 === currentPage ? 'pagination-active' : ''}`}
                   aria-current={i + 1 === currentPage ? 'page' : undefined}
                 >
                   {i + 1}
@@ -164,7 +164,7 @@ const debugInfo = {
             <li>
               <a
                 href={currentPage < totalPages ? `/blog/page/${currentPage + 1}/` : "#"}
-                class={`px-3 py-2 border border-gray-300 bg-white ${currentPage === totalPages ? 'text-gray-400 pointer-events-none opacity-50' : 'text-gray-700 hover:text-green-800'} rounded-r-md`}
+                class={`pagination-arrow ${currentPage === totalPages ? 'pagination-disabled' : ''}`}
                 aria-disabled={currentPage === totalPages}
                 tabindex={currentPage === totalPages ? "-1" : "0"}
               >
@@ -194,5 +194,55 @@ const debugInfo = {
     object-fit: contain !important;
     padding: 2rem;
     background-color: #f9fafb;
+  }
+  .pagination {
+    justify-content: center;
+    align-items: center;
+    gap: 0.25rem;
+  }
+  .pagination-page {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    border: 1px solid #d1d5db;
+    background: #fff;
+    color: #374151;
+    font-weight: 500;
+    border-radius: 0.25rem;
+    transition: background 0.2s, color 0.2s;
+  }
+  .pagination-page:hover {
+    background: #f0fdf4;
+    color: #166534;
+  }
+  .pagination-active {
+    background: #d1fae5;
+    color: #166534;
+    font-weight: 700;
+    border-color: #6ee7b7;
+  }
+  .pagination-arrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    border: 1px solid #d1d5db;
+    background: #fff;
+    color: #374151;
+    border-radius: 0.5rem;
+    transition: background 0.2s, color 0.2s;
+  }
+  .pagination-arrow:hover:not(.pagination-disabled) {
+    background: #f0fdf4;
+    color: #166534;
+  }
+  .pagination-disabled {
+    pointer-events: none;
+    opacity: 0.4;
+    color: #9ca3af;
+    background: #f3f4f6;
   }
 </style> 
