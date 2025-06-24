@@ -1,0 +1,197 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import ParkCard from '../../../components/ParkCard.astro';
+import HeroSection from '../../../components/HeroSection.astro';
+import { fetchNationalParks } from '../../../utils/airtable.js';
+import heroImages from '../../../config/heroImages.js';
+
+// Define the Park interface
+interface Park {
+  id: string;
+  name: string;
+  description: string;
+  summary?: string;
+  imageUrl: string;
+  wikimediaImages?: string | string[];
+  slug: string;
+  states: string;
+  designation: string;
+  [key: string]: any;
+}
+
+// Generate static paths for all paginated parks pages
+export async function getStaticPaths() {
+  const allParks = await fetchNationalParks({
+    sort: 'Name',
+    view: 'Grid view',
+    filterByFormula: ''
+  });
+  const PARKS_PER_PAGE = 12;
+  const totalPages = Math.ceil(allParks.length / PARKS_PER_PAGE);
+  // Start from page 2 (page 1 is /parks/)
+  return Array.from({ length: totalPages }, (_, i) => ({
+    params: { page: String(i + 1) },
+  }));
+}
+
+const { page } = Astro.params;
+const currentPage = parseInt(page ?? "1");
+
+// Redirect page 1 to /parks/
+if (currentPage === 1) {
+  return Astro.redirect('/parks/');
+}
+
+const allParks = await fetchNationalParks({
+  sort: 'Name',
+  view: 'Grid view',
+  filterByFormula: ''
+}) as Park[];
+
+const PARKS_PER_PAGE = 12;
+const totalPages = Math.ceil(allParks.length / PARKS_PER_PAGE);
+
+// Ensure current page is within valid range
+const safePage = Math.max(1, Math.min(currentPage, totalPages));
+
+// Group parks by first letter for alphabetical listing
+const parksByLetter = allParks.reduce<Record<string, Park[]>>((acc, park) => {
+  if (!park.name) return acc;
+  const firstLetter = park.name.charAt(0).toUpperCase();
+  if (!acc[firstLetter]) acc[firstLetter] = [];
+  acc[firstLetter].push(park);
+  return acc;
+}, {});
+const letters = Object.keys(parksByLetter).sort();
+
+// Flatten and slice for current page
+const flattenedParks = letters.flatMap(letter => parksByLetter[letter]);
+const startIndex = (safePage - 1) * PARKS_PER_PAGE;
+const parksForPage = flattenedParks.slice(startIndex, startIndex + PARKS_PER_PAGE);
+
+// Group the paged parks by first letter again
+const pagedParksByLetter = parksForPage.reduce<Record<string, Park[]>>((acc, park) => {
+  if (!park.name) return acc;
+  const firstLetter = park.name.charAt(0).toUpperCase();
+  if (!acc[firstLetter]) acc[firstLetter] = [];
+  acc[firstLetter].push(park);
+  return acc;
+}, {});
+const pagedLetters = Object.keys(pagedParksByLetter).sort();
+
+// Ellipsis pagination helper
+function getPagination(current: number, total: number) {
+  const delta = 2;
+  const range = [];
+  const rangeWithDots = [];
+  let l;
+  for (let i = 1; i <= total; i++) {
+    if (i === 1 || i === total || (i >= current - delta && i <= current + delta)) {
+      range.push(i);
+    }
+  }
+  for (let i of range) {
+    if (l) {
+      if (i - l === 2) {
+        rangeWithDots.push(l + 1);
+      } else if (i - l > 2) {
+        rangeWithDots.push('...');
+      }
+    }
+    rangeWithDots.push(i);
+    l = i;
+  }
+  return rangeWithDots;
+}
+const pagination = getPagination(safePage, totalPages);
+---
+
+<BaseLayout title={`All National Parks - Page ${safePage} - National Park Directory`}>
+  <head slot="head">
+    <link rel="canonical" href={safePage === 2 ? '/parks/page/2/' : `/parks/page/${safePage}/`} />
+    {safePage > 1 && (
+      <link rel="prev" href={safePage === 2 ? '/parks/' : `/parks/page/${safePage - 1}/`} />
+    )}
+    {safePage < totalPages && (
+      <link rel="next" href={`/parks/page/${safePage + 1}/`} />
+    )}
+  </head>
+  <HeroSection {...heroImages.parks} />
+  <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <div class="max-w-3xl mx-auto text-center mb-12">
+      <p class="text-lg text-gray-700">Explore all national parks, monuments, historic sites, and more across the United States.</p>
+      <p class="text-sm text-gray-500 mt-2">Showing {parksForPage.length} of {allParks.length} parks and sites</p>
+    </div>
+    <!-- Alphabet Navigation -->
+    <div class="mb-12 bg-white rounded-lg shadow-md p-4">
+      <div class="flex flex-wrap justify-center gap-2">
+        {letters.map(letter => (
+          <a 
+            href={`#section-${letter}`}
+            class="w-8 h-8 flex items-center justify-center rounded-full bg-green-100 text-green-800 hover:bg-green-200 transition-colors"
+          >
+            {letter}
+          </a>
+        ))}
+      </div>
+    </div>
+    <!-- Parks Listing -->
+    <div class="space-y-16">
+      {pagedLetters.map(letter => (
+        <section id={`section-${letter}`} class="scroll-mt-24">
+          <h2 class="text-3xl font-bold text-gray-900 mb-8 border-b border-gray-200 pb-2">{letter} <span class="text-sm font-normal text-gray-500">({pagedParksByLetter[letter].length} parks)</span></h2>
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {pagedParksByLetter[letter].map((park: Park) => (
+              <ParkCard park={park} />
+            ))}
+          </div>
+        </section>
+      ))}
+    </div>
+    <!-- Pagination -->
+    {totalPages > 1 && (
+      <nav class="flex justify-center mt-16" aria-label="Pagination">
+        <ul class="pagination flex items-center gap-1">
+          {/* Previous arrow */}
+          <li>
+            <a
+              href={safePage === 2 ? "/parks/" : `/parks/page/${safePage - 1}/`}
+              class={`pagination-arrow ${safePage === 1 ? 'pagination-disabled' : ''}`}
+              aria-disabled={safePage === 1}
+              tabindex={safePage === 1 ? "-1" : "0"}
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" /></svg>
+            </a>
+          </li>
+          {/* Page numbers with ellipsis */}
+          {pagination.map((item, idx) => (
+            <li>
+              {item === '...' ? (
+                <span class="pagination-ellipsis">&hellip;</span>
+              ) : (
+                <a
+                  href={item === 1 ? "/parks/" : `/parks/page/${item}/`}
+                  class={`pagination-page ${item === safePage ? 'pagination-active' : ''}`}
+                  aria-current={item === safePage ? 'page' : undefined}
+                >
+                  {item}
+                </a>
+              )}
+            </li>
+          ))}
+          {/* Next arrow */}
+          <li>
+            <a
+              href={safePage < totalPages ? `/parks/page/${safePage + 1}/` : "#"}
+              class={`pagination-arrow ${safePage === totalPages ? 'pagination-disabled' : ''}`}
+              aria-disabled={safePage === totalPages}
+              tabindex={safePage === totalPages ? "-1" : "0"}
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
+            </a>
+          </li>
+        </ul>
+      </nav>
+    )}
+  </div>
+</BaseLayout> 
