@@ -1,10 +1,13 @@
 ---
-import BaseLayout from '../../layouts/BaseLayout.astro';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
 import { getCollection } from 'astro:content';
-import { formatDate } from '../../utils/dateUtils';
+import { formatDate } from '../../../utils/dateUtils';
 import type { CollectionEntry } from 'astro:content';
-import HeroSection from '../../components/HeroSection.astro';
-import heroImages from '../../config/heroImages.js';
+import HeroSection from '../../../components/HeroSection.astro';
+import heroImages from '../../../config/heroImages.js';
+
+const { page } = Astro.params;
+const currentPage = parseInt(page ?? "1");
 
 // Get all blog posts that aren't marked as draft
 const allBlogPosts = await getCollection('blog', ({ data }) => {
@@ -13,34 +16,41 @@ const allBlogPosts = await getCollection('blog', ({ data }) => {
 
 // Sort by publish date (newest first)
 const sortedPosts = allBlogPosts.sort((a: CollectionEntry<'blog'>, b: CollectionEntry<'blog'>) => {
-  // Always use the raw publishDate from frontmatter for sorting
   const aDate = typeof a.data.publishDate === 'string' ? new Date(a.data.publishDate + 'T12:00:00') : new Date(a.data.publishDate);
   const bDate = typeof b.data.publishDate === 'string' ? new Date(b.data.publishDate + 'T12:00:00') : new Date(b.data.publishDate);
   return bDate.getTime() - aDate.getTime();
 });
 
-// Get the 2 newest posts as featured posts
-const featuredPosts = sortedPosts.slice(0, 2);
-
 // Pagination settings
 const POSTS_PER_PAGE = 12;
-const paginatedPosts = sortedPosts.slice(2, 2 + POSTS_PER_PAGE); // skip featured
 const totalPosts = sortedPosts.length - 2;
 const totalPages = Math.ceil(totalPosts / POSTS_PER_PAGE);
 
+// Redirect page 1 to /blog/
+if (currentPage === 1) {
+  return Astro.redirect('/blog/');
+}
+
+// Calculate start/end indices (skip 2 featured posts)
+const startIdx = 2 + (currentPage - 1) * POSTS_PER_PAGE;
+const endIdx = startIdx + POSTS_PER_PAGE;
+const paginatedPosts = sortedPosts.slice(startIdx, endIdx);
+
 // Add debug info
 const debugInfo = {
-  pageType: "blog-index",
+  pageType: "blog-paginated",
   postCount: sortedPosts.length,
-  featuredCount: featuredPosts.length,
-  postSlugs: sortedPosts.map(post => post.slug),
-  buildTime: new Date().toISOString(),
   postsPerPage: POSTS_PER_PAGE,
   totalPages,
+  currentPage,
+  startIdx,
+  endIdx,
+  postSlugs: paginatedPosts.map(post => post.slug),
+  buildTime: new Date().toISOString(),
 };
 ---
 
-<BaseLayout title="Blog - National Park Directory">
+<BaseLayout title={`Blog - Page ${currentPage} - National Park Directory`}>
   <HeroSection {...heroImages.blog} />
   <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
     <div class="text-center mb-16">
@@ -50,57 +60,6 @@ const debugInfo = {
         Discover stories, tips, and insights about America's national parks. From wildlife encounters to hiking guides, our blog helps you plan your next outdoor adventure.
       </p>
     </div>
-
-    {featuredPosts.length > 0 && (
-      <div class="mb-16">
-        <h2 class="text-2xl font-bold text-gray-800 mb-6">Featured Posts</h2>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-          {featuredPosts.slice(0, 2).map((post: CollectionEntry<'blog'>) => (
-            <div class="bg-white rounded-lg shadow-md overflow-hidden">
-              {post.data.image && (
-                <div class="relative h-48 bg-gray-100">
-                  <img 
-                    src={post.data.image} 
-                    alt={post.data.title}
-                    class="w-full h-full object-cover"
-                    data-blog-image="true"
-                    data-original-path={post.data.image}
-                    onload="this.classList.add('image-loaded')"
-                    onerror="if (!this.src.includes('blog-placeholder.jpg') && !this.src.includes('park-placeholder.svg')) { this.setAttribute('data-failed-src', this.src); this.src='/images/park-placeholder.svg'; this.classList.add('fallback-applied'); }"
-                  />
-                </div>
-              )}
-              <div class="p-6">
-                <div class="flex items-center text-sm text-gray-500 mb-2">
-                  <span>{formatDate(post.data.publishDate)}</span>
-                  <span class="mx-2">•</span>
-                  <span>{post.data.author}</span>
-                </div>
-                <h3 class="text-xl font-bold text-gray-800 mb-2">
-                  <a href={`/blog/${post.slug}`} class="hover:text-green-700 transition-colors">
-                    {post.data.title}
-                  </a>
-                </h3>
-                <p class="text-gray-600 mb-4">{post.data.description}</p>
-                <div class="flex flex-wrap gap-2 mb-4">
-                  {post.data.tags.map((tag: string) => (
-                    <span class="text-xs bg-green-100 text-green-800 rounded-full px-3 py-1">
-                      {tag}
-                    </span>
-                  ))}
-                </div>
-                <a href={`/blog/${post.slug}`} class="inline-flex items-center text-green-700 hover:text-green-900 font-medium">
-                  Read more
-                  <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                  </svg>
-                </a>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-    )}
 
     <div>
       <h2 class="text-2xl font-bold text-gray-800 mb-6">All Posts</h2>
@@ -157,23 +116,44 @@ const debugInfo = {
       {totalPages > 1 && (
         <nav class="flex justify-center mt-12" aria-label="Pagination">
           <ul class="inline-flex -space-x-px">
-            {/* No previous button on first page */}
+            {/* Previous button */}
+            {currentPage > 1 && (
+              <li>
+                <a
+                  href={currentPage === 2 ? "/blog/" : `/blog/page/${currentPage - 1}/`}
+                  class="px-4 py-2 border border-gray-300 bg-white text-gray-700 hover:bg-green-50 rounded-l-md"
+                >
+                  Previous
+                </a>
+              </li>
+            )}
+            {/* Page numbers */}
             {[...Array(totalPages)].map((_, i) => (
               <li>
                 <a
                   href={i === 0 ? "/blog/" : `/blog/page/${i + 1}/`}
-                  class={`px-4 py-2 border border-gray-300 ${i === 0 ? 'bg-green-100 text-green-800 font-bold' : 'bg-white text-gray-700 hover:bg-green-50'} rounded-l-md`}
-                  aria-current={i === 0 ? 'page' : undefined}
+                  class={`px-4 py-2 border border-gray-300 ${i + 1 === currentPage ? 'bg-green-100 text-green-800 font-bold' : 'bg-white text-gray-700 hover:bg-green-50'}`}
+                  aria-current={i + 1 === currentPage ? 'page' : undefined}
                 >
                   {i + 1}
                 </a>
               </li>
             ))}
+            {/* Next button */}
+            {currentPage < totalPages && (
+              <li>
+                <a
+                  href={`/blog/page/${currentPage + 1}/`}
+                  class="px-4 py-2 border border-gray-300 bg-white text-gray-700 hover:bg-green-50 rounded-r-md"
+                >
+                  Next
+                </a>
+              </li>
+            )}
           </ul>
         </nav>
       )}
     </div>
-    
     <!-- Debug Information -->
     <div id="debug-info" class="hidden">
       <pre>{JSON.stringify(debugInfo, null, 2)}</pre>
@@ -194,26 +174,4 @@ const debugInfo = {
     padding: 2rem;
     background-color: #f9fafb;
   }
-</style>
-
-<!-- Debug script - will only activate when ?debug=true is in URL -->
-<script>
-  document.addEventListener('DOMContentLoaded', () => {
-    // Check for debug parameter
-    const urlParams = new URLSearchParams(window.location.search);
-    const debug = urlParams.get('debug');
-    
-    if (debug === 'true') {
-      // Load debug script
-      const script = document.createElement('script');
-      script.src = '/debug-build.js';
-      document.body.appendChild(script);
-      
-      // Show debug info
-      const debugInfo = document.getElementById('debug-info');
-      if (debugInfo) {
-        debugInfo.classList.remove('hidden');
-      }
-    }
-  });
-</script> 
+</style> 
