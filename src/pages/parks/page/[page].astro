@@ -126,7 +126,6 @@ const pagination = getPagination(safePage, totalPages);
   <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
     <div class="max-w-3xl mx-auto text-center mb-12">
       <p class="text-lg text-gray-700">Explore all national parks, monuments, historic sites, and more across the United States.</p>
-      <p class="text-sm text-gray-500 mt-2">Showing {parksForPage.length} of {allParks.length} parks and sites</p>
     </div>
     <!-- Alphabet Navigation -->
     <div class="mb-12 bg-white rounded-lg shadow-md p-4">
@@ -140,10 +139,6 @@ const pagination = getPagination(safePage, totalPages);
           </a>
         ))}
       </div>
-    </div>
-    <!-- TEMP DEBUG: Pagination array for troubleshooting -->
-    <div style="text-align:center; color:#888; font-size:12px; margin-bottom:8px;">
-      Pagination: {JSON.stringify(pagination)} | Current: {safePage} / {totalPages}
     </div>
     <!-- Parks Listing -->
     <div class="space-y-16">
